@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
@@ -50,10 +49,11 @@ class Post extends StatelessWidget {
                     Container(
                       width: 40.h,
                       height: 40.h,
-                      decoration: BoxDecoration(
+                      decoration: const  BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: NetworkImage(avatarUrl), fit: BoxFit.cover),
+                            image: AssetImage("asset/demo.jpg"),)
+                            // NetworkImage(avatarUrl), fit: BoxFit.cover),
                       ),
                     ),
                     SizedBox(
@@ -124,10 +124,10 @@ class Post extends StatelessWidget {
             ),
             Container(
               height: 400.h,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image:
-                      NetworkImage(postImageUrl != null ? postImageUrl! : ""),
+                  image: AssetImage("asset/demo.jpg"),
+                      //NetworkImage(postImageUrl != null ? postImageUrl! : ""),
                   fit: BoxFit.cover,
                 ),
               ),

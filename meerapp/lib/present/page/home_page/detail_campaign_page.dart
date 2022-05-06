@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
+import 'package:meerapp/present/page/home_page/widget/join_campaign_user.dart';
 
 class DetailCampaignPage extends StatefulWidget {
   const DetailCampaignPage({Key? key}) : super(key: key);
@@ -12,7 +13,8 @@ class DetailCampaignPage extends StatefulWidget {
   State<DetailCampaignPage> createState() => _DetailCampaignPageState();
 }
 
-class _DetailCampaignPageState extends State<DetailCampaignPage> with TickerProviderStateMixin {
+class _DetailCampaignPageState extends State<DetailCampaignPage>
+    with TickerProviderStateMixin {
   late TabController _tabController;
   int currentTab = 0;
   @override
@@ -45,8 +47,9 @@ class _DetailCampaignPageState extends State<DetailCampaignPage> with TickerProv
                       height: 200.h,
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                            image: NetworkImage(
-                                "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
+                            image: AssetImage("asset/demo.jpg"),
+                            // NetworkImage(
+                              //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
                             fit: BoxFit.cover),
                       ),
                     ),
@@ -86,8 +89,9 @@ class _DetailCampaignPageState extends State<DetailCampaignPage> with TickerProv
                                     Border.all(color: Colors.white, width: 3),
                                 image: DecorationImage(
                                     alignment: Alignment(0, -0.8.h),
-                                    image: const NetworkImage(
-                                        "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
+                                    image: AssetImage("asset/demo.jpg"),
+                                    //const NetworkImage(
+                                      //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
                                     fit: BoxFit.cover),
                               ),
                             ),
@@ -173,13 +177,22 @@ class _DetailCampaignPageState extends State<DetailCampaignPage> with TickerProv
                   setState(() {
                     currentTab = index;
                   });
-
                 },
               ),
             ),
           ];
         },
-        body: currentTab == 0? const IntroduceCampaintWidget(nameCreator: "Huỳnh Thị Minh Nhực", datecreate: "17/05/2022", content: "Test", numberjoiner: 17, address: "Khu phố 6 thành p ", time:"25/11/2022") : currentTab == 1? Text("Joiner") : Text("Report"),
+        body: currentTab == 0
+            ? const IntroduceCampaintWidget(
+                nameCreator: "Huỳnh Thị Minh Nhực",
+                datecreate: "17/05/2022",
+                content: "Test",
+                numberjoiner: 17,
+                address: "Khu phố 6 thành p ",
+                time: "25/11/2022")
+            : currentTab == 1
+                ? JoinCamPaignUser()
+                : Text("Report"),
       ),
     );
   }

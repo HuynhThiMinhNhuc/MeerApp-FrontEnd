@@ -54,10 +54,12 @@ class IntroduceCampaintWidget extends StatelessWidget {
                 SizedBox(
                   width: 5.w,
                 ),
-                Text.rich(TextSpan(
-                    text: " " + nameCreator,
-                    style: ktext15RegularBlue.copyWith(decoration: TextDecoration.underline,),
+                Text.rich(
+                  TextSpan(
                     children: [
+                      TextSpan(
+                         text: " " + nameCreator,
+                         style: ktext15RegularBlue,),
                       TextSpan(
                           text: " đã tạo sự kiện này",
                           style: kText15RegularBlack),
