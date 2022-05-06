@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/api/_mock/campaign.dart';
 import 'package:meerapp/present/rootapp.dart';
 
 void main() {
@@ -12,6 +16,8 @@ class MeerApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+  log("Done");
+  MockCampaign.list().then((list) => log(jsonEncode(list)));
     return ScreenUtilInit(
       designSize: const Size(360, 780),
       minTextAdapt: true,
