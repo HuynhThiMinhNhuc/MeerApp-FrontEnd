@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/present/component/post.dart';
 import 'package:meerapp/present/page/home_page/homepage.dart';
 import 'package:meerapp/present/page/map/map_page.dart';
+import 'package:meerapp/present/page/profile/profilepage.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _RootAppState extends State<RootApp> {
       case 2:
         return MapPage();
       default:
-        return Text("profile page");
+        return ProfilePage();
     }
   }
 
