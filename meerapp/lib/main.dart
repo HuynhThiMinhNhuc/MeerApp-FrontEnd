@@ -16,19 +16,15 @@ class MeerApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-  log("Done");
-  MockCampaign.list().then((list) => log(jsonEncode(list)));
     return ScreenUtilInit(
       designSize: const Size(360, 780),
       minTextAdapt: true,
       child: MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
-        debugShowCheckedModeBanner: true,
-        home: const RootApp()
-      ),
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          debugShowCheckedModeBanner: true,
+          home: const RootApp()),
     );
   }
 }
-
