@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
 class Post extends StatelessWidget {
   final String avatarUrl;
@@ -28,7 +29,7 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 4,
+      elevation: 2,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -92,7 +93,10 @@ class Post extends StatelessWidget {
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, 'Hủy'),
-                                  child: Text('Hủy', style: kText13BoldMain,),
+                                  child: Text(
+                                    'Hủy',
+                                    style: kText13BoldMain,
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: () =>
@@ -128,13 +132,19 @@ class Post extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10.w, 10.h, 5.w, 5.h),
-              child: Text(
-                title,
-                style: kText15BoldBlack,
-              ),
-            ),
+            InkWell(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(10.w, 10.h, 5.w, 5.h),
+                  child: Text(
+                    title,
+                    style: kText15BoldBlack,
+                  ),
+                ),
+                onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DetailCampaignPage()),
+                    )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),
               child: RichText(
@@ -143,11 +153,11 @@ class Post extends StatelessWidget {
                   style: DefaultTextStyle.of(context).style,
                   children: <TextSpan>[
                     TextSpan(
-                      text: "\n\nĐịa điểm: " ,
+                      text: "\n\nĐịa điểm: ",
                       style: kText13BoldBlack,
                     ),
                     TextSpan(
-                      text:  address,
+                      text: address,
                       style: kText13RegularBlack,
                     ),
                     TextSpan(
@@ -155,58 +165,16 @@ class Post extends StatelessWidget {
                       style: kText13BoldBlack,
                     ),
                     TextSpan(
-                      text:  time,
+                      text: time,
                       style: kText13RegularBlack,
                     ),
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(8.w, 0, 10.w, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const Spacer(),
-                  Row(
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () {},
-                        icon: FaIcon(
-                          FontAwesomeIcons.heart,
-                          color: Colors.red,
-                          size: 18.w,
-                        ),
-                        splashRadius: 20.w,
-                      ),
-                      Text(
-                        "18",
-                        style: kText13BoldBlack,
-                      )
-                    ],
-                  ),
-                  SizedBox(width: 10.w),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () {},
-                        icon: FaIcon(
-                          FontAwesomeIcons.skullCrossbones,
-                          size: 18.w,
-                        ),
-                        splashRadius: 20.w,
-                      ),
-                      Text(
-                        "22",
-                        style: kText13BoldBlack,
-                      )
-                    ],
-                  )
-                ],
-              ),
-            )
+            SizedBox(
+              height: 10.h,
+            ),
           ]),
     );
   }
