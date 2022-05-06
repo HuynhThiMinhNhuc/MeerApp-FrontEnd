@@ -23,9 +23,12 @@ var kText12RegularBlack = fontConfig.copyWith(
   decoration: TextDecoration.none,
   overflow: TextOverflow.ellipsis,
 );
+
 var kText13BoldBlack = fontConfig.copyWith(fontWeight: FontWeight.bold);
 var  kText13RegularNote = kText13BoldBlack.copyWith(fontWeight: FontWeight.normal, color: meerColorGreyNoteText);
+var kText13RegularBlack = kText13RegularNote.copyWith(color: meerColorBlack);
 var  kText13RegularMain = kText13BoldBlack.copyWith(fontWeight: FontWeight.normal, color: meerColorMain);
+var kText13BoldMain = kText13RegularMain.copyWith(fontWeight: FontWeight.bold);
 
 var kText15RegularGreyNotetext =
     fontConfig.copyWith(fontSize: 15.sp, color: meerColorGreyNoteText);
