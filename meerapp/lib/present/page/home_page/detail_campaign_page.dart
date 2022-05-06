@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
-import 'package:meerapp/present/page/home_page/widget/join_campaign_user.dart';
+import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
+import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
 
 class DetailCampaignPage extends StatefulWidget {
   const DetailCampaignPage({Key? key}) : super(key: key);
@@ -192,7 +192,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                 time: "25/11/2022")
             : currentTab == 1
                 ? JoinCamPaignUser()
-                : Text("Report"),
+                : ReportCampignWidget(),
       ),
     );
   }

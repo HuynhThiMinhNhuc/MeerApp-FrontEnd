@@ -31,6 +31,8 @@ class _RootAppState extends State<RootApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: meerColorWhite,
+      floatingActionButton: FloatingActionButton(onPressed: () {  },
+      child: Icon(FontAwesomeIcons.plus) ),
       appBar: getAppBar(),
       body: getBody(),
       bottomNavigationBar: getBottomTabBar(),
@@ -71,7 +73,7 @@ class _RootAppState extends State<RootApp> {
       title: Padding(
         padding: EdgeInsets.symmetric(vertical: 15.h),
         child: Text(
-          "MeerChats",
+          "Meers",
           style: kText24BoldMain,
         ),
       ),
@@ -120,7 +122,7 @@ class _RootAppState extends State<RootApp> {
         TabData(iconData: FontAwesomeIcons.house, title: "Bài viết"),
         TabData(iconData: FontAwesomeIcons.hotjar, title: "Khẩn cấp"),
         TabData(iconData: FontAwesomeIcons.locationDot, title: "Bản đồ"),
-        TabData(iconData: FontAwesomeIcons.user, title: "Hồ sơ")
+        TabData(iconData: FontAwesomeIcons.idCard, title: "Hồ sơ")
       ],
       onTabChangedListener: (int position) {
         setState(() {
