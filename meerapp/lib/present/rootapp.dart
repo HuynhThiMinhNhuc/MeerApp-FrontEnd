@@ -115,10 +115,10 @@ class _RootAppState extends State<RootApp> {
   FancyBottomNavigation getBottomTabBar() {
     return FancyBottomNavigation(
       tabs: [
-        TabData(iconData: FontAwesomeIcons.house, title: "Home"),
-        TabData(iconData: FontAwesomeIcons.plus, title: "Khẩn cấp"),
-        TabData(iconData: Icons.people, title: "Bản đồ"),
-        TabData(iconData: Icons.people, title: "Hồ sơ")
+        TabData(iconData: FontAwesomeIcons.house, title: "Trang chủ"),
+        TabData(iconData: FontAwesomeIcons.hotjar, title: "Khẩn cấp"),
+        TabData(iconData: FontAwesomeIcons.locationDot, title: "Bản đồ"),
+        TabData(iconData: FontAwesomeIcons.user, title: "Hồ sơ")
       ],
       onTabChangedListener: (int position) {
         setState(() {
