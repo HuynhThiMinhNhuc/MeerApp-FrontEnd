@@ -5,7 +5,7 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/present/component/post.dart';
-import 'package:meerapp/present/page/homepage.dart';
+import 'package:meerapp/present/page/home_page/homepage.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -117,7 +117,7 @@ class _RootAppState extends State<RootApp> {
   FancyBottomNavigation getBottomTabBar() {
     return FancyBottomNavigation(
       tabs: [
-        TabData(iconData: FontAwesomeIcons.house, title: "Trang chủ"),
+        TabData(iconData: FontAwesomeIcons.house, title: "Bài viết"),
         TabData(iconData: FontAwesomeIcons.hotjar, title: "Khẩn cấp"),
         TabData(iconData: FontAwesomeIcons.locationDot, title: "Bản đồ"),
         TabData(iconData: FontAwesomeIcons.user, title: "Hồ sơ")

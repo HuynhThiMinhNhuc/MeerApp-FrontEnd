@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'colorconfig.dart';
@@ -25,6 +23,7 @@ var kText12RegularBlack = fontConfig.copyWith(
 );
 
 var kText13BoldBlack = fontConfig.copyWith(fontWeight: FontWeight.bold);
+var kText13BoldWhite = kText13BoldBlack.copyWith(color: meerColorWhite);
 var  kText13RegularNote = kText13BoldBlack.copyWith(fontWeight: FontWeight.normal, color: meerColorGreyNoteText);
 var kText13RegularBlack = kText13RegularNote.copyWith(color: meerColorBlack);
 var  kText13RegularMain = kText13BoldBlack.copyWith(fontWeight: FontWeight.normal, color: meerColorMain);
@@ -38,6 +37,7 @@ var kText15MediumBlack = fontConfig.copyWith(fontSize: 15.sp, fontWeight: FontWe
 var kText15RegularBlack = kText15RegularMain.copyWith(color: meerColorBlack);
 var kText15RegularRed = kText15BoldMain.copyWith(fontWeight: FontWeight.w300, color: meerColorRed );
 var kText15BoldBlack = kText15BoldMain.copyWith(color: meerColorBlack);
+var ktext15RegularBlue = kText15RegularBlack.copyWith(color: Colors.blue);
 var kText15BoldGreyHintText = fontConfig.copyWith(
   fontSize: 15.sp,
   color: meerColorGreyHintText,
@@ -60,6 +60,7 @@ var kText17RegularRed = ktext17RegularBlack.copyWith(color: meerColorRed);
 var kText17BoldBlack = kText17SemiboldBlack.copyWith(fontWeight: FontWeight.bold);
 
 var kText18RegularMain = fontConfig.copyWith(fontSize: 18.sp, color: meerColorMain);
+var ktext18BoldBlack = kText18BoldWhite.copyWith(color: meerColorBlack);
 var kText18RegularWhite = kText18RegularMain.copyWith(color: meerColorWhite);
 var kText18BoldWhite = kText18RegularWhite.copyWith(fontWeight: FontWeight.bold );
 
