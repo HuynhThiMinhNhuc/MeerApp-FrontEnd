@@ -1,0 +1,3 @@
+class SocketIOHelper {
+  static start() {}
+}

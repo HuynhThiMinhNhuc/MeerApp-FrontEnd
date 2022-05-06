@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/api/_mock/campaign.dart';
 import 'package:meerapp/present/rootapp.dart';
 
 void main() {
@@ -16,13 +20,11 @@ class MeerApp extends StatelessWidget {
       designSize: const Size(360, 780),
       minTextAdapt: true,
       child: MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-        ),
-        debugShowCheckedModeBanner: true,
-        home: const RootApp()
-      ),
+          theme: ThemeData(
+            primarySwatch: Colors.green,
+          ),
+          debugShowCheckedModeBanner: true,
+          home: const RootApp()),
     );
   }
 }
-
