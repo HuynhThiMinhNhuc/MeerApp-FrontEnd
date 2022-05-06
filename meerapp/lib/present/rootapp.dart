@@ -4,6 +4,8 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:meerapp/present/component/post.dart';
+import 'package:meerapp/present/page/homepage.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -38,7 +40,7 @@ class _RootAppState extends State<RootApp> {
   Widget getBody() {
     switch (currentPage) {
       case 0:
-        return Text("Home");
+        return HomePage();
       case 1:
         return Text("urgent page");
       case 2:
