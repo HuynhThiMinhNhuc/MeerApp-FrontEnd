@@ -12,22 +12,23 @@ class PostController {
   List<CampaignPost> _getCampaignPostsFromResponse(
       Map<String, dynamic> jsonResponse) {
     return (jsonResponse['data'] as List<dynamic>)
-        .map((json) => CampaignPost.fromJson(json as Map<String,dynamic>))
+        .map((json) => CampaignPost.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
   List<EmergencyPost> _getEmergencyPostsFromResponse(
       Map<String, dynamic> jsonResponse) {
     return (jsonResponse['data'] as List<dynamic>)
-        .map((json) => EmergencyPost.fromJson(json as Map<String,dynamic>))
+        .map((json) => EmergencyPost.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
   Future<String> _getBody(http.BaseResponse response) async {
-    if (response is http.Response)
+    if (response is http.Response) {
       return response.body;
-    else if (response is http.StreamedResponse)
+    } else if (response is http.StreamedResponse) {
       return response.stream.bytesToString();
+    }
     throw Exception("Wrong type");
   }
 
@@ -61,7 +62,7 @@ class PostController {
   ) async {
     var queryParams = _getSearchQueryParams(startIndex, number);
     var url = Uri.http(ServerUrl, '/campaign/select', queryParams);
-    var response = await http.get(url);
+    var response = await getResponse(http.get(url));
     log(response.request.toString());
 
     var jsonResponse = await _transferToJson(response);
@@ -77,7 +78,7 @@ class PostController {
     var queryParams = _getSearchQueryParams(startIndex, number)
       ..addEntries({'creatorId': userId}.entries);
     var url = Uri.http(ServerUrl, '/campaign/select', queryParams);
-    var response = await http.get(url);
+    var response = await getResponse(http.get(url));
 
     var jsonResponse = await _transferToJson(response);
 
@@ -104,7 +105,7 @@ class PostController {
           .add(await http.MultipartFile.fromPath('banner', post.bannerUrl!));
     }
 
-    var response = await request.send();
+    var response = await getResponse(request.send());
     var jsonResponse = await _transferToJson(response);
 
     return jsonResponse['result'] as bool;
@@ -125,7 +126,7 @@ class PostController {
   ) async {
     var queryParams = _getSearchQueryParams(startIndex, number);
     var url = Uri.http(ServerUrl, '/emergency/select', queryParams);
-    var response = await http.get(url);
+    var response = await getResponse(http.get(url));
 
     var jsonResponse = await _transferToJson(response);
 
@@ -140,7 +141,7 @@ class PostController {
     var queryParams = _getSearchQueryParams(startIndex, number)
       ..addEntries({'creatorId': userId}.entries);
     var url = Uri.http(ServerUrl, '/emergency/select', queryParams);
-    var response = await http.get(url);
+    var response = await getResponse(http.get(url));
 
     var jsonResponse = await _transferToJson(response);
 
@@ -159,7 +160,7 @@ class PostController {
           .add(await http.MultipartFile.fromPath('banner', post.bannerUrl!));
     }
 
-    var response = await request.send();
+    var response = await getResponse(request.send());
     var jsonResponse = await _transferToJson(response);
 
     return jsonResponse['result'] as bool;
@@ -188,7 +189,7 @@ class PostController {
           .add(await http.MultipartFile.fromPath('banner', post.bannerUrl!));
     }
 
-    var response = await request.send();
+    var response = await getResponse(request.send());
     var jsonResponse =
         jsonDecode(await _getBody(response)) as Map<String, dynamic>;
     return response.statusCode == 200 && jsonResponse['result'] == true;
@@ -196,7 +197,7 @@ class PostController {
 
   Future<bool> _delete(String path, List<String> ids) async {
     var url = Uri.http(ServerUrl, '/$path/delete');
-    var response = await http.post(url, body: {'keys': ids});
+    var response = await getResponse(http.post(url, body: {'keys': ids}));
 
     var jsonResponse =
         jsonDecode(await _getBody(response)) as Map<String, dynamic>;

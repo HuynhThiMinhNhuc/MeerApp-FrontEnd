@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -10,19 +12,46 @@ import 'package:meerapp/present/component/post.dart';
 import 'package:meerapp/present/models/post.dart';
 import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
 
   HomePage({Key? key}) : super(key: key);
 
-  Future<List<CampaignPost>> _fetchCampainPosts(
-      int startIndex, int number) async {
-    return _postController.GetCampaigns(startIndex, number);
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final bool isLoading = false;
+  late final List<CampaignPost> listPost;
+
+  @override
+  void initState() {
+    super.initState();
+    listPost = <CampaignPost>[];
+  }
+
+  void _fetchCampainPosts(int startIndex, int number) {
+    try {
+      widget._postController.GetCampaigns(startIndex, number).then((value) {
+        setState(() {
+          listPost.addAll(value);
+        });
+      });
+    } catch (e) {
+      // TODO: Show error
+      log('timeout exception');
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchCampainPosts(0, 10);
   }
 
   @override
   Widget build(BuildContext context) {
-    var w;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -40,37 +69,21 @@ class HomePage extends StatelessWidget {
               style: kText20MediumBlack,
             ),
           ),
-          FutureBuilder(
-            future: _fetchCampainPosts(0, 10),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                // return Column(
-                //   children: List.generate(
-                //     posts.length,
-                //     (index) => Post(
-                //       avatarUrl: posts[index]["avatarUrl"],
-                //       name: posts[index]["name"],
-                //       address: posts[index]["address"],
-                //       postImageUrl: posts[index]["postImageUrl"],
-                //       title: posts[index]["title"],
-                //       time: posts[index]["time"],
-                //       content: posts[index]["content"],
-                //       addressUser: posts[index]["addressUser"],
-                //     ),
-                //   ),
-                // );
-                final data = snapshot.data as List<CampaignPost>;
-                return Column(
-                  children: data.map((post) => Post(postData: post,
-                    )).toList(),
-                );
-              } else if (snapshot.hasError) {
-                return Text('fail');
-              } else {
-                return Text('loading');
-              }
-            },
-          )
+          Builder(builder: (_) {
+            if (listPost.isEmpty) {
+              return Text('Không có bài viết');
+            }
+            return Column(
+              children: [
+                ...listPost
+                    .map((post) => Post(
+                          postData: post,
+                        ))
+                    .toList(),
+                if (isLoading) const Text('loading')
+              ],
+            );
+          })
         ],
       ),
     );
