@@ -12,7 +12,7 @@ class CreateNewCampaignPage extends StatelessWidget {
       backgroundColor: meerColorBackground,
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: meerColorBlackIcon, //change your color here
+          color: meerColorBlackIcon, // ? change your color here
         ),
         centerTitle: true,
         backgroundColor: meerColorBackground,

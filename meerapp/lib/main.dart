@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/api/_mock/campaign.dart';
 import 'package:meerapp/present/rootapp.dart';
+import 'injection.dart' as di;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(const MeerApp());
 }
 

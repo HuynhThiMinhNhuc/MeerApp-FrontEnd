@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/config/helper.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
+import '../models/post.dart';
+
 class Post extends StatelessWidget {
-  final String avatarUrl;
-  final String name;
-  final String addressUser;
-  final String? postImageUrl;
-  final String title;
-  final String content;
-  final String time;
-  final String address;
+  final IPost postData;
+  // final String? avatarUrl;
+  // final String name;
+  // final String? addressUser;
+  // final String? postImageUrl;
+  // final String title;
+  // final String content;
+  // final String time;
+  // final String address;
 
   const Post(
       {Key? key,
-      required this.avatarUrl,
-      required this.name,
-      required this.address,
-      required this.postImageUrl,
-      required this.title,
-      required this.time,
-      required this.addressUser,
-      required this.content})
+      // required this.avatarUrl,
+      // required this.name,
+      // required this.address,
+      // required this.postImageUrl,
+      // required this.title,
+      // required this.time,
+      // required this.addressUser,
+      // required this.content,
+      required this.postData,
+      })
       : super(key: key);
 
   @override
@@ -64,12 +70,12 @@ class Post extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {},
-                          child: Text(name, style: kText15BoldBlack),
+                          child: Text(postData.creator.name, style: kText15BoldBlack),
                         ),
                         SizedBox(
                           height: 2.h,
                         ),
-                        Text(addressUser, style: kText12RegularBlack),
+                        if (postData.creator.address != null) Text(postData.creator.address!, style: kText12RegularBlack),
                       ],
                     )
                   ],
@@ -136,7 +142,7 @@ class Post extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10.w, 10.h, 5.w, 5.h),
                   child: Text(
-                    title,
+                    postData.title,
                     style: kText15BoldBlack,
                   ),
                 ),
@@ -149,7 +155,7 @@ class Post extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),
               child: RichText(
                 text: TextSpan(
-                  text: content,
+                  text: postData.content,
                   style: DefaultTextStyle.of(context).style,
                   children: <TextSpan>[
                     TextSpan(
@@ -157,7 +163,7 @@ class Post extends StatelessWidget {
                       style: kText13BoldBlack,
                     ),
                     TextSpan(
-                      text: address,
+                      text: postData.address,
                       style: kText13RegularBlack,
                     ),
                     TextSpan(
@@ -165,7 +171,7 @@ class Post extends StatelessWidget {
                       style: kText13BoldBlack,
                     ),
                     TextSpan(
-                      text: time,
+                      text: DateTimeToString(postData.timeCreate),
                       style: kText13RegularBlack,
                     ),
                   ],
