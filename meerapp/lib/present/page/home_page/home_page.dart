@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CreateNewCampaign(),
+          const CreateNewCampaign(),
           Container(
             color: meerColorBackground,
             height: 10,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/config/helper.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
@@ -121,6 +122,52 @@ class Post extends StatelessWidget {
                         ),
                       ),
                     ),
+                    PopupMenuItem(
+                      child: InkWell(
+                        onTap: () {},
+                        child: ListTile(
+                          title: Text(
+                            'Chỉnh sửa',
+                            style: kText13RegularBlack,
+                          ),
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      child: InkWell(
+                        onTap: () {
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text(
+                                  'Xóa bài viết'),
+                              content: Text("Bạn chắc chắn muốn xóa bài viết này?"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Hủy'),
+                                  child: Text(
+                                    'Hủy',
+                                    style: kText13BoldMain,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, 'Xóa'),
+                                  child: Text('Xóa', style: kText13BoldMain),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                         child: ListTile(
+                          title: Text(
+                            'Xóa',
+                            style: kText13RegularBlack,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -149,7 +196,7 @@ class Post extends StatelessWidget {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const DetailCampaignPage()),
+                          builder: (context) => const DetailCampaignPage(mode: Status.nonMember,)),
                     )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),
@@ -178,9 +225,7 @@ class Post extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 10.h,
-            ),
+            
           ]),
     );
   }

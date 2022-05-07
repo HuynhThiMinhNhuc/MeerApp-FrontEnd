@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meerapp/api/_mock/campaign.dart';
 import 'package:meerapp/present/rootapp.dart';
 import 'injection.dart' as di;
 
@@ -26,7 +22,7 @@ class MeerApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.green,
           ),
-          debugShowCheckedModeBanner: true,
+          debugShowCheckedModeBanner: false,
           home: const RootApp()),
     );
   }

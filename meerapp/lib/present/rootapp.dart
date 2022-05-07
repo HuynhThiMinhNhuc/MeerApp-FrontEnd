@@ -4,10 +4,12 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:meerapp/present/component/post.dart';
-import 'package:meerapp/present/page/home_page/homepage.dart';
+import 'package:meerapp/present/page/home_page/home_page.dart';
 import 'package:meerapp/present/page/map/map_page.dart';
+import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
+import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 import 'package:meerapp/present/page/profile/profilepage.dart';
+import 'package:meerapp/present/page/urgent_page/urgent_page.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -18,6 +20,7 @@ class RootApp extends StatefulWidget {
 
 class _RootAppState extends State<RootApp> {
   int currentPage = 0;
+  bool controlVisibleFloatingBtn = true;
 
   @override
   void initState() {
@@ -33,8 +36,20 @@ class _RootAppState extends State<RootApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: meerColorWhite,
-      floatingActionButton: FloatingActionButton(onPressed: () {  },
-      child: Icon(FontAwesomeIcons.plus) ),
+      floatingActionButton: Visibility(
+        visible: controlVisibleFloatingBtn,
+        child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => currentPage == 1
+                        ? const CreateNewEmergencyPage()
+                        : CreateNewCampaignPage()),
+              );
+            },
+            child: const Icon(FontAwesomeIcons.pen)),
+      ),
       appBar: getAppBar(),
       body: getBody(),
       bottomNavigationBar: getBottomTabBar(),
@@ -46,7 +61,7 @@ class _RootAppState extends State<RootApp> {
       case 0:
         return HomePage();
       case 1:
-        return Text("urgent page");
+        return UrgentPage();
       case 2:
         return MapPage();
       default:
@@ -96,13 +111,8 @@ class _RootAppState extends State<RootApp> {
 
   AppBar mapAppbar() {
     return AppBar(
+      toolbarHeight: 0,
       backgroundColor: meerColorBackground,
-      title: Text(
-        "Bản đồ",
-        style: kText20MediumBlack,
-      ),
-      elevation: 0,
-      centerTitle: true,
     );
   }
 
@@ -129,6 +139,7 @@ class _RootAppState extends State<RootApp> {
       onTabChangedListener: (int position) {
         setState(() {
           currentPage = position;
+          controlVisibleFloatingBtn = position > 1 ? false : true;
         });
       },
     );
