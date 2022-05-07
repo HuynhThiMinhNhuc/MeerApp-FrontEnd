@@ -106,6 +106,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
               child: Column(
                 children: [
                   ChoiceField(
+                    controller: _locationTextController,
                     icon: Icons.keyboard_arrow_right_outlined,
                     title: 'Chọn địa điểm',
                     onPress: () {},
