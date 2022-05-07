@@ -45,7 +45,7 @@ class _RootAppState extends State<RootApp> {
                 MaterialPageRoute(
                     builder: (context) => currentPage == 1
                         ? const CreateNewEmergencyPage()
-                        : const CreateNewCampaignPage()),
+                        : CreateNewCampaignPage()),
               );
             },
             child: const Icon(FontAwesomeIcons.pen)),

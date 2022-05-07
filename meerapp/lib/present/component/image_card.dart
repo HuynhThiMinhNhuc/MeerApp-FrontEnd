@@ -42,9 +42,9 @@ class _ImageCardState extends State<ImageCard> {
       final image = File('${directory.path}/${basename(picture.path)}');
 
       //Create new image from source image, add temporary to storage app
-      final file = await File(picture.path); //.copy(image.path);
+      final file = File(picture.path); //.copy(image.path);
 
-      this.setState(() {
+      setState(() {
         //Update UI with image
         imageFile = file;
       });
@@ -84,9 +84,9 @@ class _ImageCardState extends State<ImageCard> {
                     top: 0,
                     right: 0,
                     child: IconButton(
-                      icon: Icon(
-                        Icons.cancel_outlined,
-                        color: Color(0xff455154),
+                      icon: const Icon(
+                       Icons.cancel_rounded,
+                        color: Color.fromARGB(206, 173, 173, 173),
                       ),
                       onPressed: _deleteImage,
                     ))

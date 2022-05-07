@@ -6,8 +6,15 @@ import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.d
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
 
+enum Status { 
+   admin, 
+   member, 
+   nonMember, 
+}  
+
 class DetailCampaignPage extends StatefulWidget {
-  const DetailCampaignPage({Key? key}) : super(key: key);
+  final Status mode;
+  const DetailCampaignPage({Key? key, required this.mode}) : super(key: key);
 
   @override
   State<DetailCampaignPage> createState() => _DetailCampaignPageState();
@@ -31,7 +38,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
 
   @override
   Widget build(BuildContext context) {
-    double c_width = MediaQuery.of(context).size.width;
+    double cWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: meerColorWhite,
@@ -100,7 +107,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                             width: 10.w,
                           ),
                           SizedBox(
-                            width: c_width - 110.w,
+                            width: cWidth - 110.w,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
@@ -127,19 +134,31 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                   SizedBox(height: 65.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      iconOverview(Icons.people, 15),
+                    children:  [ 
+                       Visibility(
+                         visible: widget.mode == Status.admin? true : false,
+                         child: ElevatedButton(
+                            onPressed: () {},                       style: ElevatedButton.styleFrom(
+                              alignment: Alignment.center,
+                              fixedSize: Size(100.w, 30.h),
+                              primary: meerColorMain,
+                            ), 
+                            child: Text(
+                              "Mời ",
+                              style: kText13BoldWhite,
+                            ),),
+                       ),
                       SizedBox(width: 10.w),
                       ElevatedButton(
                           onPressed: () {},
                           child: Text(
-                            "Kết thúc",
+                            widget.mode == Status.admin? "Kết thúc" : widget.mode == Status.member? "Hủy đăng ký" : "Đăng ký",
                             style: kText13BoldWhite,
                           ),
                           style: ElevatedButton.styleFrom(
                             alignment: Alignment.center,
-                            fixedSize: Size(100.w, 30.h),
-                            primary: meerColorRed,
+                            fixedSize: Size(120.w, 30.h),
+                            primary: widget.mode == Status.nonMember? meerColorMain : meerColorRed,
                           )),
                       SizedBox(
                         width: 20.w,
