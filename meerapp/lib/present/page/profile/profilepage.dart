@@ -130,21 +130,26 @@ class _ProfilePageState extends State<ProfilePage>
                 ],
               )),
           Column(
-              children: List.generate(
-                  posts.length,
-                  (index) => Post(
-                        avatarUrl: posts[index]["avatarUrl"],
-                        name: posts[index]["name"],
-                        address: posts[index]["address"],
-                        postImageUrl: posts[index]["postImageUrl"],
-                        title: posts[index]["title"],
-                        time: posts[index]["time"],
-                        content: posts[index]["content"],
-                        addressUser: posts[index]["addressUser"],
-                      ))),
+              // TODO: Open comment here
+              // children: List.generate(
+              //     posts.length,
+              //     (index) => Post(
+              //           avatarUrl: posts[index]["avatarUrl"],
+              //           name: posts[index]["name"],
+              //           address: posts[index]["address"],
+              //           postImageUrl: posts[index]["postImageUrl"],
+              //           title: posts[index]["title"],
+              //           time: posts[index]["time"],
+              //           content: posts[index]["content"],
+              //           addressUser: posts[index]["addressUser"],
+              //         ))),
+              // ? Test data
+              children: [Text('test')],)
         ],
       )
-    ]));
+    ],
+            ),
+    );
   }
 
   Widget joinedOverview(String title, int number) {
