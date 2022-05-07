@@ -111,13 +111,8 @@ class _RootAppState extends State<RootApp> {
 
   AppBar mapAppbar() {
     return AppBar(
+      toolbarHeight: 0,
       backgroundColor: meerColorBackground,
-      title: Text(
-        "Bản đồ",
-        style: kText20MediumBlack,
-      ),
-      elevation: 0,
-      centerTitle: true,
     );
   }
 
