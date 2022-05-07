@@ -190,7 +190,7 @@ class Post extends StatelessWidget {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const DetailCampaignPage()),
+                          builder: (context) => const DetailCampaignPage(mode: Status.nonMember,)),
                     )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),
@@ -220,20 +220,6 @@ class Post extends StatelessWidget {
               ),
             ),
             
-             Padding(
-               padding: EdgeInsets.fromLTRB(10.w,0, 0, 10.h),
-               child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text(
-                              "Tham gia ngay",
-                              style: kText13BoldWhite,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              alignment: Alignment.center,
-                              fixedSize: Size(130.w, 30.h),
-                              primary: meerColorMain,
-                            )),
-             ),
           ]),
     );
   }
