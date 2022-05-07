@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/constant/post.dart';
+import 'package:meerapp/controllers/controller.dart';
+import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
+import 'package:meerapp/present/models/post.dart';
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 
 class UrgentPage extends StatelessWidget {
-  const UrgentPage({Key? key}) : super(key: key);
+  PostController _postController = sl.get<PostController>();
+  UrgentPage({Key? key}) : super(key: key);
+
+  Future<List<EmergencyPost>> _fetchEmergencyPosts(
+      int startIndex, int number) async {
+    return _postController.GetEmergencies(startIndex, number);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +35,40 @@ class UrgentPage extends StatelessWidget {
               style: kText20MediumBlack,
             ),
           ),
-          Column(
-              children: List.generate(
-                  posts.length,
-                  (index) => Post(
-                        avatarUrl: posts[index]["avatarUrl"],
-                        name: posts[index]["name"],
-                        address: posts[index]["address"],
-                        postImageUrl: posts[index]["postImageUrl"],
-                        title: posts[index]["title"],
-                        time: posts[index]["time"],
-                        content: posts[index]["content"],
-                        addressUser: posts[index]["addressUser"],
-                      ))),
+          FutureBuilder(
+            future: _fetchEmergencyPosts(0, 10),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                // return Column(
+                //   children: List.generate(
+                //     posts.length,
+                //     (index) => Post(
+                //       avatarUrl: posts[index]["avatarUrl"],
+                //       name: posts[index]["name"],
+                //       address: posts[index]["address"],
+                //       postImageUrl: posts[index]["postImageUrl"],
+                //       title: posts[index]["title"],
+                //       time: posts[index]["time"],
+                //       content: posts[index]["content"],
+                //       addressUser: posts[index]["addressUser"],
+                //     ),
+                //   ),
+                // );
+                final data = snapshot.data as List<EmergencyPost>;
+                return Column(
+                  children: data
+                      .map((post) => Post(
+                            postData: post,
+                          ))
+                      .toList(),
+                );
+              } else if (snapshot.hasError) {
+                return Text('fail');
+              } else {
+                return Text('loading');
+              }
+            },
+          )
         ],
       ),
     );

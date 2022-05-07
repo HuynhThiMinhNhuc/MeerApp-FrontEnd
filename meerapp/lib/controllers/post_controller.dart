@@ -18,8 +18,8 @@ class PostController {
 
   List<EmergencyPost> _getEmergencyPostsFromResponse(
       Map<String, dynamic> jsonResponse) {
-    return (jsonResponse['data'] as List<Map<String, dynamic>>)
-        .map((json) => EmergencyPost.fromJson(json))
+    return (jsonResponse['data'] as List<dynamic>)
+        .map((json) => EmergencyPost.fromJson(json as Map<String,dynamic>))
         .toList();
   }
 
