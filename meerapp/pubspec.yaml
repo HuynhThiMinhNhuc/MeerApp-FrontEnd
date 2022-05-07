@@ -43,6 +43,8 @@ dependencies:
   google_maps_flutter: ^2.1.4
   geolocator: ^8.2.1
   custom_info_window: ^1.0.1
+  image_picker: ^0.8.5
+  path_provider: ^2.0.9
 
 dev_dependencies:
   flutter_test:
