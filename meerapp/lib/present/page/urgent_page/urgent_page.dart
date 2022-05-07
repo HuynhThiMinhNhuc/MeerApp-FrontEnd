@@ -4,28 +4,26 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/post.dart';
 import 'package:meerapp/present/component/post.dart';
-import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
+import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class UrgentPage extends StatelessWidget {
+  const UrgentPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var w;
     return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CreateNewCampaign(),
+          const CreateNewEmergency(),
           Container(
+            height: 20.h,
             color: meerColorBackground,
-            height: 10,
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(10.w, 10.w, 0, 0),
             child: Text(
-              "Bài viết",
+              "Tin khẩn cấp",
               style: kText20MediumBlack,
             ),
           ),
@@ -48,8 +46,8 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class CreateNewCampaign extends StatelessWidget {
-  const CreateNewCampaign({
+class CreateNewEmergency extends StatelessWidget {
+  const CreateNewEmergency({
     Key? key,
   }) : super(key: key);
 
@@ -71,7 +69,7 @@ class CreateNewCampaign extends StatelessWidget {
                   height: 40.h,
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Tạo 1 chiến dịch mới nào!",
+                    "Khẩn cấp? Đăng ngay..",
                     style: kText15RegularGreyNotetext,
                   ),
                 ),
@@ -82,9 +80,10 @@ class CreateNewCampaign extends StatelessWidget {
       ),
       onTap: () => {
         Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => CreateNewCampaignPage()),
-  )
+          context,
+          MaterialPageRoute(
+              builder: (context) => const CreateNewEmergencyPage()),
+        )
       },
     );
   }
