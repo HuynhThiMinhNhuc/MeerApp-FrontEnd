@@ -10,6 +10,7 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/post.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
+import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
 import '../../../models/map.dart';

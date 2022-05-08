@@ -2,25 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/models/post.dart';
-import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
-import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
-import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
+import 'package:meerapp/present/models/status_emerency.dart';
 
-class DetailCampaignPage extends StatefulWidget {
-  final StatusCompaign mode;
-  final CampaignPost? post;
-  const DetailCampaignPage({
-    Key? key,
-    required this.mode,
-    required this.post,
-  }) : super(key: key);
+class DetailEmerencyPage extends StatefulWidget {
+  final StatusEmerency mode;
+  const DetailEmerencyPage({Key? key, required this.mode}) : super(key: key);
 
   @override
-  State<DetailCampaignPage> createState() => _DetailCampaignPageState();
+  State<DetailEmerencyPage> createState() => _DetailEmerencyPageState();
 }
 
-class _DetailCampaignPageState extends State<DetailCampaignPage>
+class _DetailEmerencyPageState extends State<DetailEmerencyPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   int currentTab = 0;
@@ -117,7 +109,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    widget.post?.title ?? "test nef",
+                                    "Chiến dịch làm sạch bãi biển Vũng Tàu",
                                     textAlign: TextAlign.start,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -136,7 +128,8 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Visibility(
-                        visible: widget.mode == Status.admin ? true : false,
+                        visible:
+                            widget.mode == StatusEmerency.admin ? true : false,
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
@@ -150,24 +143,6 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                           ),
                         ),
                       ),
-                      SizedBox(width: 10.w),
-                      ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            widget.mode == Status.admin
-                                ? "Kết thúc"
-                                : widget.mode == Status.member
-                                    ? "Hủy đăng ký"
-                                    : "Đăng ký",
-                            style: kText13BoldWhite,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            alignment: Alignment.center,
-                            fixedSize: Size(120.w, 30.h),
-                            primary: widget.mode == Status.nonMember
-                                ? meerColorMain
-                                : meerColorRed,
-                          )),
                       SizedBox(
                         width: 20.w,
                       )
@@ -183,43 +158,89 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                 ],
               ),
             ),
-            SliverAppBar(
-              pinned: true,
-              stretch: true,
-              floating: true,
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.white,
-              title: TabBar(
-                indicatorColor: meerColorMain,
-                unselectedLabelColor: const Color(0xFF757070),
-                controller: _tabController,
-                labelColor: meerColorMain,
-                labelStyle: kText15BoldMain,
-                tabs: const [
-                  Tab(text: "Giới thiệu"),
-                  Tab(text: "Thành viên"),
-                  Tab(text: "Báo cáo"),
-                ],
-                onTap: (index) {
-                  setState(() {
-                    currentTab = index;
-                  });
-                },
-              ),
-            ),
           ];
         },
-        body: currentTab == 0
-            ? const IntroduceCampaintWidget(
-                nameCreator: "Huỳnh Thị Minh Nhực",
-                datecreate: "17/05/2022",
-                content: "Test",
-                numberjoiner: 17,
-                address: "Khu phố 6 thành p ",
-                time: "25/11/2022")
-            : currentTab == 1
-                ? JoinCamPaignUser()
-                : ReportCampignWidget(),
+        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            child: Text(
+              "Khẩn cấp",
+              style: kText20BoldRed,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Thông tin người gặp nạn",
+                  style: ktext18BoldBlack,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text.rich(
+                  TextSpan(
+                      text: 'Họ và tên: ',
+                      style: kText15BoldBlack,
+                      children: [
+                        TextSpan(text: "Minh Nhực", style: kText15RegularBlack)
+                      ]),
+                ),
+                InkWell(
+                  child: Text.rich(
+                    TextSpan(
+                        text: 'Địa điểm gặp nạn: ',
+                        style: kText15BoldBlack,
+                        children: [
+                          TextSpan(
+                              text: "Đoạn đường Linh Trung Thủ đức",
+                              style: ktext15RegularBlue.copyWith(
+                                  decoration: TextDecoration.underline))
+                        ]),
+                  ),
+                  onTap: () => {
+                    //Todo: navigator to map
+                  },
+                ),
+                Text.rich(
+                  TextSpan(
+                      text: 'Số điện thoại: ',
+                      style: kText15BoldBlack,
+                      children: [
+                        TextSpan(text: "0348771034", style: kText15RegularBlack)
+                      ]),
+                ),
+                Text.rich(
+                  TextSpan(text: 'Email: ', style: kText15BoldBlack, children: [
+                    TextSpan(
+                        text: "huynhthiminhnhuc@gmail.com",
+                        style: kText15RegularBlack)
+                  ]),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Tình hình hiện tại",
+                  style: ktext18BoldBlack,
+                ),
+                SizedBox(
+                  height: 10.h,
+                ),
+                Text(
+                    "Trên đường đi học về mình bị 1 xe máy va chạm rồi bỏ chạy, hiện tại đang bị thương ở chân",
+                    style: kText15RegularBlack),
+              ],
+            ),
+          ),
+        ]),
       ),
     );
   }

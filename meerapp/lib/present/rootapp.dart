@@ -134,7 +134,7 @@ class _RootAppState extends State<RootApp> {
         TabData(iconData: FontAwesomeIcons.house, title: "Bài viết"),
         TabData(iconData: FontAwesomeIcons.hotjar, title: "Khẩn cấp"),
         TabData(iconData: FontAwesomeIcons.locationDot, title: "Bản đồ"),
-        TabData(iconData: FontAwesomeIcons.idCard, title: "Hồ sơ")
+        TabData(iconData: FontAwesomeIcons.userLarge, title: "Hồ sơ")
       ],
       onTabChangedListener: (int position) {
         setState(() {

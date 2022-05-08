@@ -67,6 +67,7 @@ var kText18BoldMain = kText18BoldWhite.copyWith(color: meerColorMain);
 
 var kText20MediumBlack = fontConfig.copyWith(fontSize: 20.sp, fontWeight: FontWeight.w600);
 var kText20BoldBlack = kText20MediumBlack.copyWith( fontWeight: FontWeight.bold);
+var kText20BoldRed = kText20BoldBlack.copyWith( color: meerColorRed);
 
 var kText22BoldMain = fontConfig.copyWith(
     fontSize: 22.sp,

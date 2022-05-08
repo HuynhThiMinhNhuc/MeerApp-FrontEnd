@@ -2,13 +2,14 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get_it/get_it.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/post.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
+
+import 'package:meerapp/present/models/statusPost.dart';
 import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
 
 import '../../../models/post.dart';
@@ -74,13 +75,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 ...listPost
                     .map((post) => Post(
-                          postData: post,
+                          postData: post, mode: StatusPost.campaign,
                         ))
                     .toList(),
                 if (isLoading) const Text('loading')
               ],
             );
           })
+
         ],
       ),
     );

@@ -1,14 +1,12 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/constant/current_user.dart';
 import 'package:meerapp/constant/post.dart';
+import 'package:meerapp/present/models/statusPost.dart';
 import '../../../config/fontconfig.dart';
 import '../../component/post.dart';
-import '../home_page/widget/introduce_campaignwidget.dart';
-import '../home_page/widget/join_campaign_user.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -145,6 +143,7 @@ class _ProfilePageState extends State<ProfilePage>
               //         ))),
               // ? Test data
               children: [Text('test')],)
+
         ],
       )
     ],
