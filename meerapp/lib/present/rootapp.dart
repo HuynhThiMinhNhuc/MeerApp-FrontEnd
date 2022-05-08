@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/present/page/home_page/home_page.dart';
 import 'package:meerapp/present/page/map/map_page.dart';
 import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
+import 'package:meerapp/present/page/new_campaign_page/widget/choice_location_time.dart';
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 import 'package:meerapp/present/page/profile/profilepage.dart';
 import 'package:meerapp/present/page/urgent_page/urgent_page.dart';
