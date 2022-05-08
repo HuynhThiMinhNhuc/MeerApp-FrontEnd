@@ -62,8 +62,13 @@ class _PassWordInputState extends State<PassWordInput> {
           suffixIcon: IconButton(
             icon: widget.ispass
                 ? securi
-                    ? FaIcon(FontAwesomeIcons.eyeSlash, size: 22.h)
-                    : Icon(Icons.remove_red_eye_outlined, size: 25.h)
+                    ? FaIcon(FontAwesomeIcons.eyeSlash,
+                        size: 18.h, color: meerColorMain)
+                    : Icon(
+                        Icons.remove_red_eye_outlined,
+                        size: 23.h,
+                        color: meerColorMain,
+                      )
                 : FaIcon(
                     FontAwesomeIcons.calendar,
                     color: meerColorMain,

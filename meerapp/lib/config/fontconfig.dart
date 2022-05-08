@@ -34,6 +34,8 @@ var kText13RegularMain = kText13BoldBlack.copyWith(
 var kText13BoldMain = kText13RegularMain.copyWith(fontWeight: FontWeight.bold);
 
 var kText14RegularBlack = kText13RegularBlack.copyWith(fontSize: 14.sp);
+var kText14BoldMainColor = fontConfig.copyWith(
+    color: meerColorMain, fontSize: 14.sp, fontWeight: FontWeight.w600);
 
 var kText15RegularGreyNotetext =
     fontConfig.copyWith(fontSize: 15.sp, color: meerColorGreyNoteText);
@@ -60,6 +62,8 @@ var kText16BoldBlack = kText16RegularWhite.copyWith(
     fontWeight: FontWeight.bold, color: meerColorBlack);
 var kText16RegularBlack =
     kText16BoldBlack.copyWith(fontWeight: FontWeight.normal, fontSize: 16.sp);
+var kText16RegularGreyText =
+    fontConfig.copyWith(color: meerColorGreyText, fontSize: 16.sp);
 
 var kText17SemiboldBlack =
     fontConfig.copyWith(fontSize: 17.sp, fontWeight: FontWeight.w600);
@@ -81,14 +85,17 @@ var kText18RegularWhite = kText18RegularMain.copyWith(color: meerColorWhite);
 var kText18BoldWhite =
     kText18RegularWhite.copyWith(fontWeight: FontWeight.bold);
 var kText18BoldMain = kText18BoldWhite.copyWith(color: meerColorMain);
-
+var kText18RegularGreyNoteText = fontConfig.copyWith(
+  fontSize: ScreenUtil().setSp(18.sp),
+  color: meerColorGreyNoteText,
+);
 var kText20BoldMain = fontConfig.copyWith(
     color: meerColorMain, fontSize: 20.sp, fontWeight: FontWeight.w500);
 
 var kText20MediumBlack =
     fontConfig.copyWith(fontSize: 20.sp, fontWeight: FontWeight.w600);
 var kText20BoldBlack = kText20MediumBlack.copyWith(fontWeight: FontWeight.bold);
-var kText20BoldRed = kText20BoldBlack.copyWith( color: meerColorRed);
+var kText20BoldRed = kText20BoldBlack.copyWith(color: meerColorRed);
 
 var kText22BoldMain = fontConfig.copyWith(
     fontSize: 22.sp,
@@ -101,6 +108,20 @@ var kText24MeniumBlack =
 var kText24BoldMain = kText22BoldMain.copyWith(fontSize: 24.sp);
 
 var kText24BoldBlack = kText24MeniumBlack.copyWith(fontWeight: FontWeight.bold);
+
+var kText28BoldGreyNoteText = fontConfig.copyWith(
+  fontSize: 28.sp,
+  color: meerColorGreyText,
+  decoration: TextDecoration.none,
+  overflow: TextOverflow.ellipsis,
+);
+var kText32BoldMain = fontConfig.copyWith(
+  fontSize: 32.sp,
+  color: meerColorMain,
+  decoration: TextDecoration.none,
+  fontWeight: FontWeight.bold,
+);
+
 var kText40BoldMain = fontConfig.copyWith(
   fontSize: 40.sp,
   color: meerColorMain,

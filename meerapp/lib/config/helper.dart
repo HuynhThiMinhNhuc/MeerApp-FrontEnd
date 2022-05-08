@@ -16,6 +16,10 @@ String DateTimeToString(DateTime time) {
       DateFormat('d/M/yyyy').format(time);
 }
 
+String DateTimeToString2(DateTime time) {
+  return DateFormat('d/M/yyyy').format(time);
+}
+
 Future<T> getResponse<T extends BaseResponse>(Future<T> request) {
   return request
       .timeout(Duration(seconds: timeoutHttp)).catchError((error, stackTrace) => throw Exception(error));
