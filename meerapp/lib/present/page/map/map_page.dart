@@ -307,19 +307,17 @@ class MyCustomInfoWindow extends StatelessWidget {
       onTap: () async {
         //TODO: add loading widget
         if (object is EmergencyMap) {
-          var post = await _postController.getEmergencyPostById(object.id);
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return DetailEmerencyPage(
               mode: StatusEmerency.nonadmin,
-              post: post,
+              postId: object.id,
             );
           }));
         } else if (object is CampaignMap) {
-          var post = await _postController.getCampaignPostById(object.id);
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return DetailCampaignPage(
               mode: StatusCompaign.nonMember,
-              post: post,
+              postId: object.id,
             );
           }));
         }
@@ -334,7 +332,6 @@ class MyCustomInfoWindow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TODO: Change InfoWindow here
               Text(
                 object.title,
                 //mapObject.name,

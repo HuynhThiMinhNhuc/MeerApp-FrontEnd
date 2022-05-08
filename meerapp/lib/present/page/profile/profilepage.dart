@@ -8,6 +8,7 @@ import 'package:meerapp/constant/post.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/page/profile/Widgets/profile_overview.dart';
 import 'package:meerapp/present/models/statusPost.dart';
+import 'package:meerapp/singleton/user.dart';
 import '../../../config/fontconfig.dart';
 import '../../component/post.dart';
 
@@ -31,36 +32,21 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width;
-    var dataStream = Stream.fromFuture(Future.wait([
-      UserAPI.getCurrentUserInfo(),
-      UserAPI.getCreatedCampaign(),
-    ]));
+    UserSingleton.instance.refreshUserInfo();
 
     return SingleChildScrollView(
-      child: StreamBuilder<List<MyResponse>>(
-        stream: dataStream,
+      child: StreamBuilder(
+        stream: UserSingleton.instance.userInfoStream.stream,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final userInfo = snapshot.data?[0].data;
-            final createdCampaigns = snapshot.data?[1].data;
-            return Column(
-              children: [
-                ProfileOverView(
-                  mode.My,
-                  fullname: userInfo["fullname"],
-                  description: userInfo["description"],
-                ),
-                _buildToggleButton(),
-                Column(
-                  // TODO: Open comment here
-
-                  children: List<Widget>.empty(),
-                ),
-              ],
-            );
-          } else {
-            return Column();
-          }
+          return Column(
+            children: [
+              ProfileOverView(
+                mode.My,
+              ),
+              _buildToggleButton(),
+              _buildListCreatedCampaign(),
+            ],
+          );
         },
       ),
     );
@@ -127,6 +113,26 @@ class _ProfilePageState extends State<ProfilePage>
               ),
             ),
           ]),
+    );
+  }
+
+  Widget _buildListCreatedCampaign() {
+    return FutureBuilder<MyResponse>(
+      future: UserAPI.getCreatedCampaign(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Column(
+            children: [CircularProgressIndicator()],
+          );
+        }
+
+        final createdCampaigns = snapshot.data!.data as List<dynamic>;
+        return Column(
+          children: createdCampaigns
+              .map((e) => Post(postData: CampaignPost.fromJson(e)))
+              .toList(),
+        );
+      },
     );
   }
 
