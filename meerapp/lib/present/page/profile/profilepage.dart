@@ -50,11 +50,11 @@ class _ProfilePageState extends State<ProfilePage>
                   fullname: userInfo["fullname"],
                   description: userInfo["description"],
                 ),
+                _buildToggleButton(),
                 Column(
                   // TODO: Open comment here
-                  
-          children: [_buildToggleButton(),  List<Widget>.empty(),],
-                    
+
+                  children: List<Widget>.empty(),
                 ),
               ],
             );
