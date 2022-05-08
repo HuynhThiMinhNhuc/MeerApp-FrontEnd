@@ -136,7 +136,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                 ),
                                 Text(
                                   "Địa điểm",
-                                  style: kText13RegularNote,
+                                  style: kText13BoldBlack,
                                 )
                               ],
                             ),
@@ -147,7 +147,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                               padding: EdgeInsets.only(left: 10.w),
                               child: Text(
                                 "Tên địa điểm",
-                                style: kText15BoldBlack,
+                                style: kText15RegularGreyNotetext,
                               ),
                             ),
                             Padding(
@@ -251,7 +251,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                 ),
                                 Text(
                                   "Ngày",
-                                  style: kText13RegularNote,
+                                  style: kText13BoldBlack,
                                 )
                               ],
                             ),
@@ -352,7 +352,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                 ),
                                 Text(
                                   "Giờ",
-                                  style: kText13RegularNote,
+                                  style: kText13BoldBlack,
                                 )
                               ],
                             ),
