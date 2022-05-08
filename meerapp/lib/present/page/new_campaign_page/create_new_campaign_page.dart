@@ -8,6 +8,7 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/user.dart';
 import 'package:meerapp/present/component/image_card.dart';
+import 'package:meerapp/present/page/new_campaign_page/widget/choice_location_time.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
   CreateNewCampaignPage({Key? key}) : super(key: key);
@@ -108,38 +109,14 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                   ChoiceField(
                     controller: _locationTextController,
                     icon: Icons.keyboard_arrow_right_outlined,
-                    title: 'Chọn địa điểm',
-                    onPress: () {},
-                  ),
-                  ChoiceField(
-                    controller: _dateTextController,
-                    icon: Icons.keyboard_arrow_right_outlined,
-                    title: 'Chọn thời gian',
+                    title: 'Thiết lập địa điểm, địa điểm',
                     onPress: () {
-                      showDatePicker(
+                      showModalBottomSheet<void>(
                         context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(DateTime.now().year - 1,
-                            DateTime.now().month, DateTime.now().day),
-                        lastDate: DateTime(DateTime.now().year + 2),
-                      ).then((value) {
-                        startDate = value;
-
-                        if (startDate != null) {
-                          final formattedDate =
-                              DateFormat('dd/MM/yyyy').format(startDate!);
-                          if (formattedDate != _dateTextController.text) {
-                            setState(() {
-                              _dateTextController.text = formattedDate;
-                              print("Date selected: $formattedDate");
-                            });
-                          }
-                        } else {
-                          setState(() {
-                            _dateTextController.text = '';
-                          });
-                        }
-                      });
+                        builder: (BuildContext context) {
+                          return const ChoiceLocationTime();
+                        },
+                      );
                     },
                   ),
                 ],
@@ -376,44 +353,48 @@ class ChoiceField extends StatefulWidget {
 class _ChoiceFieldState extends State<ChoiceField> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            widget.title,
-            style: kText15BoldBlack,
-          ),
-          SizedBox(
-            width: 10.w,
-          ),
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: TextFormField(
-                    readOnly: true,
-                    textAlign: TextAlign.end,
-                    style: kText15RegularBlack,
-                    controller: widget.controller,
-                    decoration: const InputDecoration(border: InputBorder.none),
-                  ),
-                ),
-                IconButton(
-                    iconSize: 20.w,
-                    padding: const EdgeInsets.all(1.0),
-                    onPressed: widget.onPress,
-                    icon: Icon(
-                      widget.icon,
-                      color: meerColorMain,
-                    ))
-              ],
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              widget.title,
+              style: kText15BoldBlack,
             ),
-          ),
-        ],
+            SizedBox(
+              width: 10.w,
+            ),
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: TextFormField(
+                      readOnly: true,
+                      textAlign: TextAlign.end,
+                      style: kText15RegularBlack,
+                      controller: widget.controller,
+                      decoration:
+                          const InputDecoration(border: InputBorder.none),
+                    ),
+                  ),
+                  IconButton(
+                      iconSize: 20.w,
+                      padding: const EdgeInsets.all(1.0),
+                      onPressed: widget.onPress,
+                      icon: Icon(
+                        widget.icon,
+                        color: meerColorMain,
+                      ))
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+      onTap: () => {widget.onPress},
     );
   }
 }

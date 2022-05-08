@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
 import '../../models/map.dart';
@@ -199,7 +200,7 @@ class _MapPageState extends State<MapPage> {
               onTap: () {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
-                  return const DetailCampaignPage(mode: Status.nonMember);
+                  return const DetailCampaignPage(mode: StatusCompaign.admin);
                 }));
               },
               child: Container(

@@ -1,0 +1,4 @@
+enum StatusEmerency { 
+   admin, 
+   nonadmin 
+}  

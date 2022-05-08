@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/config/helper.dart';
+import 'package:meerapp/present/models/statusPost.dart';
+import 'package:meerapp/present/models/status_compaign.dart';
+import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
+import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
+
 
 import '../models/post.dart';
 
@@ -17,6 +21,7 @@ class Post extends StatelessWidget {
   // final String content;
   // final String time;
   // final String address;
+  final StatusPost mode;
 
   const Post(
       {Key? key,
@@ -28,8 +33,10 @@ class Post extends StatelessWidget {
       // required this.time,
       // required this.addressUser,
       // required this.content,
+      required this.mode,
       required this.postData,
       })
+
       : super(key: key);
 
   @override
@@ -59,7 +66,7 @@ class Post extends StatelessWidget {
                       decoration: const  BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: AssetImage("asset/demo.jpg"),)
+                            image: AssetImage("asset/demo.jpg", ),fit: BoxFit.cover)
                             // NetworkImage(avatarUrl), fit: BoxFit.cover),
                       ),
                     ),
@@ -141,7 +148,7 @@ class Post extends StatelessWidget {
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text(
                                   'Xóa bài viết'),
-                              content: Text("Bạn chắc chắn muốn xóa bài viết này?"),
+                              content:const  Text("Bạn chắc chắn muốn xóa bài viết này?"),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () =>
@@ -196,7 +203,7 @@ class Post extends StatelessWidget {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const DetailCampaignPage(mode: Status.nonMember,)),
+                          builder: (context) =>  mode == StatusPost.campaign? const DetailCampaignPage(mode: StatusCompaign.admin,) : const DetailEmerencyPage(mode: StatusEmerency.admin)),
                     )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),
@@ -213,10 +220,10 @@ class Post extends StatelessWidget {
                       text: postData.address,
                       style: kText13RegularBlack,
                     ),
-                    TextSpan(
-                      text: "\n\nThời gian: ",
+                     TextSpan(
+                      text: "\n\nThời gian: " ,
                       style: kText13BoldBlack,
-                    ),
+                    ) ,
                     TextSpan(
                       text: DateTimeToString(postData.timeCreate),
                       style: kText13RegularBlack,
