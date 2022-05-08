@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/models/post.dart';
+import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
@@ -136,7 +137,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Visibility(
-                        visible: widget.mode == Status.admin ? true : false,
+                        visible: widget.mode == StatusCompaign.admin ? true : false,
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
@@ -154,9 +155,9 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                       ElevatedButton(
                           onPressed: () {},
                           child: Text(
-                            widget.mode == Status.admin
+                            widget.mode == StatusCompaign.admin
                                 ? "Kết thúc"
-                                : widget.mode == Status.member
+                                : widget.mode == StatusCompaign.member
                                     ? "Hủy đăng ký"
                                     : "Đăng ký",
                             style: kText13BoldWhite,
@@ -164,7 +165,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                           style: ElevatedButton.styleFrom(
                             alignment: Alignment.center,
                             fixedSize: Size(120.w, 30.h),
-                            primary: widget.mode == Status.nonMember
+                            primary: widget.mode == StatusCompaign.nonMember
                                 ? meerColorMain
                                 : meerColorRed,
                           )),

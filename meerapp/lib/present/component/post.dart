@@ -204,7 +204,7 @@ class Post extends StatelessWidget {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>  mode == StatusPost.campaign? const DetailCampaignPage(mode: StatusCompaign.admin,) : const DetailEmerencyPage(mode: StatusEmerency.admin)),
+                          builder: (context) =>  mode == StatusPost.campaign? const DetailCampaignPage(mode: StatusCompaign.admin, post: null,) : const DetailEmerencyPage(mode: StatusEmerency.admin)),
                     )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),

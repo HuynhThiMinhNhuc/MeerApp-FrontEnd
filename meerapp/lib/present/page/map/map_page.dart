@@ -228,7 +228,7 @@ class MyCustomInfoWindow extends StatelessWidget {
         //TODO: add loading widget
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return const DetailCampaignPage(
-            mode: Status.nonMember,
+            mode: StatusCompaign.nonMember,
             post: null,
           );
         }));
