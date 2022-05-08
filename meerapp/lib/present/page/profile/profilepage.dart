@@ -31,34 +31,36 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width;
-    var dataStream = Stream.fromFuture(Future.wait([
-      UserAPI.getCurrentUserInfo(),
-      UserAPI.getCreatedCampaign(),
-    ]));
+    UserSingleton.instance.refreshUserInfo();
 
     return SingleChildScrollView(
-      child: StreamBuilder<List<MyResponse>>(
-        stream: dataStream,
+      child: StreamBuilder(
+        stream: UserSingleton.instance.userInfoStream.stream,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            final userInfo = snapshot.data?[0].data;
-            final createdCampaigns = snapshot.data?[1].data as List<dynamic>;
-            return Column(
-              children: [
-                ProfileOverView(
-                  mode.My,
-                ),
-                Column(
-                  // TODO: Open comment here
-                  children: createdCampaigns
-                      .map((e) => Post(postData: CampaignPost.fromJson(e)))
-                      .toList(),
-                ),
-              ],
-            );
-          } else {
-            return Column();
-          }
+          return Column(
+            children: [
+              ProfileOverView(
+                mode.My,
+              ),
+              FutureBuilder<MyResponse>(
+                future: UserAPI.getCreatedCampaign(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Column(
+                      children: [CircularProgressIndicator()],
+                    );
+                  }
+
+                  final createdCampaigns = snapshot.data!.data as List<dynamic>;
+                  return Column(
+                    children: createdCampaigns
+                        .map((e) => Post(postData: CampaignPost.fromJson(e)))
+                        .toList(),
+                  );
+                },
+              ),
+            ],
+          );
         },
       ),
     );

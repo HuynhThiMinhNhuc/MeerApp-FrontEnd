@@ -27,7 +27,6 @@ class ProfileOverView extends StatefulWidget {
 class _ProfileOverViewState extends State<ProfileOverView> {
   @override
   Widget build(BuildContext context) {
-    UserSingleton.instance.refreshUserInfo();
     return StreamBuilder<dynamic>(
       stream: UserSingleton.instance.userInfoStream.stream,
       builder: (context, snapshot) {
