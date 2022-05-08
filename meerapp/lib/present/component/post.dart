@@ -67,7 +67,7 @@ class Post extends StatelessWidget {
                       decoration: const  BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: AssetImage("asset/demo.jpg", ),fit: BoxFit.cover)
+                            image: AssetImage("asset/avt1.jpg", ),fit: BoxFit.cover)
                             // NetworkImage(avatarUrl), fit: BoxFit.cover),
                       ),
                     ),
@@ -147,6 +147,7 @@ class Post extends StatelessWidget {
                           showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
+
                               title: const Text(
                                   'Xóa bài viết'),
                               content:const  Text("Bạn chắc chắn muốn xóa bài viết này?"),
@@ -168,7 +169,7 @@ class Post extends StatelessWidget {
                             ),
                           );
                         },
-                         child: ListTile(
+                        child: ListTile(
                           title: Text(
                             'Xóa',
                             style: kText13RegularBlack,
@@ -188,7 +189,7 @@ class Post extends StatelessWidget {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("asset/demo.jpg"),
-                      //NetworkImage(postImageUrl != null ? postImageUrl! : ""),
+                  //NetworkImage(postImageUrl != null ? postImageUrl! : ""),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -233,7 +234,6 @@ class Post extends StatelessWidget {
                 ),
               ),
             ),
-            
           ]),
     );
   }

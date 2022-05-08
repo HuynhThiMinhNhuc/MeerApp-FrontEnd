@@ -12,6 +12,7 @@ const meerColor25BackgroundButton = Color.fromARGB(57, 132, 232, 152);
 const meerColorBlackIcon = Color(0xFF262626);
 
 const meerColorRed = Color(0xFFD35D6E);
+const meerColorLightBlue = Color.fromARGB(255, 12, 142, 218);
 
 const meerColorWhite = Color(0xFFFFFFFF);
 
