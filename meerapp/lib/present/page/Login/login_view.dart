@@ -225,13 +225,12 @@ class _LoginState extends State<LoginPage> {
                   child: RichText(
                       text: TextSpan(
                           text: "Bạn chưa có tài khoản?",
-                          style:
-                              kText16RegularGreyText.copyWith(fontSize: 15.sp),
+                          style: kText15RegularGreyText,
                           children: <TextSpan>[
                         TextSpan(
-                            text: ' Đăng ký!',
-                            style: kText15RegularRed.copyWith(
-                                fontWeight: FontWeight.w600)),
+                          text: ' Đăng ký!',
+                          style: kText15MediumRed,
+                        )
                       ])),
                 ),
               ],

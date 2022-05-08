@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/constant/post.dart';
-import 'package:meerapp/constant/user.dart';
 import 'package:meerapp/present/component/EventJoin.dart';
-import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
-
 class DetailJoinWidget extends StatelessWidget {
   final List campaignList;
   final List emergencyList;
