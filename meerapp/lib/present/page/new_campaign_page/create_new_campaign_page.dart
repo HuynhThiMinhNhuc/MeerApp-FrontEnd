@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/user.dart';
@@ -120,8 +119,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                       );
                     },
                   ),
-                ],
-              ),
+              ])
             ),
             SizedBox(
               height: 10.h,
@@ -355,45 +353,41 @@ class _ChoiceFieldState extends State<ChoiceField> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              widget.title,
-              style: kText15BoldBlack,
-            ),
-            SizedBox(
-              width: 10.w,
-            ),
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: TextFormField(
-                      readOnly: true,
-                      textAlign: TextAlign.end,
-                      style: kText15RegularBlack,
-                      controller: widget.controller,
-                      decoration:
-                          const InputDecoration(border: InputBorder.none),
-                    ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            widget.title,
+            style: kText15BoldBlack,
+          ),
+          SizedBox(
+            width: 10.w,
+          ),
+          Flexible(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Flexible(
+                  child: TextFormField(
+                    readOnly: true,
+                    textAlign: TextAlign.end,
+                    style: kText15RegularBlack,
+                    controller: widget.controller,
+                    decoration: const InputDecoration(border: InputBorder.none),
                   ),
-                  IconButton(
-                      iconSize: 20.w,
-                      padding: const EdgeInsets.all(1.0),
-                      onPressed: widget.onPress,
-                      icon: Icon(
-                        widget.icon,
-                        color: meerColorMain,
-                      ))
-                ],
-              ),
+                ),
+                IconButton(
+                    iconSize: 20.w,
+                    padding: const EdgeInsets.all(1.0),
+                    onPressed: widget.onPress,
+                    icon: Icon(
+                      widget.icon,
+                      color: meerColorMain,
+                    ))
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       onTap: () => {widget.onPress},
     );
