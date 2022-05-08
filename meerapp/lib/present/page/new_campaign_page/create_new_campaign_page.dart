@@ -112,6 +112,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                     title: 'Thiết lập địa điểm, địa điểm',
                     onPress: () {
                       showModalBottomSheet<void>(
+                        backgroundColor: Colors.transparent,
                         context: context,
                         builder: (BuildContext context) {
                           return const ChoiceLocationTime();
