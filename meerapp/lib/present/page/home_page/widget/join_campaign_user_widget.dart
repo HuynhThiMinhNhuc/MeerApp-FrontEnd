@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/constant/user.dart';
+import 'package:meerapp/models/user.dart';
 
 class JoinCamPaignUser extends StatelessWidget {
-  const JoinCamPaignUser({Key? key}) : super(key: key);
+  final List<UserOverview> users;
+  const JoinCamPaignUser({Key? key, required this.users}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +16,11 @@ class JoinCamPaignUser extends StatelessWidget {
         children: [
           Padding(
             padding:  EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-            child: Text("15 thành viên ", style: ktext18BoldBlack,),
+            child: Text("${users.length} thành viên ", style: ktext18BoldBlack,),
           ),
           Column(
             children: List.generate(users.length, (index) => 
-            JoinCampaignUserItem(fullName: users[index]["fullName"], avatarUrl: users[index]["avatarUlr"])
+            JoinCampaignUserItem(fullName: users[index].name, avatarUrl: users[index].avatarUri)
           ),)
         ],
       ),
@@ -29,7 +30,7 @@ class JoinCamPaignUser extends StatelessWidget {
 
 class JoinCampaignUserItem extends StatelessWidget {
   final String fullName;
-  final String avatarUrl;
+  final String? avatarUrl;
   const JoinCampaignUserItem({
     Key? key,
     required this.fullName,
@@ -55,8 +56,8 @@ class JoinCampaignUserItem extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 3),
-              image: const DecorationImage(
-                  image: AssetImage("asset/demo.jpg"),
+              image: DecorationImage(
+                  image: avatarUrl == null ? NetworkImage(avatarUrl!) as ImageProvider : const AssetImage("asset/demo.jpg"),
                   fit: BoxFit.cover),
             ),
           ),

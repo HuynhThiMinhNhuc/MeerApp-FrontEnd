@@ -7,7 +7,7 @@ import 'package:meerapp/present/models/status_emerency.dart';
 
 class DetailEmerencyPage extends StatefulWidget {
   final StatusEmerency mode;
-  final EmergencyPost post;
+  final DetailEmergencyPost post;
   const DetailEmerencyPage({Key? key, required this.mode, required this.post}) : super(key: key);
 
   @override

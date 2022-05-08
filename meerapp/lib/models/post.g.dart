@@ -63,6 +63,10 @@ DetailCampaignPost _$DetailCampaignPostFromJson(Map<String, dynamic> json) =>
       notdone: (json['notdone'] as List<dynamic>)
           .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
           .toList(),
+      email: const _EmailConverter()
+          .fromJson(json['email'] as Map<String, dynamic>),
+      phone: const _PhoneConverter()
+          .fromJson(json['phone'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DetailCampaignPostToJson(DetailCampaignPost instance) =>
@@ -83,6 +87,8 @@ Map<String, dynamic> _$DetailCampaignPostToJson(DetailCampaignPost instance) =>
       'absent': instance.absent,
       'reported': instance.reported,
       'notdone': instance.notdone,
+      'email': const _EmailConverter().toJson(instance.email),
+      'phone': const _PhoneConverter().toJson(instance.phone),
     };
 
 EmergencyPost _$EmergencyPostFromJson(Map<String, dynamic> json) =>
@@ -140,6 +146,10 @@ DetailEmergencyPost _$DetailEmergencyPostFromJson(Map<String, dynamic> json) =>
       notdone: (json['notdone'] as List<dynamic>)
           .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
           .toList(),
+      email: const _EmailConverter()
+          .fromJson(json['email'] as Map<String, dynamic>),
+      phone: const _PhoneConverter()
+          .fromJson(json['phone'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DetailEmergencyPostToJson(
@@ -160,4 +170,6 @@ Map<String, dynamic> _$DetailEmergencyPostToJson(
       'absent': instance.absent,
       'reported': instance.reported,
       'notdone': instance.notdone,
+      'email': const _EmailConverter().toJson(instance.email),
+      'phone': const _PhoneConverter().toJson(instance.phone),
     };
