@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
@@ -28,11 +27,12 @@ class TextInput extends StatelessWidget {
     return TextFormField(
       keyboardType: textInputType,
       controller: textEditingController,
+      style: kText15RegularBlack,
       decoration: InputDecoration(
         prefixIcon: Icon(
           icon,
           color: meerColorMain,
-          size: 23.h,
+          size: 18.h,
         ),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

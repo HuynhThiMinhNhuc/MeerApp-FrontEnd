@@ -52,6 +52,10 @@ dependencies:
   path_provider: ^2.0.9
   flutter_speed_dial: ^6.0.0
   dio: ^4.0.6
+  card_swiper: ^2.0.3
+  flutter_spinkit: ^5.1.0
+  flutter_localizations:
+    sdk: flutter  
 
 dev_dependencies:
   json_serializable: ^6.2.0
@@ -84,7 +88,7 @@ flutter:
     - asset/avt3.jpg
     - asset/location.png
     - asset/Login.png
-
+    - asset/welcome.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

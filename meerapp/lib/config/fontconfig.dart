@@ -47,6 +47,7 @@ var kText15MediumBlack =
 var kText15RegularBlack = kText15RegularMain.copyWith(color: meerColorBlack);
 var kText15RegularRed =
     kText15BoldMain.copyWith(fontWeight: FontWeight.w300, color: meerColorRed);
+var kText15MediumRed = kText15RegularRed.copyWith(fontWeight: FontWeight.w600);
 var kText15BoldBlack = kText15BoldMain.copyWith(color: meerColorBlack);
 var ktext15RegularBlue = kText15RegularBlack.copyWith(color: Colors.blue);
 var kText15BoldGreyHintText = fontConfig.copyWith(
@@ -55,6 +56,9 @@ var kText15BoldGreyHintText = fontConfig.copyWith(
   decoration: TextDecoration.none,
   fontWeight: FontWeight.w400,
 );
+var kText15RegularGreyText =
+    fontConfig.copyWith(color: meerColorGreyText, fontSize: 15.sp);
+var kText16BoldMain = kText15BoldBlack.copyWith(color: meerColorMain);
 
 var kText16RegularWhite =
     fontConfig.copyWith(fontSize: 16.sp, color: meerColorWhite);

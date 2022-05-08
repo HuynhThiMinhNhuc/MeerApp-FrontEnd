@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/api/route/user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/constant/current_user.dart';
 import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
@@ -13,6 +14,7 @@ import 'package:meerapp/singleton/user.dart';
 
 import '../../../../config/fontconfig.dart';
 import '../edit_profile.dart';
+import '../menuView.dart';
 import '../profilepage.dart';
 
 class ProfileOverView extends StatefulWidget {

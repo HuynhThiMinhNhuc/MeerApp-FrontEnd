@@ -41,11 +41,13 @@ class _PassWordInputState extends State<PassWordInput> {
     return TextFormField(
       keyboardType: widget.textInputType,
       controller: widget.textcontroller,
+      style: kText15RegularBlack,
       decoration: InputDecoration(
           prefixIcon: Icon(
             widget.ispass ? Icons.lock : Icons.cake_rounded,
             color: meerColorMain,
             size: 23.h,
+            
           ),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -72,6 +74,7 @@ class _PassWordInputState extends State<PassWordInput> {
                 : FaIcon(
                     FontAwesomeIcons.calendar,
                     color: meerColorMain,
+                    size: 20.h,
                   ),
             color: meerColorBlackIcon,
             onPressed: () {

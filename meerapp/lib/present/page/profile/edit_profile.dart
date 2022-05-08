@@ -484,9 +484,7 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ],
                 ),
-                Padding(
-                    padding: EdgeInsets.only(top: 10.h),
-                    child: StatusSwitch(firstState: true)),
+               
                 Padding(
                   padding: EdgeInsets.only(top: 7.h),
                   child: Align(
