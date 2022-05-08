@@ -8,6 +8,7 @@ import 'package:meerapp/constant/post.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/page/profile/Widgets/profile_overview.dart';
 import 'package:meerapp/present/models/statusPost.dart';
+import 'package:meerapp/singleton/user.dart';
 import '../../../config/fontconfig.dart';
 import '../../component/post.dart';
 
@@ -41,17 +42,17 @@ class _ProfilePageState extends State<ProfilePage>
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final userInfo = snapshot.data?[0].data;
-            final createdCampaigns = snapshot.data?[1].data;
+            final createdCampaigns = snapshot.data?[1].data as List<dynamic>;
             return Column(
               children: [
                 ProfileOverView(
                   mode.My,
-                  fullname: userInfo["fullname"],
-                  description: userInfo["description"],
                 ),
                 Column(
                   // TODO: Open comment here
-                  children: List<Widget>.empty(),
+                  children: createdCampaigns
+                      .map((e) => Post(postData: CampaignPost.fromJson(e)))
+                      .toList(),
                 ),
               ],
             );
