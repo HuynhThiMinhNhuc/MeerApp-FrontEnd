@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,13 +16,46 @@ import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage
 
 import '../../../models/post.dart';
 
-class UrgentPage extends StatelessWidget {
-  PostController _postController = sl.get<PostController>();
+class UrgentPage extends StatefulWidget {
+  final PostController _postController = sl.get<PostController>();
+
   UrgentPage({Key? key}) : super(key: key);
 
-  Future<List<EmergencyPost>> _fetchEmergencyPosts(
-      int startIndex, int number) async {
-    return _postController.GetEmergencies(startIndex, number);
+  @override
+  State<UrgentPage> createState() => _UrgentPageState();
+}
+
+class _UrgentPageState extends State<UrgentPage> {
+  bool isLoading = false;
+  late final List<EmergencyPost> posts;
+
+  @override
+  void initState() {
+    super.initState();
+    posts = <EmergencyPost>[];
+  }
+
+  void _fetchEmergencyPosts(int startIndex, int number) {
+    setState(() {
+      isLoading = true;
+    });
+    widget._postController.GetEmergencies(startIndex, number).then((value) {
+      setState(() {
+        posts.addAll(value);
+      });
+    }).onError((error, stackTrace) {
+      log(error.toString());
+    }).then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchEmergencyPosts(0, 10);
   }
 
   @override
@@ -42,44 +77,28 @@ class UrgentPage extends StatelessWidget {
               style: kText20MediumBlack,
             ),
           ),
-          FutureBuilder(
-            future: _fetchEmergencyPosts(0, 10),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                // return Column(
-                //   children: List.generate(
-                //     posts.length,
-                //     (index) => Post(
-                //       avatarUrl: posts[index]["avatarUrl"],
-                //       name: posts[index]["name"],
-                //       address: posts[index]["address"],
-                //       postImageUrl: posts[index]["postImageUrl"],
-                //       title: posts[index]["title"],
-                //       time: posts[index]["time"],
-                //       content: posts[index]["content"],
-                //       addressUser: posts[index]["addressUser"],
-                //     ),
-                //   ),
-                // );
-                final data = snapshot.data as List<EmergencyPost>;
-                return Column(
-                  children: data
-                      .map((post) => Post(
-                            postData: post, mode: StatusPost.emergency,
-                          ))
-                      .toList(),
-                );
-              } else if (snapshot.hasError) {
-                return Text('fail');
-              } else {
-                return Text('loading');
-              }
-            },
-          )
-
+          _buildListPosts(),
         ],
       ),
     );
+  }
+
+  Widget _buildListPosts() {
+    if (posts.isNotEmpty || isLoading) {
+      return Column(
+        children: [
+          ...posts
+              .map((post) => Post(
+                    postData: post,
+                    mode: StatusPost.campaign,
+                  ))
+              .toList(),
+          if (isLoading) const Text('loading')
+        ],
+      );
+    } else {
+      return Text('Không có bài viết');
+    }
   }
 }
 

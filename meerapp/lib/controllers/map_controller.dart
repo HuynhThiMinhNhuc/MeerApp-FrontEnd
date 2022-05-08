@@ -1,11 +1,11 @@
 part of 'controller.dart';
 
 class MapController extends BaseController {
-  Map<String, dynamic> _getNearbyQueryParams(int lat, int lng) {
+  Map<String, dynamic> _getNearbyQueryParams(double lat, double lng) {
     return <String, dynamic>{
-      'longitude': lng,
-      'latitude': lat,
-      'maxdistance': maxDistanceNearby,
+      'longitude': lng.toString(),
+      'latitude': lat.toString(),
+      'maxdistance': maxDistanceNearby.toString(),
     };
   }
 
@@ -28,31 +28,35 @@ class MapController extends BaseController {
   }
 
 
-  Future<List<CampaignMap>> getCampaignsMap(int lat, int lng) async {
+  Future<List<CampaignMap>> getCampaignsMap(double lat, double lng) async {
     try {
       var response = await dio.get(ServerUrl + '/nearby/campaign',
           queryParameters: _getNearbyQueryParams(lat, lng));
       var jsonResponse = _mapResponseToJson(response);
       
       return _mapJsonToCampaigns(jsonResponse);
+    } on TimeoutException catch(_) {
+      return Future.error(TimeoutException);
     } catch (e) {
-      return Future.error(e);
+      return Future.error('Cannot not get Campaign map');
     }
   }
 
-  Future<List<EmergencyMap>> getEmergencisMap(int lat, int lng) async {
+  Future<List<EmergencyMap>> getEmergenciesMap(double lat, double lng) async {
     try {
       var response = await dio.get(ServerUrl + '/nearby/emergency',
           queryParameters: _getNearbyQueryParams(lat, lng));
       var jsonResponse = _mapResponseToJson(response);
 
       return _mapJsonToEmergencies(jsonResponse);
+    } on TimeoutException catch(_) {
+      return Future.error(TimeoutException);
     } catch (e) {
-      return Future.error(e);
+      return Future.error('Cannot not get Emergency map');
     }
   }
 
-  Future<List<UserMap>> getVolunteerMap(int lat, int lng) async {
+  Future<List<UserMap>> getVolunteerMap(double lat, double lng) async {
     try {
       var response = await dio.get(ServerUrl + '/nearby/campaign',
           queryParameters: _getNearbyQueryParams(lat, lng));

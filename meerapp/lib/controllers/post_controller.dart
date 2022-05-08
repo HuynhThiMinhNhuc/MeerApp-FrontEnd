@@ -22,16 +22,16 @@ class PostController extends BaseController{
   // Campaign
   Future<List<CampaignPost>> _getCampaigns(
       Map<String, dynamic> queryParams) async {
-    // try {
+    try {
       var response = await dio.get(ServerUrl + '/campaign/select',
           queryParameters: queryParams);
 
       var jsonResponse = await _mapResponseToJson(response);
 
       return _getCampaignPostsFromResponse(jsonResponse);
-    // } catch (e) {
-    //   return Future.error(e);
-    // }
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<List<CampaignPost>> GetCampaigns(

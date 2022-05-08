@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,13 @@ import '../../../models/map.dart';
 
 class MapPage extends StatefulWidget {
   final String currentMarkerId = "test"; // ? Get account id
+
+  final CameraPosition initialCameraPosition = CameraPosition(
+    target: DefaultLatLng,
+    zoom: 17,
+  );
+  final CustomInfoWindowController _infoWindowController =
+      CustomInfoWindowController();
   final MapController _mapController = sl.get<MapController>();
 
   MapPage({Key? key}) : super(key: key);
@@ -26,15 +34,12 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  late CameraPosition initialCameraPosition;
-  final CustomInfoWindowController _infoWindowController =
-      CustomInfoWindowController();
   late List<bool> stateToggle = [true, false];
 
   Marker? currentLocation;
-  final Map<IMapObject, Marker> nearEventLocation = <IMapObject, Marker>{};
+  late final List<IMapObject> nearEventLocation;
   Set<Marker> get allMarker {
-    var set = nearEventLocation.values.toSet();
+    var set = nearEventLocation.map((element) => createMaker(element)).toSet();
     if (currentLocation != null) set.add(currentLocation!);
     return set;
   }
@@ -42,25 +47,17 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-
-    var lastKnowPosition = null; //await Geolocator.getLastKnownPosition();
-    initialCameraPosition = CameraPosition(
-      target: lastKnowPosition != null
-          ? convertFromPositionToLatLng(lastKnowPosition)
-          : DefaultLatLng,
-      zoom: 15,
-    );
+    nearEventLocation = [];
   }
 
   @override
   void dispose() {
-    _infoWindowController.dispose();
+    widget._infoWindowController.dispose();
     super.dispose();
   }
 
-  void setMainPosition(LatLng position) {
-    // log("set position to: ${currentLocation!.position.toString()}");
-    _infoWindowController.googleMapController!.animateCamera(
+  void setMainPositionTo(LatLng position) {
+    widget._infoWindowController.googleMapController!.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: position,
@@ -99,16 +96,39 @@ class _MapPageState extends State<MapPage> {
           // TODO: Show description
         },
         infoWindow: InfoWindow());
-    setMainPosition(currentLocation!.position);
+    setMainPositionTo(currentLocation!.position);
   }
 
-  Future<void> _getNearMarker() async {
-    // TODO: fetch api to get nearEventLocation
+  void _getNearPost() {
+    final List<Future> listTask = [];
+
+    if (stateToggle[0]) {
+      listTask.add(widget._mapController.getCampaignsMap(
+        (currentLocation?.position ?? widget.initialCameraPosition.target)
+            .latitude,
+        (currentLocation?.position ?? widget.initialCameraPosition.target)
+            .longitude,
+      ));
+    }
+    if (stateToggle[1]) {
+      listTask.add(widget._mapController.getEmergenciesMap(
+        (currentLocation?.position ?? widget.initialCameraPosition.target)
+            .latitude,
+        (currentLocation?.position ?? widget.initialCameraPosition.target)
+            .longitude,
+      ));
+    }
+
+    Future.wait(listTask).then((listTwo) {
+      setState(() {
+        for (List<IMapObject> posts in listTwo) {
+          nearEventLocation.addAll(posts);
+        }
+      });
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    // ? Mock data
+  void _mockData() {
     IMapObject mapObject = CampaignMap(
       id: 1,
       lat: DefaultLatLng.latitude,
@@ -116,24 +136,48 @@ class _MapPageState extends State<MapPage> {
       title: 'test vị trí',
       time: DateTime.now(),
     );
-    nearEventLocation.addEntries({mapObject: createMaker(mapObject)}.entries);
+    IMapObject map3Object = EmergencyMap(
+      id: 2,
+      lat: DefaultLatLng.latitude + 0.005,
+      lng: DefaultLatLng.longitude,
+      title: 'test vị trí 2',
+      // time: DateTime.now(),
+    );
+    IMapObject map2Object = EmergencyMap(
+      id: 3,
+      lat: DefaultLatLng.latitude - 0.002,
+      lng: DefaultLatLng.longitude + 0.003,
+      title: 'test vị trí 3',
+    );
+
+    nearEventLocation.add(mapObject);
+    nearEventLocation.add(map2Object);
+    nearEventLocation.add(map3Object);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ? Mock data
+    _mockData();
 
     return Scaffold(
       body: Stack(
         children: [
           GoogleMap(
-            initialCameraPosition: initialCameraPosition,
+            initialCameraPosition: widget.initialCameraPosition,
             onMapCreated: (controller) async {
-              _infoWindowController.googleMapController = controller;
+              widget._infoWindowController.googleMapController = controller;
               // await _getCurrentLocation().onError((error, stackTrace) => log("cannot get current location"));
-              await _getNearMarker();
+              _getNearPost();
             },
-            onCameraMove: (position) => {_infoWindowController.onCameraMove!()},
-            onTap: (position) => {_infoWindowController.hideInfoWindow!()},
+            onCameraMove: (position) =>
+                {widget._infoWindowController.onCameraMove!()},
+            onTap: (position) =>
+                {widget._infoWindowController.hideInfoWindow!()},
             markers: allMarker,
           ),
           CustomInfoWindow(
-            controller: _infoWindowController,
+            controller: widget._infoWindowController,
             height: 55,
             width: 150,
             offset: 50,
@@ -142,50 +186,54 @@ class _MapPageState extends State<MapPage> {
             top: 30.h,
             child: Align(
               alignment: Alignment.topCenter,
-              child: Container(
-                padding: EdgeInsets.zero,
-                decoration: const BoxDecoration(
-                  color: meerColorBackground,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                ),
-                child: ToggleButtons(
-                  borderRadius: BorderRadius.circular(30),
-                  fillColor: meerColorMain,
-                  color: meerColorBlack,
-                  selectedColor: meerColorWhite,
-                  onPressed: (index) => setState(() {
-                    stateToggle[index] = !stateToggle[index];
-                  }),
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
-                      child: const Text(
-                        "Chiến dịch",
-                        style: TextStyle(
-                          fontFamily: "Roboto",
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
-                      child: const Text(
-                        "Khẩn cấp",
-                        style: TextStyle(
-                          fontFamily: "Roboto",
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                  isSelected: stateToggle,
-                ),
-              ),
+              child: _buildToggleButton(),
             ),
           )
         ],
+      ),
+    );
+  }
+
+  Widget _buildToggleButton() {
+    return Container(
+      padding: EdgeInsets.zero,
+      decoration: const BoxDecoration(
+        color: meerColorBackground,
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+      ),
+      child: ToggleButtons(
+        borderRadius: BorderRadius.circular(30),
+        fillColor: meerColorMain,
+        color: meerColorBlack,
+        selectedColor: meerColorWhite,
+        onPressed: (index) => setState(() {
+          stateToggle[index] = !stateToggle[index];
+        }),
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
+            child: const Text(
+              "Chiến dịch",
+              style: TextStyle(
+                fontFamily: "Roboto",
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
+            child: const Text(
+              "Khẩn cấp",
+              style: TextStyle(
+                fontFamily: "Roboto",
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+        isSelected: stateToggle,
       ),
     );
   }
@@ -198,16 +246,30 @@ class _MapPageState extends State<MapPage> {
     var newMarker = Marker(
         markerId: MarkerId(mapObject.id.toString()),
         position: mapObject.position,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        icon: _getIcon(mapObject),
         onTap: () {
           //location
-          _infoWindowController.addInfoWindow!(
+          widget._infoWindowController.addInfoWindow!(
             MyCustomInfoWindow(object: mapObject),
             mapObject.position,
           );
         });
 
     return newMarker;
+  }
+
+  BitmapDescriptor _getIcon(IMapObject mapObject) {
+    if (currentLocation != null &&
+        mapObject.position.latitude == currentLocation!.position.latitude &&
+        mapObject.position.longitude == currentLocation!.position.longitude) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue);
+    }
+    if (mapObject is CampaignMap) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed);
+    } else if (mapObject is EmergencyMap) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange);
+    }
+    throw Exception("Not check the mapObject");
   }
 }
 

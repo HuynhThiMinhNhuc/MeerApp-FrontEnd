@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/constant/post.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
@@ -24,22 +23,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final bool isLoading = false;
-  late final List<CampaignPost> listPost;
+  bool isLoading = false;
+  late final List<CampaignPost> posts;
 
   @override
   void initState() {
     super.initState();
-    listPost = <CampaignPost>[];
+    posts = <CampaignPost>[];
   }
 
   void _fetchCampainPosts(int startIndex, int number) {
-
+    setState(() {
+      isLoading = true;
+    });
     widget._postController.GetCampaigns(startIndex, number).then((value) {
       setState(() {
-        listPost.addAll(value);
+        posts.addAll(value);
       });
-    }).onError((error, stackTrace) {log(error.toString());});
+    }).onError((error, stackTrace) {
+      log(error.toString());
+    }).then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   @override
@@ -67,25 +74,28 @@ class _HomePageState extends State<HomePage> {
               style: kText20MediumBlack,
             ),
           ),
-          Builder(builder: (_) {
-            if (listPost.isEmpty) {
-              return Text('Không có bài viết');
-            }
-            return Column(
-              children: [
-                ...listPost
-                    .map((post) => Post(
-                          postData: post, mode: StatusPost.campaign,
-                        ))
-                    .toList(),
-                if (isLoading) const Text('loading')
-              ],
-            );
-          })
-
+          _buildListPosts()
         ],
       ),
     );
+  }
+
+  Widget _buildListPosts() {
+    if (posts.isNotEmpty || isLoading) {
+      return Column(
+        children: [
+          ...posts
+              .map((post) => Post(
+                    postData: post,
+                    mode: StatusPost.campaign,
+                  ))
+              .toList(),
+          if (isLoading) const Text('loading')
+        ],
+      );
+    } else {
+      return Text('Không có bài viết');
+    }
   }
 }
 

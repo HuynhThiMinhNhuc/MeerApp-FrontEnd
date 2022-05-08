@@ -8,10 +8,9 @@ abstract class IMapObject {
   final int id;
   @JsonKey(name: 'latitude')
   final double lat;
-  @JsonKey(name:'longtitude')
+  @JsonKey(name:'longitude')
   final double lng;
   final String title;
-  final DateTime time;
   @JsonKey(ignore: true)
   LatLng get position => LatLng(lat, lng);
 
@@ -20,24 +19,24 @@ abstract class IMapObject {
     required this.lat,
     required this.lng,
     required this.title,
-    required this.time,
   });
 }
 
 @JsonSerializable()
 class CampaignMap extends IMapObject {
+  @JsonKey(name:'dateTimeStart')
+  final DateTime time;
   CampaignMap({
     required int id,
     required double lat,
     required double lng,
     required String title,
-    required DateTime time,
+    required this.time,
   }) : super(
           id: id,
           lat: lat,
           lng: lng,
           title: title,
-          time: time,
         );
                   factory CampaignMap.fromJson(Map<String, dynamic> json) =>
       _$CampaignMapFromJson(json);
@@ -52,13 +51,11 @@ class EmergencyMap extends IMapObject {
     required double lat,
     required double lng,
     required String title,
-    required DateTime time,
   }) : super(
           id: id,
           lat: lat,
           lng: lng,
           title: title,
-          time: time,
         );
 
   factory EmergencyMap.fromJson(Map<String, dynamic> json) =>
@@ -74,13 +71,11 @@ class UserMap extends IMapObject {
     required double lat,
     required double lng,
     required String title,
-    required DateTime time,
   }) : super(
           id: id,
           lat: lat,
           lng: lng,
           title: title,
-          time: time,
         );
 
           factory UserMap.fromJson(Map<String, dynamic> json) =>
