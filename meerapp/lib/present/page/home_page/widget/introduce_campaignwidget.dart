@@ -12,13 +12,17 @@ class IntroduceCampaintWidget extends StatelessWidget {
   final String content;
   final String time;
   final String address;
+  final String email;
+  final String? phone;
   const IntroduceCampaintWidget({ Key? key,
   required this.nameCreator, 
   required this.datecreate,
   required this.content,
   required this.numberjoiner,
   required this.address,
-  required this.time
+  required this.time,
+  required this.email,
+  this.phone,
    }) : super(key: key);
 
   @override
@@ -148,20 +152,20 @@ class IntroduceCampaintWidget extends StatelessWidget {
             Text.rich(
               TextSpan(text: 'Email: ', style: kText15BoldBlack, children: [
                 TextSpan(
-                    text: currentUser["name"].toString(),
+                    text: email,
                     style: kText15RegularBlack)
               ]),
             ),
             SizedBox(
               height: 5.h,
             ),
-            Text.rich(
+            if (phone != null) Text.rich(
               TextSpan(
                   text: 'Số điện thoại: ',
                   style: kText15BoldBlack,
                   children: [
                     TextSpan(
-                        text: currentUser["phone"].toString(),
+                        text: phone,
                         style: kText15RegularBlack)
                   ]),
             ),

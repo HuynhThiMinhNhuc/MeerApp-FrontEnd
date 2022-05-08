@@ -12,13 +12,8 @@ class PostController extends BaseController {
         .toList();
   }
 
-  CampaignPost _getCampaignPostFromResponse(Map<String, dynamic> jsonResponse) {
-    return CampaignPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
-  }
-
-  EmergencyPost _getEmergencyPostFromResponse(
-      Map<String, dynamic> jsonResponse) {
-    return EmergencyPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
+  DetailCampaignPost _getCampaignPostFromResponse(Map<String, dynamic> jsonResponse) {
+    return DetailCampaignPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
   }
 
   List<EmergencyPost> _getEmergencyPostsFromResponse(
@@ -27,6 +22,12 @@ class PostController extends BaseController {
         .map((json) => EmergencyPost.fromJson(json as Map<String, dynamic>))
         .toList();
   }
+
+  DetailEmergencyPost _getEmergencyPostFromResponse(
+      Map<String, dynamic> jsonResponse) {
+    return DetailEmergencyPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
+  }
+
 
   // Campaign
   Future<List<CampaignPost>> _getCampaigns(
@@ -51,7 +52,7 @@ class PostController extends BaseController {
     return _getCampaigns(queryParams);
   }
 
-  Future<CampaignPost> getCampaignPostById(int id) async {
+  Future<DetailCampaignPost> getCampaignPostById(int id) async {
     try {
       var response = await dio.get(ServerUrl + '/campaign/detail/id',
           queryParameters: {'key': id.toString()});
@@ -101,7 +102,7 @@ class PostController extends BaseController {
     return _getEmergencies(queryParams);
   }
 
-  Future<EmergencyPost> getEmergencyPostById(int id) async {
+  Future<DetailEmergencyPost> getEmergencyPostById(int id) async {
     try {
       var response = await dio.get(ServerUrl + '/emergency/detail/id',
           queryParameters: {'key': id.toString()});

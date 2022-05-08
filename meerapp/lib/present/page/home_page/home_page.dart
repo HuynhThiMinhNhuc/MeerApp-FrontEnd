@@ -1,17 +1,17 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
+import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
 
-import 'package:meerapp/present/models/statusPost.dart';
-import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
-
 import '../../../models/post.dart';
+import '../new_campaign_page/create_new_campaign_page.dart';
 
 class HomePage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
@@ -25,14 +25,35 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool isLoading = false;
   late final List<CampaignPost> posts;
+  Timer? debounceLoadPostsTimer;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     posts = <CampaignPost>[];
+    _scrollController.addListener(() async {
+      if (_scrollController.offset >=
+              _scrollController.position.maxScrollExtent &&
+          !_scrollController.position.outOfRange) {
+        // log("reach the bottom");
+
+        if (!isLoading &&
+            (debounceLoadPostsTimer == null ||
+                !debounceLoadPostsTimer!.isActive)) {
+          _fetchCampainPosts(posts.length, pageSize);
+        }
+      }
+      if (_scrollController.offset <=
+              _scrollController.position.minScrollExtent &&
+          !_scrollController.position.outOfRange) {
+        log("reach the top");
+      }
+    });
   }
 
-  void _fetchCampainPosts(int startIndex, int number) {
+  void _fetchCampainPosts(int startIndex, int number) async {
+    log('Fetch data');
     setState(() {
       isLoading = true;
     });
@@ -42,9 +63,13 @@ class _HomePageState extends State<HomePage> {
       });
     }).onError((error, stackTrace) {
       log(error.toString());
-    }).then((value) {
+    }).then((value) async {
       setState(() {
         isLoading = false;
+      });
+      log('fetch complete');
+      debounceLoadPostsTimer = Timer.periodic(Duration(seconds: 2), (timer) {
+        timer.cancel();
       });
     });
   }
@@ -52,12 +77,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _fetchCampainPosts(0, 10);
+    _fetchCampainPosts(0, pageSize);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: _scrollController,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,12 +114,18 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildListPosts() {
     if (posts.isNotEmpty || isLoading) {
-      return Column(
-        children: [
-          ...posts.map((post) => Post(postData: post)).toList(),
-          if (isLoading) const Text('loading')
-        ],
-      );
+      final count = isLoading ? posts.length + 1 : posts.length;
+      return ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: count,
+          itemBuilder: (_, index) {
+            if (index < posts.length) {
+              return Post(postData: posts[index]);
+            } else {
+              return const Text('loading');
+            }
+          });
     } else {
       return Text('Không có bài viết');
     }

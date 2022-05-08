@@ -8,9 +8,11 @@ import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.d
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
 
+import '../../../config/helper.dart';
+
 class DetailCampaignPage extends StatefulWidget {
   final StatusCompaign mode;
-  final CampaignPost post;
+  final DetailCampaignPost post;
   const DetailCampaignPage({
     Key? key,
     required this.mode,
@@ -137,7 +139,8 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Visibility(
-                        visible: widget.mode == StatusCompaign.admin ? true : false,
+                        visible:
+                            widget.mode == StatusCompaign.admin ? true : false,
                         child: ElevatedButton(
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
@@ -153,7 +156,17 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                       ),
                       SizedBox(width: 10.w),
                       ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            switch (widget.mode) {
+                              case StatusCompaign.admin:
+                                return;
+                              case StatusCompaign.member:
+                                return;
+                              case StatusCompaign.nonMember:
+                                return;
+                              default:
+                            }
+                          },
                           child: Text(
                             widget.mode == StatusCompaign.admin
                                 ? "Kết thúc"
@@ -211,16 +224,21 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
           ];
         },
         body: currentTab == 0
-            ? const IntroduceCampaintWidget(
-                nameCreator: "Huỳnh Thị Minh Nhực",
-                datecreate: "17/05/2022",
-                content: "Test",
-                numberjoiner: 17,
-                address: "Khu phố 6 thành p ",
-                time: "25/11/2022")
+            ? IntroduceCampaintWidget(
+                nameCreator: widget.post.creator.name,
+                datecreate: DateTimeToString2(widget.post.timeCreate),
+                content: widget.post.title,
+                numberjoiner: widget.post.joined.length,
+                address: widget.post.address,
+                time: DateTimeToString2(widget.post.timeStart),
+                email: widget.post.email,
+                phone: widget.post.phone,
+              )
             : currentTab == 1
-                ? JoinCamPaignUser()
-                : ReportCampignWidget(),
+                ? JoinCamPaignUser(users: widget.post.joined)
+                : ReportCampignWidget(
+                    usersJoin: widget.post.doned,
+                    usersNotJoin: widget.post.notdone),
       ),
     );
   }

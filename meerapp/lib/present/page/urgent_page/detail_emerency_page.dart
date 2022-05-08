@@ -4,10 +4,12 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
+import 'package:card_swiper/card_swiper.dart';
+import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 
 class DetailEmerencyPage extends StatefulWidget {
   final StatusEmerency mode;
-  final EmergencyPost post;
+  final DetailEmergencyPost post;
   const DetailEmerencyPage({Key? key, required this.mode, required this.post}) : super(key: key);
 
   @override
@@ -36,142 +38,75 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
 
     return Scaffold(
       backgroundColor: meerColorWhite,
-      body: NestedScrollView(
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, value) {
-          return [
-            SliverToBoxAdapter(
-              child: Column(
-                children: [
-                  Stack(clipBehavior: Clip.none, children: [
-                    Container(
-                      height: 200.h,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage("asset/demo.jpg"),
-                            // NetworkImage(
-                            //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
-                            fit: BoxFit.cover),
-                      ),
-                    ),
-                    Positioned(
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      left: 10.w,
-                      top: 30.h,
-                    ),
-                    Positioned(
-                      bottom: -65.h,
-                      left: 5.w,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 90.h,
-                            height: 90.h,
-                            padding: const EdgeInsets.all(3),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                  colors: meerColorGradientActive),
-                            ),
-                            child: Container(
-                              width: 86.h,
-                              height: 86.h,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border:
-                                    Border.all(color: Colors.white, width: 3),
-                                image: DecorationImage(
-                                    alignment: Alignment(0, -0.8.h),
-                                    image: AssetImage("asset/demo.jpg"),
-                                    //const NetworkImage(
-                                    //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10.w,
-                          ),
-                          SizedBox(
-                            width: cWidth - 110.w,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 35.h,
-                                ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    "Chiến dịch làm sạch bãi biển Vũng Tàu",
-                                    textAlign: TextAlign.start,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: kText20MediumBlack,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ]),
-                  SizedBox(height: 65.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Visibility(
-                        visible:
-                            widget.mode == StatusEmerency.admin ? true : false,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            alignment: Alignment.center,
-                            fixedSize: Size(100.w, 30.h),
-                            primary: meerColorMain,
-                          ),
-                          child: Text(
-                            "Mời ",
-                            style: kText13BoldWhite,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 20.w,
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: 20.w, right: 20.w, top: 0, bottom: 0),
-                    child: const Divider(
-                      color: Color(0xFFDDDDDD),
-                    ),
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Center(
+            child: SizedBox(
+              height: 300.h,
+              child: Swiper(
+                itemBuilder: (context, index) {
+                  return Image.asset(
+                    "asset/demo.jpg",
+                    fit: BoxFit.fill,
+                  );
+                },
+                indicatorLayout: PageIndicatorLayout.COLOR,
+                autoplay: false,
+                itemCount: 2,
+                pagination: const SwiperPagination(
+                  builder: SwiperPagination.rect,
+                ),
+                control: const SwiperControl(
+                  color: meerColor80Black,
+                ),
               ),
             ),
-          ];
-        },
-        body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
             child: Text(
-              "Khẩn cấp",
+              "Khẩn cấp - " + "Tai nạn giao thông đoạn đường 12/06",
               style: kText20BoldRed,
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                   style: ElevatedButton.styleFrom(
+                    //alignment: Alignment.center,
+                    primary: meerColorMain,
+                    maximumSize: const Size.fromHeight(40),
+                  ),
+                  child: Text(
+                    "Mời",
+                    style: kText13BoldWhite,
+                  ),
+                ),
+                SizedBox(width: 15.w,),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(10),
+                    primary: meerColorRed, // Background color
+                  ),
+                  child: Text(
+                    "Kết thúc",
+                    style: kText13BoldWhite,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -225,7 +160,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+            padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -241,6 +176,18 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                     style: kText15RegularBlack),
               ],
             ),
+          ),
+           ExpansionTile(
+            title: Text(
+              'Danh sách tham gia',
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+            ),
+            subtitle: const Text('Tình nguyện viên đã giúp đỡ'),
+            children: List.generate(
+                5,
+                (index) => const  JoinCampaignUserItem(
+                    fullName: "Minh Nhuc",
+                    avatarUrl: "asset/avt1.jpg")),
           ),
         ]),
       ),

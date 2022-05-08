@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:meerapp/constant/user.dart';
+import 'package:meerapp/models/user.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 
 class ReportCampignWidget extends StatelessWidget {
-  const ReportCampignWidget({Key? key}) : super(key: key);
+  final List<UserOverview> usersJoin;
+  final List<UserOverview> usersNotJoin;
+  const ReportCampignWidget({Key? key, required this.usersJoin, required this.usersNotJoin,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +20,10 @@ class ReportCampignWidget extends StatelessWidget {
             ),
             subtitle: const Text('Gồm cả người đã và chưa đăng ký '),
             children: List.generate(
-                users.length,
+                usersJoin.length,
                 (index) => JoinCampaignUserItem(
-                    fullName: users[index]["fullName"],
-                    avatarUrl: users[index]["avatarUlr"])),
+                    fullName: usersJoin[index].name,
+                    avatarUrl: usersJoin[index].avatarUri)),
           ),
           ExpansionTile(
             title: const Text(
@@ -32,10 +34,10 @@ class ReportCampignWidget extends StatelessWidget {
               'Đã đăng kí nhưng không tham gia',
             ),
             children: List.generate(
-                users.length,
+                usersNotJoin.length,
                 (index) => JoinCampaignUserItem(
-                    fullName: users[index]["fullName"],
-                    avatarUrl: users[index]["avatarUlr"])),
+                    fullName: usersNotJoin[index].name,
+                    avatarUrl: usersNotJoin[index].avatarUri)),
           ),
         ],
       ),

@@ -188,8 +188,8 @@ class Post extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>  postData is CampaignPost ? 
-                          DetailCampaignPage(mode: StatusCompaign.admin, post: postData as CampaignPost,) 
-                          : DetailEmerencyPage(mode: StatusEmerency.admin, post: postData as EmergencyPost,)),
+                          DetailCampaignPage(mode: StatusCompaign.admin, post: postData as DetailCampaignPost,) 
+                          : DetailEmerencyPage(mode: StatusEmerency.admin, post: postData as DetailEmergencyPost,)),
                     )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),

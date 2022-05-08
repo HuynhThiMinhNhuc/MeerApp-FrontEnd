@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/constant/current_user.dart';
+import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
 import 'package:meerapp/present/page/Login/login_view.dart';
 import 'package:meerapp/present/page/profile/join_view.dart';
 
@@ -13,7 +14,16 @@ import '../profilepage.dart';
 
 class ProfileOverView extends StatefulWidget {
   mode modeProfile;
-  ProfileOverView(this.modeProfile);
+  String avatarImageURI;
+  String fullname;
+  String description;
+
+  ProfileOverView(
+    this.modeProfile, {
+    this.avatarImageURI = "asset/avt1.jpg",
+    this.fullname = "My Default Name",
+    this.description = "Default Description",
+  });
 
   @override
   _ProfileOverViewState createState() => _ProfileOverViewState();
@@ -22,82 +32,7 @@ class ProfileOverView extends StatefulWidget {
 class _ProfileOverViewState extends State<ProfileOverView> {
   @override
   Widget build(BuildContext context) {
-    double c_width = MediaQuery.of(context).size.width;
-    List name = currentUser['fullname'].toString().split(' ');
-    // return Column(
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    //     SizedBox(
-    //       height: 10.h,
-    //     ),
-    //     Row(
-    //       children: [
-    //         //Avatar widget
-    //         Container(
-    //           margin: EdgeInsets.only(left: 10.w),
-    //           width: 90.h,
-    //           height: 90.h,
-    //           padding: const EdgeInsets.all(3),
-    //           decoration: BoxDecoration(
-    //               shape: BoxShape.circle,
-    //               gradient: LinearGradient(colors: meerColorGradientActive)),
-    //           child: Container(
-    //             width: 70.h,
-    //             height: 70.h,
-    //             decoration: BoxDecoration(
-    //               shape: BoxShape.circle,
-    //               border: Border.all(color: Colors.white, width: 5.h),
-    //               image: DecorationImage(
-    //                 fit: BoxFit.cover,
-    //                 image: AssetImage(currentUser['avatarUrl'].toString()),
-    //               ),
-    //             ),
-    //           ),
-    //         ),
-    //         Expanded(
-    //           child: Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //             children: [
-    //               joinedOverview('Đã tạo', 15),
-    //               joinedOverview('Đã tham gia', 15),
-    //               joinedOverview('Bỏ tham gia', 15),
-    //             ],
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //     SizedBox(
-    //       height: 5.h,
-    //     ),
-    //     Padding(
-    //       padding: EdgeInsets.only(top: 7.h, left: 12.w),
-    //       child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.start,
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             Text(
-    //               name[name.length - 2] + ' ' + name[name.length - 1],
-    //               style: kText15BoldBlack,
-    //             ),
-    //             SizedBox(
-    //               height: 7.h,
-    //             ),
-    //             Text(
-    //               currentUser['phoneNumber'].toString(),
-    //               style: kText13RegularBlack,
-    //             ),
-    //             SizedBox(
-    //               height: 7.h,
-    //             ),
-    //             Text(
-    //               currentUser['description'].toString(),
-    //               style: kText13RegularBlack,
-    //             ),
-    //           ]),
-    //     ),
-    //     SizedBox(
-    //       height: 15.h,
-    //     ),
+    List name = widget.fullname.toString().split(' ');
     return Column(
       children: [
         Stack(
@@ -109,7 +44,7 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                 image: DecorationImage(
                     colorFilter: ColorFilter.mode(
                         Colors.black.withOpacity(0.3), BlendMode.darken),
-                    image: AssetImage("asset/avt1.jpg"),
+                    image: MyImage(widget.avatarImageURI),
                     fit: BoxFit.cover),
               ),
             ),
@@ -170,7 +105,7 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                         border: Border.all(color: Colors.white, width: 3),
                         image: DecorationImage(
                             alignment: Alignment(0, -0.8.h),
-                            image: AssetImage("asset/avt1.jpg"),
+                            image: MyImage(widget.avatarImageURI),
                             fit: BoxFit.cover),
                       ),
                     ),
@@ -244,7 +179,7 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                     height: 7.h,
                   ),
                   Text(
-                    currentUser['description'].toString(),
+                    widget.description.toString(),
                     style: kText13RegularBlack,
                   ),
                   SizedBox(
@@ -256,7 +191,7 @@ class _ProfileOverViewState extends State<ProfileOverView> {
             SizedBox(
               height: 20.h,
             ),
-           
+
           ],
         ),
       ],

@@ -81,9 +81,13 @@ class CampaignPost extends IPost {
 class DetailCampaignPost extends CampaignPost {
   final List<UserOverview> joined;
   final List<UserOverview> doned;
-  final List<UserOverview> absent;
+  final List<UserOverview> absent; // Vắng có phép
   final List<UserOverview> reported;
-  final List<UserOverview> notdone;
+  final List<UserOverview> notdone; // Vắng không phép
+  @_EmailConverter()
+  final String email;
+  @_PhoneConverter()
+  final String? phone;
 
   DetailCampaignPost({
     required int id,
@@ -102,6 +106,8 @@ class DetailCampaignPost extends CampaignPost {
     required this.absent,
     required this.reported,
     required this.notdone,
+    required this.email,
+    this.phone,
   }) : super(
           id: id,
           address: address,
@@ -117,7 +123,36 @@ class DetailCampaignPost extends CampaignPost {
         );
 
   factory DetailCampaignPost.fromJson(Map<String, dynamic> json) =>
-      _$DetailCampaignPostFromJson(json);
+      DetailCampaignPost(
+        id: json['id'] as int,
+        address: json['address'] as String,
+        lat: (json['gpslati'] as num).toDouble(),
+        lng: (json['gpslongti'] as num).toDouble(),
+        title: json['title'] as String,
+        content: json['content'] as String,
+        creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
+        timeCreate: DateTime.parse(json['createdAt'] as String),
+        imageUrl: json['imageURI'] as String?,
+        bannerUrl: json['bannerUrl'] as String?,
+        timeStart: DateTime.parse(json['dateTimeStart'] as String),
+        joined: (json['joined'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        doned: (json['doned'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        absent: (json['absent'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        reported: (json['reported'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        notdone: (json['notdone'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        email: json['creator']['email'] as String,
+        phone: json['creator']['phone'] as String?,
+      );
   @override
   Map<String, dynamic> toJson() => _$DetailCampaignPostToJson(this);
 }
@@ -150,6 +185,7 @@ class EmergencyPost extends IPost {
 
   factory EmergencyPost.fromJson(Map<String, dynamic> json) =>
       _$EmergencyPostFromJson(json);
+
   @override
   Map<String, dynamic> toJson() => _$EmergencyPostToJson(this);
 }
@@ -161,6 +197,10 @@ class DetailEmergencyPost extends EmergencyPost {
   final List<UserOverview> absent;
   final List<UserOverview> reported;
   final List<UserOverview> notdone;
+  @_EmailConverter()
+  final String email;
+  @_PhoneConverter()
+  final String? phone;
 
   DetailEmergencyPost({
     required int id,
@@ -178,6 +218,8 @@ class DetailEmergencyPost extends EmergencyPost {
     required this.absent,
     required this.reported,
     required this.notdone,
+    required this.email,
+    this.phone,
   }) : super(
           id: id,
           address: address,
@@ -192,7 +234,63 @@ class DetailEmergencyPost extends EmergencyPost {
         );
 
   factory DetailEmergencyPost.fromJson(Map<String, dynamic> json) =>
-      _$DetailEmergencyPostFromJson(json);
+      DetailEmergencyPost(
+        id: json['id'] as int,
+        address: json['address'] as String,
+        lat: (json['gpslati'] as num).toDouble(),
+        lng: (json['gpslongti'] as num).toDouble(),
+        title: json['title'] as String,
+        content: json['content'] as String,
+        creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
+        timeCreate: DateTime.parse(json['createdAt'] as String),
+        imageUrl: json['imageURI'] as String?,
+        bannerUrl: json['bannerUrl'] as String?,
+        joined: (json['joined'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        doned: (json['doned'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        absent: (json['absent'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        reported: (json['reported'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        notdone: (json['notdone'] as List<dynamic>)
+            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        email: json['creator']['email'] as String,
+        phone: json['creator']['phone'] as String?,
+      );
   @override
   Map<String, dynamic> toJson() => _$DetailEmergencyPostToJson(this);
+}
+
+class _EmailConverter extends JsonConverter<String, Map<String, dynamic>> {
+  const _EmailConverter();
+  @override
+  String fromJson(Map<String, dynamic> json) {
+    return json['creator']['email'];
+  }
+
+  @override
+  Map<String, dynamic> toJson(String object) {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
+}
+
+class _PhoneConverter extends JsonConverter<String?, Map<String, dynamic>> {
+  const _PhoneConverter();
+  @override
+  String? fromJson(Map<String, dynamic> json) {
+    return json['creator']['phone'] as String?;
+  }
+
+  @override
+  Map<String, dynamic> toJson(String? object) {
+    // TODO: implement toJson
+    throw UnimplementedError();
+  }
 }
