@@ -6,11 +6,13 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
-import 'package:meerapp/present/models/post.dart';
+import 'package:meerapp/models/post.dart';
 
 import 'package:meerapp/present/models/statusPost.dart';
 
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
+
+import '../../../models/post.dart';
 
 class UrgentPage extends StatelessWidget {
   PostController _postController = sl.get<PostController>();

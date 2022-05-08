@@ -1,5 +1,5 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:meerapp/present/models/user.dart';
+import 'package:meerapp/models/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'post.g.dart';

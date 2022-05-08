@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/controllers/post_controller.dart';
+import 'package:meerapp/constant/post.dart';
+import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
-import 'package:meerapp/present/models/post.dart';
 
 import 'package:meerapp/present/models/statusPost.dart';
 import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
+
+import '../../../models/post.dart';
 
 class HomePage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
@@ -32,16 +34,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _fetchCampainPosts(int startIndex, int number) {
-    try {
-      widget._postController.GetCampaigns(startIndex, number).then((value) {
-        setState(() {
-          listPost.addAll(value);
-        });
+
+    widget._postController.GetCampaigns(startIndex, number).then((value) {
+      setState(() {
+        listPost.addAll(value);
       });
-    } catch (e) {
-      // TODO: Show error
-      log('timeout exception');
-    }
+    }).onError((error, stackTrace) {log(error.toString());});
   }
 
   @override

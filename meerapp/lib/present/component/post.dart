@@ -9,7 +9,8 @@ import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
 
 
-import '../models/post.dart';
+import '../../models/post.dart';
+
 
 class Post extends StatelessWidget {
   final IPost postData;
