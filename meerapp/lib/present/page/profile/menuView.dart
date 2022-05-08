@@ -40,10 +40,10 @@ class MenuView extends StatelessWidget {
               title: 'Chỉnh sửa hồ sơ',
               iconMenu: Icons.edit_outlined,
               clickMenu: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => EditProfile()),
-                    )
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => EditProfile()),
+                    // )
                   }),
           MenuItem(
             title: 'Đổi mật khẩu',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/api/route/user.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/component/EventJoin.dart';
 
@@ -17,6 +18,10 @@ class DetailJoinWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var future = Future.wait([
+      UserAPI.getDonedCampaign(),
+      UserAPI.getDoneEmergency(),
+    ]);
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.max,

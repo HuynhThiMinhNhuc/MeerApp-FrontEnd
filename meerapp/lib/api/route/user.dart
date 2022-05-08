@@ -12,6 +12,21 @@ class UserAPI {
         ServerUrl + "/user/detail/campaign/created?start=0&count=1000");
   }
 
+  static Future<MyResponse> getDonedCampaign() async {
+    return myAPIWrapper.getWithAuth(
+        ServerUrl + "/user/detail/campaign/doned?start=0&count=1000");
+  }
+
+  static Future<MyResponse> getNotDoneCampaign() async {
+    return myAPIWrapper.getWithAuth(
+        ServerUrl + "/user/detail/campaign/notdoned?start=0&count=1000");
+  }
+
+  static Future<MyResponse> getDoneEmergency() async {
+    return myAPIWrapper.getWithAuth(
+        ServerUrl + "/user/detail/emergency/doned?start=0&count=1000");
+  }
+
   static Future<MyResponse> updateUserInfo(dynamic formdata) async {
     return myAPIWrapper.postWithAuth(
       ServerUrl + "/user/update",
