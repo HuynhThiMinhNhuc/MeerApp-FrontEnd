@@ -5,6 +5,7 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 
 class DetailEmerencyPage extends StatefulWidget {
@@ -78,24 +79,31 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                   style: ElevatedButton.styleFrom(
+                  style: ElevatedButton.styleFrom(
                     //alignment: Alignment.center,
                     primary: meerColorMain,
-                    maximumSize: const Size.fromHeight(40),
+                    fixedSize: Size(100.w, 30.h),
                   ),
                   child: Text(
                     "Mời",
                     style: kText13BoldWhite,
                   ),
                 ),
-                SizedBox(width: 15.w,),
+                SizedBox(
+                  width: 15.w,
+                ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AddJoinerPage()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(10),
-                    primary: meerColorRed, // Background color
+                    primary: meerColorRed,
+                    fixedSize: Size(100.w, 30.h), // Background color
                   ),
                   child: Text(
                     "Kết thúc",
@@ -177,7 +185,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
               ],
             ),
           ),
-           ExpansionTile(
+          ExpansionTile(
             title: Text(
               'Danh sách tham gia',
               style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
@@ -185,9 +193,8 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
             subtitle: const Text('Tình nguyện viên đã giúp đỡ'),
             children: List.generate(
                 5,
-                (index) => const  JoinCampaignUserItem(
-                    fullName: "Minh Nhuc",
-                    avatarUrl: "asset/avt1.jpg")),
+                (index) => const JoinCampaignUserItem(
+                    fullName: "Minh Nhuc", avatarUrl: "asset/avt1.jpg")),
           ),
         ]),
       ),
