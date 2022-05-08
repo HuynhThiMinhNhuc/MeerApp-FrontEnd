@@ -14,27 +14,9 @@ import '../../models/post.dart';
 
 class Post extends StatelessWidget {
   final IPost postData;
-  // final String? avatarUrl;
-  // final String name;
-  // final String? addressUser;
-  // final String? postImageUrl;
-  // final String title;
-  // final String content;
-  // final String time;
-  // final String address;
-  final StatusPost mode;
 
   const Post(
       {Key? key,
-      // required this.avatarUrl,
-      // required this.name,
-      // required this.address,
-      // required this.postImageUrl,
-      // required this.title,
-      // required this.time,
-      // required this.addressUser,
-      // required this.content,
-      required this.mode,
       required this.postData,
       })
 
@@ -205,7 +187,9 @@ class Post extends StatelessWidget {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>  mode == StatusPost.campaign? const DetailCampaignPage(mode: StatusCompaign.admin, post: null,) : const DetailEmerencyPage(mode: StatusEmerency.admin)),
+                          builder: (context) =>  postData is CampaignPost ? 
+                          DetailCampaignPage(mode: StatusCompaign.admin, post: postData as CampaignPost,) 
+                          : DetailEmerencyPage(mode: StatusEmerency.admin, post: postData as EmergencyPost,)),
                     )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),

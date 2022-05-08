@@ -12,7 +12,9 @@ import 'package:meerapp/constant/post.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
+import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
+import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
 
 import '../../../models/map.dart';
 
@@ -131,7 +133,7 @@ class _MapPageState extends State<MapPage> {
         }
       });
     }).onError((error, stackTrace) {
-      return Future.error(error ?? "Cannot find posts");
+      log(error?.toString() ?? "Cannot find posts");
     }).then((value) {
       setState(() {
         isLoadingPosts = false;
@@ -217,11 +219,13 @@ class _MapPageState extends State<MapPage> {
         fillColor: meerColorMain,
         color: meerColorBlack,
         selectedColor: meerColorWhite,
-        onPressed: isLoadingPosts ? null : (index) => setState(() {
-          stateToggle[index] = !stateToggle[index];
-          log('onClick toggle button, button[$index]=${stateToggle[index]}');
-          _getNearPost();
-        }),
+        onPressed: isLoadingPosts
+            ? null
+            : (index) => setState(() {
+                  stateToggle[index] = !stateToggle[index];
+                  log('onClick toggle button, button[$index]=${stateToggle[index]}');
+                  _getNearPost();
+                }),
         children: <Widget>[
           Padding(
             padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
@@ -302,12 +306,23 @@ class MyCustomInfoWindow extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         //TODO: add loading widget
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return const DetailCampaignPage(
-            mode: StatusCompaign.nonMember,
-            post: null,
-          );
-        }));
+        if (object is EmergencyMap) {
+          var post = await _postController.getEmergencyPostById(object.id);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return DetailEmerencyPage(
+              mode: StatusEmerency.nonadmin,
+              post: post,
+            );
+          }));
+        } else if (object is CampaignMap) {
+          var post = await _postController.getCampaignPostById(object.id);
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return DetailCampaignPage(
+              mode: StatusCompaign.nonMember,
+              post: post,
+            );
+          }));
+        }
       },
       child: Container(
         decoration: BoxDecoration(

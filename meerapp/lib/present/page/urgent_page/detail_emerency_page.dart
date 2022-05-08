@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 
 class DetailEmerencyPage extends StatefulWidget {
   final StatusEmerency mode;
-  const DetailEmerencyPage({Key? key, required this.mode}) : super(key: key);
+  final EmergencyPost post;
+  const DetailEmerencyPage({Key? key, required this.mode, required this.post}) : super(key: key);
 
   @override
   State<DetailEmerencyPage> createState() => _DetailEmerencyPageState();

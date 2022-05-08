@@ -1,6 +1,6 @@
 part of 'controller.dart';
 
-class PostController extends BaseController{
+class PostController extends BaseController {
   String _getPathFromPost(IPost post) =>
       post is CampaignPost ? 'campaign' : 'emergency';
 
@@ -10,6 +10,15 @@ class PostController extends BaseController{
     return (jsonResponse['data'] as List<dynamic>)
         .map((json) => CampaignPost.fromJson(json as Map<String, dynamic>))
         .toList();
+  }
+
+  CampaignPost _getCampaignPostFromResponse(Map<String, dynamic> jsonResponse) {
+    return CampaignPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
+  }
+
+  EmergencyPost _getEmergencyPostFromResponse(
+      Map<String, dynamic> jsonResponse) {
+    return EmergencyPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
   }
 
   List<EmergencyPost> _getEmergencyPostsFromResponse(
@@ -40,6 +49,19 @@ class PostController extends BaseController{
   ) async {
     var queryParams = _getSearchQueryParams(startIndex, number);
     return _getCampaigns(queryParams);
+  }
+
+  Future<CampaignPost> getCampaignPostById(int id) async {
+    try {
+      var response = await dio.get(ServerUrl + '/campaign/detail/id',
+          queryParameters: {'key': id.toString()});
+
+      var jsonResponse = await _mapResponseToJson(response);
+
+      return _getCampaignPostFromResponse(jsonResponse);
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<List<CampaignPost>> GetCampaignsByUserId(
@@ -77,6 +99,19 @@ class PostController extends BaseController{
   ) async {
     var queryParams = _getSearchQueryParams(startIndex, number);
     return _getEmergencies(queryParams);
+  }
+
+  Future<EmergencyPost> getEmergencyPostById(int id) async {
+    try {
+      var response = await dio.get(ServerUrl + '/emergency/detail/id',
+          queryParameters: {'key': id.toString()});
+
+      var jsonResponse = await _mapResponseToJson(response);
+
+      return _getEmergencyPostFromResponse(jsonResponse);
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<List<EmergencyPost>> GetEmergenciesByUserId(

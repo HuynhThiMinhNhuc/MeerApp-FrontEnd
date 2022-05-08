@@ -84,12 +84,7 @@ class _HomePageState extends State<HomePage> {
     if (posts.isNotEmpty || isLoading) {
       return Column(
         children: [
-          ...posts
-              .map((post) => Post(
-                    postData: post,
-                    mode: StatusPost.campaign,
-                  ))
-              .toList(),
+          ...posts.map((post) => Post(postData: post)).toList(),
           if (isLoading) const Text('loading')
         ],
       );

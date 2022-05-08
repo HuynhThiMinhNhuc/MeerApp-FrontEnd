@@ -10,7 +10,7 @@ import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dar
 
 class DetailCampaignPage extends StatefulWidget {
   final StatusCompaign mode;
-  final CampaignPost? post;
+  final CampaignPost post;
   const DetailCampaignPage({
     Key? key,
     required this.mode,
@@ -118,7 +118,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    widget.post?.title ?? "test nef",
+                                    widget.post.title,
                                     textAlign: TextAlign.start,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,

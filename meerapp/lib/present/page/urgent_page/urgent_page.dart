@@ -90,7 +90,6 @@ class _UrgentPageState extends State<UrgentPage> {
           ...posts
               .map((post) => Post(
                     postData: post,
-                    mode: StatusPost.campaign,
                   ))
               .toList(),
           if (isLoading) const Text('loading')

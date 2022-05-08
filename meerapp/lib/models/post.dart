@@ -19,7 +19,7 @@ abstract class IPost {
   @JsonKey(name: 'imageURI')
   final String? imageUrl;
   final String? bannerUrl;
-  @JsonKey(name:'createdAt')
+  @JsonKey(name: 'createdAt')
   final DateTime timeCreate;
 
   @JsonKey(ignore: true)
@@ -43,7 +43,7 @@ abstract class IPost {
 
 @JsonSerializable()
 class CampaignPost extends IPost {
-  @JsonKey(name:'dateTimeStart')
+  @JsonKey(name: 'dateTimeStart')
   final DateTime timeStart;
 
   CampaignPost({
@@ -78,6 +78,51 @@ class CampaignPost extends IPost {
 }
 
 @JsonSerializable()
+class DetailCampaignPost extends CampaignPost {
+  final List<UserOverview> joined;
+  final List<UserOverview> doned;
+  final List<UserOverview> absent;
+  final List<UserOverview> reported;
+  final List<UserOverview> notdone;
+
+  DetailCampaignPost({
+    required int id,
+    required String address,
+    required double lat,
+    required double lng,
+    required String title,
+    required String content,
+    required UserOverview creator,
+    required DateTime timeCreate,
+    required String? imageUrl,
+    required String? bannerUrl,
+    required DateTime timeStart,
+    required this.joined,
+    required this.doned,
+    required this.absent,
+    required this.reported,
+    required this.notdone,
+  }) : super(
+          id: id,
+          address: address,
+          lat: lat,
+          lng: lng,
+          title: title,
+          content: content,
+          creator: creator,
+          timeCreate: timeCreate,
+          imageUrl: imageUrl,
+          bannerUrl: bannerUrl,
+          timeStart: timeStart,
+        );
+
+  factory DetailCampaignPost.fromJson(Map<String, dynamic> json) =>
+      _$DetailCampaignPostFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$DetailCampaignPostToJson(this);
+}
+
+@JsonSerializable()
 class EmergencyPost extends IPost {
   EmergencyPost({
     required int id,
@@ -107,4 +152,47 @@ class EmergencyPost extends IPost {
       _$EmergencyPostFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$EmergencyPostToJson(this);
+}
+
+@JsonSerializable()
+class DetailEmergencyPost extends EmergencyPost {
+  final List<UserOverview> joined;
+  final List<UserOverview> doned;
+  final List<UserOverview> absent;
+  final List<UserOverview> reported;
+  final List<UserOverview> notdone;
+
+  DetailEmergencyPost({
+    required int id,
+    required String address,
+    required double lat,
+    required double lng,
+    required String title,
+    required String content,
+    required UserOverview creator,
+    required DateTime timeCreate,
+    required String? imageUrl,
+    required String? bannerUrl,
+    required this.joined,
+    required this.doned,
+    required this.absent,
+    required this.reported,
+    required this.notdone,
+  }) : super(
+          id: id,
+          address: address,
+          lat: lat,
+          lng: lng,
+          title: title,
+          content: content,
+          creator: creator,
+          timeCreate: timeCreate,
+          imageUrl: imageUrl,
+          bannerUrl: bannerUrl,
+        );
+
+  factory DetailEmergencyPost.fromJson(Map<String, dynamic> json) =>
+      _$DetailEmergencyPostFromJson(json);
+  @override
+  Map<String, dynamic> toJson() => _$DetailEmergencyPostToJson(this);
 }
