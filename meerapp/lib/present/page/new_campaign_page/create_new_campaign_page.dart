@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/user.dart';
 import 'package:meerapp/present/component/image_card.dart';
-import 'package:meerapp/present/page/new_campaign_page/widget/choice_location_time.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
   const CreateNewCampaignPage({Key? key}) : super(key: key);
@@ -32,6 +32,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
   late TextEditingController _descriptionTextController;
 
   late TextEditingController _requireTextController;
+  bool isSwitched = false;
   late File avatarImage;
   late File backgroundImage;
   DateTime? startDate;
@@ -40,7 +41,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
   void initState() {
     super.initState();
     _nameTextController = TextEditingController();
-    _dateTextController = TextEditingController();
+    _dateTextController = TextEditingController(text: "Chọn thời gian tổ chức");
     _locationTextController = TextEditingController();
     _descriptionTextController = TextEditingController();
     _requireTextController = TextEditingController();
@@ -104,30 +105,325 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                   color: meerColorWhite,
                 ),
                 child: Column(children: [
-                  ChoiceField(
-                    controller: _locationTextController,
-                    icon: Icons.keyboard_arrow_right_outlined,
-                    title: 'Thiết lập thời gian, địa điểm',
-                    onPress: () {
-                      showModalBottomSheet(
-                        isScrollControlled: true,
-                        backgroundColor: Colors.transparent,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DraggableScrollableSheet(
-                            initialChildSize: 0.95,
-                            maxChildSize: 1,
-                            minChildSize: 0.25,
-                            builder: (BuildContext context,
-                                ScrollController scrollController) {
-                              return const ChoiceLocationTime();
-                            },
-                          );
-                          //return const ChoiceLocationTime();
-                        },
-                      );
-                    },
+                  Container(
+                    decoration: BoxDecoration(
+                        color: meerColorWhite,
+                        borderRadius: BorderRadius.all(Radius.circular(10.w))),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.all(15.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Thời gian, địa điểm ",
+                              style: kText15BoldBlack,
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.locationDot,
+                                  color: meerColorRed,
+                                  size: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                Text(
+                                  "Địa điểm",
+                                  style: kText13RegularNote,
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.w),
+                              child: Text(
+                                "Tên địa điểm",
+                                style: kText15BoldBlack,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: TextFormField(),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(width: 10.w),
+                                Text(
+                                  "Sử dụng vị trí hiện tại của bạn ",
+                                  style: kText15RegularBlack,
+                                ),
+                                Flexible(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Switch(
+                                        value: isSwitched,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isSwitched = value;
+                                            print(isSwitched);
+                                          });
+                                        },
+                                        activeTrackColor:
+                                            Colors.lightGreenAccent,
+                                        activeColor: Colors.green,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Stack(
+                              children: [
+                                Container(
+                                  height: 120.h,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      image: const DecorationImage(
+                                          image:
+                                              AssetImage("asset/location.png"),
+                                          fit: BoxFit.cover)),
+                                ),
+                                Positioned(
+                                    child: Container(
+                                  height: 35.h,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Flexible(
+                                        child: TextFormField(
+                                          readOnly: true,
+                                          textAlign: TextAlign.start,
+                                          style: kText13RegularBlack.copyWith(
+                                              color: meerColorWhite),
+                                          controller: _locationTextController,
+                                          decoration: const InputDecoration(
+                                              border: InputBorder.none),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          FontAwesomeIcons.angleRight,
+                                          color: meerColorBlack,
+                                          size: 20,
+                                        ),
+                                        onPressed: () => {
+                                          //TODO: navigate to map to get location
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  decoration: const BoxDecoration(
+                                      color: Color.fromARGB(92, 0, 0, 0),
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20))),
+                                ))
+                              ],
+                            ),
+                            SizedBox(
+                              height: 15.h,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.calendar,
+                                  color: meerColorMain,
+                                  size: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                Text(
+                                  "Ngày",
+                                  style: kText13RegularNote,
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: InputDecorator(
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(7.w, 0, 0, 0),
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(4.0)),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Flexible(
+                                              child: TextFormField(
+                                                readOnly: true,
+                                                textAlign: TextAlign.start,
+                                                style: kText15RegularBlack,
+                                                controller: _dateTextController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        border:
+                                                            InputBorder.none),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                  FontAwesomeIcons.caretDown),
+                                              onPressed: () => {
+                                                showDatePicker(
+                                                  context: context,
+                                                  initialDate: DateTime.now(),
+                                                  firstDate: DateTime(
+                                                      DateTime.now().year - 1,
+                                                      DateTime.now().month,
+                                                      DateTime.now().day),
+                                                  lastDate: DateTime(
+                                                      DateTime.now().year + 2),
+                                                ).then((value) {
+                                                  startDate = value;
+
+                                                  if (startDate != null &&
+                                                      startDate != "") {
+                                                    final formattedDate =
+                                                        DateFormat('dd/MM/yyyy')
+                                                            .format(startDate!);
+                                                    if (formattedDate !=
+                                                        _dateTextController
+                                                            .text) {
+                                                      setState(() {
+                                                        _dateTextController
+                                                                .text =
+                                                            formattedDate;
+                                                        print(
+                                                            "Date selected: $formattedDate");
+                                                      });
+                                                    }
+                                                  } else {
+                                                    setState(() {
+                                                      _dateTextController.text =
+                                                          '';
+                                                    });
+                                                  }
+                                                })
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            SizedBox(
+                              height: 15.h,
+                            ),
+                            Row(
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.clock,
+                                  color: meerColorMain,
+                                  size: 20.w,
+                                ),
+                                SizedBox(
+                                  width: 5.w,
+                                ),
+                                Text(
+                                  "Giờ",
+                                  style: kText13RegularNote,
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                            TimePickerDialog(
+                              hourLabelText: "Giờ",
+                              minuteLabelText: "Phút",
+                              initialTime: TimeOfDay(
+                                hour: DateTime.now().hour,
+                                minute: DateTime.now().minute,
+                              ),
+                              initialEntryMode: TimePickerEntryMode.input,
+                              cancelText: "",
+                              confirmText: "",
+                              onEntryModeChanged: (time) => {
+                                //Todo: save data time
+                              },
+                            ),
+                            SizedBox(
+                              height: 10.h,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 10.h),
+                  //   child: Row(
+                  //     mainAxisSize: MainAxisSize.max,
+                  //     mainAxisAlignment: MainAxisAlignment.start,
+                  //     children: <Widget>[
+                  //       Text(
+                  //         "Thời gian",
+                  //         style: kText15BoldBlack,
+                  //       ),
+                  //       SizedBox(
+                  //         width: 15.w,
+                  //       ),
+                  //       Flexible(
+                  //           child: Text(
+                  //         "12:14 ngày 17/03/2022",
+                  //         style: kText15RegularBlack,
+                  //       ))
+                  //     ],
+                  //   ),
+                  // ),
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(15.w, 5.h, 10.w, 10.h),
+                  //   child: Row(
+                  //     mainAxisSize: MainAxisSize.max,
+                  //     mainAxisAlignment: MainAxisAlignment.start,
+                  //     children: <Widget>[
+                  //       Text(
+                  //         "Địa điểm",
+                  //         style: kText15BoldBlack,
+                  //       ),
+                  //       SizedBox(
+                  //         width: 15.w,
+                  //       ),
+                  //       Flexible(
+                  //           child: Text(
+                  //         "Khu phố 6, thành phố Thủ Đức, thành phố Hồ Chí Minh",
+                  //         style: kText15RegularBlack.copyWith(
+                  //             overflow: TextOverflow.ellipsis),
+                  //       ))
+                  //     ],
+                  //   ),
+                  // ),
                 ])),
             SizedBox(
               height: 10.h,
@@ -364,6 +660,9 @@ class _ChoiceFieldState extends State<ChoiceField> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          SizedBox(
+            width: 10.w,
+          ),
           Text(
             widget.title,
             style: kText15BoldBlack,

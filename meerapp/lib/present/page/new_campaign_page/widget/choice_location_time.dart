@@ -35,7 +35,8 @@ class _ChoiceLocationTimeState extends State<ChoiceLocationTime> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return
+     Container(
       decoration: const BoxDecoration(
           color: meerColorWhite,
           borderRadius: BorderRadius.only(
@@ -83,13 +84,14 @@ class _ChoiceLocationTimeState extends State<ChoiceLocationTime> {
                   )
                 ],
               ),
+              
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(width: 10.w),
                   Text(
                     "Sử dụng vị trí hiện tại của bạn ",
-                    style: kText15BoldBlack,
+                    style: kText15RegularBlack,
                   ),
                   Flexible(
                     child: Row(
@@ -110,6 +112,20 @@ class _ChoiceLocationTimeState extends State<ChoiceLocationTime> {
                     ),
                   ),
                 ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(left:10.w),
+                child: Text(
+                  "Tên địa điểm",
+                  style: kText15BoldBlack,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: TextFormField(),
+              ),
+              SizedBox(
+                height: 10.h,
               ),
               Stack(
                 children: [
@@ -158,20 +174,7 @@ class _ChoiceLocationTimeState extends State<ChoiceLocationTime> {
                   ))
                 ],
               ),
-              SizedBox(
-                height: 10.h,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 5.w),
-                child: Text(
-                  "Tên địa điểm",
-                  style: kText15BoldBlack,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: TextFormField(),
-              ),
+              
               SizedBox(
                 height: 10.h,
               ),
@@ -322,5 +325,6 @@ class _ChoiceLocationTimeState extends State<ChoiceLocationTime> {
         ),
       ),
     );
+ 
   }
 }
