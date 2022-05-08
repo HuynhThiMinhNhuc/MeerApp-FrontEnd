@@ -35,6 +35,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   late List<bool> stateToggle = [true, false];
+  bool isLoadingPosts = false;
 
   Marker? currentLocation;
   late final List<IMapObject> nearEventLocation;
@@ -101,6 +102,9 @@ class _MapPageState extends State<MapPage> {
 
   void _getNearPost() {
     final List<Future> listTask = [];
+    setState(() {
+      isLoadingPosts = true;
+    });
 
     if (stateToggle[0]) {
       listTask.add(widget._mapController.getCampaignsMap(
@@ -121,9 +125,16 @@ class _MapPageState extends State<MapPage> {
 
     Future.wait(listTask).then((listTwo) {
       setState(() {
+        nearEventLocation.clear();
         for (List<IMapObject> posts in listTwo) {
           nearEventLocation.addAll(posts);
         }
+      });
+    }).onError((error, stackTrace) {
+      return Future.error(error ?? "Cannot find posts");
+    }).then((value) {
+      setState(() {
+        isLoadingPosts = false;
       });
     });
   }
@@ -158,7 +169,7 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     // ? Mock data
-    _mockData();
+    // _mockData();
 
     return Scaffold(
       body: Stack(
@@ -206,8 +217,10 @@ class _MapPageState extends State<MapPage> {
         fillColor: meerColorMain,
         color: meerColorBlack,
         selectedColor: meerColorWhite,
-        onPressed: (index) => setState(() {
+        onPressed: isLoadingPosts ? null : (index) => setState(() {
           stateToggle[index] = !stateToggle[index];
+          log('onClick toggle button, button[$index]=${stateToggle[index]}');
+          _getNearPost();
         }),
         children: <Widget>[
           Padding(
@@ -244,7 +257,8 @@ class _MapPageState extends State<MapPage> {
 
   Marker createMaker(IMapObject mapObject) {
     var newMarker = Marker(
-        markerId: MarkerId(mapObject.id.toString()),
+        markerId: MarkerId(
+            mapObject.id.toString() + mapObject.runtimeType.toString()),
         position: mapObject.position,
         icon: _getIcon(mapObject),
         onTap: () {
