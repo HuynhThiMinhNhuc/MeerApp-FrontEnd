@@ -50,12 +50,13 @@ class Post extends StatelessWidget {
                     Container(
                       width: 40.h,
                       height: 40.h,
-                      decoration: const  BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: AssetImage("asset/demo.jpg"),)
-                            // NetworkImage(avatarUrl), fit: BoxFit.cover),
-                      ),
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage("asset/avt1.jpg"),
+                          )
+                          // NetworkImage(avatarUrl), fit: BoxFit.cover),
+                          ),
                     ),
                     SizedBox(
                       width: 10.w,
@@ -133,9 +134,9 @@ class Post extends StatelessWidget {
                           showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              title: const Text(
-                                  'Xóa bài viết'),
-                              content: Text("Bạn chắc chắn muốn xóa bài viết này?"),
+                              title: const Text('Xóa bài viết'),
+                              content:
+                                  Text("Bạn chắc chắn muốn xóa bài viết này?"),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () =>
@@ -154,7 +155,7 @@ class Post extends StatelessWidget {
                             ),
                           );
                         },
-                         child: ListTile(
+                        child: ListTile(
                           title: Text(
                             'Xóa',
                             style: kText13RegularBlack,
@@ -174,7 +175,7 @@ class Post extends StatelessWidget {
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("asset/demo.jpg"),
-                      //NetworkImage(postImageUrl != null ? postImageUrl! : ""),
+                  //NetworkImage(postImageUrl != null ? postImageUrl! : ""),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -219,21 +220,20 @@ class Post extends StatelessWidget {
                 ),
               ),
             ),
-            
-             Padding(
-               padding: EdgeInsets.fromLTRB(10.w,0, 0, 10.h),
-               child: ElevatedButton(
-                            onPressed: () {},
-                            child: Text(
-                              "Tham gia ngay",
-                              style: kText13BoldWhite,
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              alignment: Alignment.center,
-                              fixedSize: Size(130.w, 30.h),
-                              primary: meerColorMain,
-                            )),
-             ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(10.w, 0, 0, 10.h),
+              child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Tham gia ngay",
+                    style: kText13BoldWhite,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    alignment: Alignment.center,
+                    fixedSize: Size(130.w, 30.h),
+                    primary: meerColorMain,
+                  )),
+            ),
           ]),
     );
   }

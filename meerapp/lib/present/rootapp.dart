@@ -124,12 +124,7 @@ class _RootAppState extends State<RootApp> {
   AppBar profileAppbar() {
     return AppBar(
       backgroundColor: meerColorBackground,
-      title: Text(
-        "Tài khoản",
-        style: kText20MediumBlack,
-      ),
-      elevation: 0,
-      centerTitle: true,
+      toolbarHeight: 0.h,
     );
   }
 
