@@ -3,14 +3,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/user.dart';
+import 'package:meerapp/controllers/controller.dart';
+import 'package:meerapp/injection.dart';
+import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/component/image_card.dart';
+import 'package:meerapp/present/page/new_campaign_page/widget/map.dart';
+import 'package:meerapp/singleton/user.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
-  const CreateNewCampaignPage({Key? key}) : super(key: key);
+  final PostController _postController = sl.get<PostController>();
+  CreateNewCampaignPage({Key? key}) : super(key: key);
 
   static const List<String> _userName = <String>[
     'Huynh Nhuc',
@@ -34,10 +41,13 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
   late TextEditingController _descriptionTextController;
 
   late TextEditingController _requireTextController;
+
+  DateTime hourTimeStart = DateTime(1);
   bool isSwitched = false;
-  late File avatarImage;
-  late File backgroundImage;
+  late File? avatarImage;
+  late File? backgroundImage;
   DateTime? startDate;
+  LatLng? location;
 
   @override
   void initState() {
@@ -75,6 +85,22 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('Lưu'),
+            ),
+          ],
+        ),
+      );
+      return false;
+    }
+    if (location == null) {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Lỗi'),
+          content: const Text('Vui lòng chọn địa điểm diễn ra sự kiện'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
               child: const Text('Lưu'),
             ),
           ],
@@ -227,8 +253,8 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                           color: meerColorBlack,
                                           size: 20,
                                         ),
-                                        onPressed: () => {
-                                          //TODO: navigate to map to get location
+                                        onPressed: () async {
+                                          location = await Navigator.of(context).push<LatLng?>(MaterialPageRoute(builder: (_)=>MyMap()));
                                         },
                                       )
                                     ],
@@ -367,65 +393,14 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: InputDecorator(
-                                  decoration: InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(7.w, 0, 0, 0),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(4.0)),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Flexible(
-                                              child: TextFormField(
-                                                readOnly: true,
-                                                textAlign: TextAlign.start,
-                                                style: kText15RegularBlack,
-                                                controller: _timeTextController,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        border:
-                                                            InputBorder.none),
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                  FontAwesomeIcons.caretDown),
-                                              onPressed: () => {
-                                                 showTimePicker(
-                                                     hourLabelText: "Giờ",
-                                                      minuteLabelText: "Phút",
-                                                      initialTime: TimeOfDay(
-                                                        hour: DateTime.now().hour,
-                                                        minute: DateTime.now().minute,
-                                                      ),
-                                                      initialEntryMode: TimePickerEntryMode.input,
-                                                      cancelText: "Hủy",
-                                                      confirmText: "Lưu",
-                                                      onEntryModeChanged: (time) => {
-                                                        //Todo: save data time
-                                                      },
-                                                  context: context,
-
-                                                  )
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )),
+                            TimePickerDialog(
+                              hourLabelText: "Giờ",
+                              minuteLabelText: "Phút",
+                              initialTime: TimeOfDay(
+                                hour: DateTime.now().hour,
+                                minute: DateTime.now().minute,
+                              ),
+                              initialEntryMode: TimePickerEntryMode.input,
                             ),
                             
                             SizedBox(
@@ -521,11 +496,17 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                           onImageChanged: (file) {
                             backgroundImage = file;
                           },
+                          onImageDeleted: () {
+                            backgroundImage = null;
+                          },
                         ),
                         ImageCard(
                           hintTitle: "+ Ảnh đại diện",
                           onImageChanged: (file) {
                             avatarImage = file;
+                          },
+                          onImageDeleted: () {
+                            avatarImage = null;
                           },
                         ),
                       ],
@@ -631,6 +612,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
         TextButton(
           onPressed: () {
             if (!isValidation()) return;
+            _addNewCampagin();
           },
           child: Text(
             "Đăng",
@@ -646,6 +628,23 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
         ),
       ],
     );
+  }
+
+  void _addNewCampagin() {
+    // var post = CampaignPost(
+    //     id: 0,
+    //     address: _locationTextController.text,
+    //     lat: location!.latitude,
+    //     lng: location!.longitude,
+    //     title: _nameTextController.text,
+    //     content: _descriptionTextController.text,
+    //     creator: ,
+    //     timeCreate: DateTime.now(),
+    //     imageUrl: avatarImage?.path,
+    //     bannerUrl: backgroundImage?.path,
+    //     timeStart: ,
+    //     );
+    // widget._postController.InsertPost(post);
   }
 }
 
