@@ -110,6 +110,61 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                     fit: BoxFit.cover),
               ),
             ),
+            Positioned.fill(
+                top: 0,
+                right: 0,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 50.w, top: 14.h),
+                        child: Text(
+                          name[name.length - 2] + ' ' + name[name.length - 1],
+                          textAlign: TextAlign.center,
+                          style: kText18RegularWhite,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.white,
+                      ),
+                      iconSize: 25.h,
+                      onPressed: () {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text(
+                              'Đăng xuất',
+                            ),
+                            content: const Text(
+                              'Bạn thật sự muốn đăng xuất khỏi tài khoản này?',
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Hủy'),
+                                child: Text(
+                                  'Hủy',
+                                  style: kText15BoldBlack.copyWith(
+                                      color: meerColorGreyNoteText),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Đăng'),
+                                child:
+                                    Text('Đăng xuất', style: kText15BoldMain),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                )),
             Positioned(
               bottom: -60.h,
               left: 10.w,
@@ -151,7 +206,7 @@ class _ProfileOverViewState extends State<ProfileOverView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                joinedOverview('Đã tạo', 15, JoinedView(1)),
+                joinedOverview('Đã tạo', 15, JoinedView(0)),
                 joinedOverview('Đã tham gia', 15, JoinedView(1)),
                 joinedOverview('Bỏ tham gia', 15, JoinedView(2)),
               ],

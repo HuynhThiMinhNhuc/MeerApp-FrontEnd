@@ -86,23 +86,23 @@ class EventJoinItem extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 5.h,
+                      height: 7.h,
                     ),
                     Text(
                       'Tổ chức bởi: ' + userName,
                       style: kText13RegularBlack,
                     ),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    Text(time, style: kText13RegularNote),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Text(getStatus(),
-                          style: kText15BoldBlack.copyWith(color: getColor())),
+                    Padding(
+                      padding: EdgeInsets.only(top: 15.h),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(time, style: kText13RegularNote),
+                          Text(getStatus(),
+                              style:
+                                  kText15BoldBlack.copyWith(color: getColor())),
+                        ],
+                      ),
                     ),
                   ],
                 ),
