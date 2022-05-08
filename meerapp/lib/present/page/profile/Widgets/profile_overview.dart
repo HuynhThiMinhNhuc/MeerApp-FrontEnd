@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/constant/current_user.dart';
 import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
@@ -8,6 +9,7 @@ import 'package:meerapp/present/page/profile/join_view.dart';
 
 import '../../../../config/fontconfig.dart';
 import '../edit_profile.dart';
+import '../menuView.dart';
 import '../profilepage.dart';
 
 class ProfileOverView extends StatefulWidget {
@@ -66,45 +68,16 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                     ),
                     IconButton(
                       icon: const Icon(
-                        Icons.logout,
+                        FontAwesomeIcons.ellipsisVertical,
                         color: Colors.white,
                       ),
-                      iconSize: 25.h,
-                      onPressed: () {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: Text(
-                              'Đăng xuất',
-                              style: kText16BoldBlack,
-                            ),
-                            content: Text(
-                              'Bạn thật sự muốn đăng xuất khỏi tài khoản này?',
-                              style: kText14RegularBlack,
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Hủy'),
-                                child: Text(
-                                  'Hủy',
-                                  style: kText15BoldBlack.copyWith(
-                                      color: meerColorGreyNoteText),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => LoginPage()),
-                                  ),
-                                },
-                                child:
-                                    Text('Đăng xuất', style: kText15BoldMain),
-                              ),
-                            ],
-                          ),
-                        );
+                      iconSize: 20.h,
+                      onPressed: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MenuView()),
+                        ),
+                       
                       },
                     ),
                   ],
@@ -150,9 +123,24 @@ class _ProfileOverViewState extends State<ProfileOverView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                joinedOverview('Đã tạo', 15, JoinedView(currentTab: 0,)),
-                joinedOverview('Đã tham gia', 15, JoinedView(currentTab: 1,)),
-                joinedOverview('Bỏ tham gia', 15, JoinedView(currentTab: 2,)),
+                joinedOverview(
+                    'Đã tạo',
+                    15,
+                    JoinedView(
+                      currentTab: 0,
+                    )),
+                joinedOverview(
+                    'Đã tham gia',
+                    15,
+                    JoinedView(
+                      currentTab: 1,
+                    )),
+                joinedOverview(
+                    'Bỏ tham gia',
+                    15,
+                    JoinedView(
+                      currentTab: 2,
+                    )),
               ],
             ),
           ),
@@ -203,42 +191,7 @@ class _ProfileOverViewState extends State<ProfileOverView> {
             SizedBox(
               height: 20.h,
             ),
-            SizedBox(
-                child: widget.modeProfile == mode.My
-                    ? InkWell(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.w),
-                          child: Container(
-                            height: 35.h,
-                            decoration: const BoxDecoration(
-                              color: meerColorMain,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ), //BorderRadius.all
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'Chỉnh sửa hồ sơ',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.white,
-                                    decoration: TextDecoration.none,
-                                    fontFamily: 'Roboto_Regular',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ),
-                        onTap: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EditProfile()),
-                          )
-                        },
-                      )
-                    : Container()),
+
           ],
         ),
       ],

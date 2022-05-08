@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/present/page/Login/profile_view.dart';
 
 import '../../component/custom_btn.dart';
 import '../../component/password_input.dart';
@@ -49,7 +50,7 @@ class _RegisterViewState extends State<RegisterView> {
                 height: 5.h,
               ),
               Text(
-                'Tạo tài khoản mới',
+                'Nhập thông tin để tạo tài khoản mới!',
                 style: kText18RegularGreyNoteText,
               ),
               SizedBox(
@@ -211,6 +212,11 @@ class _RegisterViewState extends State<RegisterView> {
                     //     emailcontroller.text.trim(),
                     //     passwordcontroller.text.trim(),
                     //     confirmpasswordcontroller.text.trim()))
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfileCreate(email: '',),)
+                    ),
                   },
                   textInput: 'ĐĂNG KÝ',
                 ),
@@ -222,9 +228,10 @@ class _RegisterViewState extends State<RegisterView> {
                 child: RichText(
                     text: TextSpan(children: <TextSpan>[
                   TextSpan(
-                      text: "Bạn đã có tài khoản?",
-                      style: kText16RegularGreyText.copyWith(fontSize: 15.sp)),
-                  TextSpan(text: " Đăng nhập!", style: kText17RegularRed)
+                    text: "Bạn đã có tài khoản?",
+                    style: kText15RegularGreyText,
+                  ),
+                  TextSpan(text: " Đăng nhập!", style: kText15MediumRed)
                 ])),
               ),
             ],
@@ -232,5 +239,6 @@ class _RegisterViewState extends State<RegisterView> {
         ),
       ),
     );
+ 
   }
 }

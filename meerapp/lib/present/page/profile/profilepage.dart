@@ -20,6 +20,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
+  late List<bool> stateToggle = [true, false];
   late TabController _tabController;
   @override
   void initState() {
@@ -51,7 +52,9 @@ class _ProfilePageState extends State<ProfilePage>
                 ),
                 Column(
                   // TODO: Open comment here
-                  children: List<Widget>.empty(),
+                  
+          children: [_buildToggleButton(),  List<Widget>.empty(),],
+                    
                 ),
               ],
             );
@@ -60,6 +63,70 @@ class _ProfilePageState extends State<ProfilePage>
           }
         },
       ),
+    );
+  }
+
+  Widget _buildToggleButton() {
+    return Container(
+      height: 40.h,
+      child: ToggleButtons(
+          borderRadius: BorderRadius.circular(30),
+          fillColor: meerColorMain,
+          borderColor: meerColorMain,
+          selectedBorderColor: meerColorMain,
+          color: meerColorBlack,
+          selectedColor: meerColorWhite,
+          onPressed: (int index) {
+            setState(() {
+              for (int buttonIndex = 0;
+                  buttonIndex < stateToggle.length;
+                  buttonIndex++) {
+                if (buttonIndex == index) {
+                  stateToggle[buttonIndex] = true;
+                } else {
+                  stateToggle[buttonIndex] = false;
+                }
+              }
+            });
+          },
+          isSelected: stateToggle,
+          children: <Widget>[
+            Container(
+              width: (MediaQuery.of(context).size.width - 36) / 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Chiến dịch",
+                    style: TextStyle(
+                      fontFamily: "Roboto",
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 0.h),
+              child: Container(
+                width: (MediaQuery.of(context).size.width - 36) / 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Khẩn cấp",
+                      style: TextStyle(
+                        fontFamily: "Roboto",
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ]),
     );
   }
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
@@ -20,7 +19,7 @@ class CustomButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
           alignment: Alignment.center,
           primary: meerColorMain,
-          fixedSize: Size(MediaQuery.of(context).size.width, 60.h),
+          fixedSize: Size(MediaQuery.of(context).size.width - 100.w, 60.h),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
     );

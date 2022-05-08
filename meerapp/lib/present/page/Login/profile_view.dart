@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
+import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/present/page/Login/welcome_view.dart';
 
 import '../../component/custom_btn.dart';
 import '../../component/password_input.dart';
 import '../../component/text_input.dart';
 
-class Profile extends StatefulWidget {
+class ProfileCreate extends StatefulWidget {
   final String email;
   var userProfile;
 
-  Profile({Key? key, required this.email}) : super(key: key);
+  ProfileCreate({Key? key, required this.email}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _ProfileState extends State<ProfileCreate> {
   final TextEditingController namecontroller = new TextEditingController();
   final TextEditingController birthcontroller = new TextEditingController();
   final TextEditingController phonecontroller = new TextEditingController();
@@ -37,47 +39,33 @@ class _ProfileState extends State<Profile> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
             Padding(
-              padding: EdgeInsets.fromLTRB(20, 50, 0, 20),
+              padding: EdgeInsets.fromLTRB(20.w, 30.h, 0, 0),
               child: Row(children: [
-                IconButton(onPressed: () => {}, icon: Icon(Icons.arrow_back)),
+                IconButton(
+                    onPressed: () => {Navigator.pop(context)},
+                    icon: Icon(Icons.arrow_back)),
               ]),
             ),
-            const Text(
+            Text(
               'Hồ sơ',
-              style: TextStyle(
-                  color: meerColorMain,
-                  fontSize: 38,
-                  fontFamily: 'Roboto-Regular.ttf',
-                  fontWeight: FontWeight.bold),
+              style: kText32BoldMain,
             ),
             SizedBox(
               height: 5.h,
             ),
-            const Text(
-              'Bổ sung thông tin của bạn',
-              style: TextStyle(
-                  color: meerColorGreyNoteText,
-                  fontSize: 20,
-                  fontFamily: 'Roboto_Regular'),
+            Text(
+              'Điền thông tin cá nhân của bạn!',
+              style: kText18RegularGreyNoteText,
             ),
             SizedBox(
               height: 40.h,
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(30, 0, 0, 10),
-                    child: Text(
-                      'Họ và tên',
-                      style: TextStyle(
-                          color: meerColorMain,
-                          fontFamily: 'Roboto-Regular.tff',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(30, 0, 0, 7),
+                child: Text('Họ và tên', style: kText16BoldMain),
+              ),
+            ]),
             Padding(
                 padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
                 child: TextInput(
@@ -92,21 +80,15 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               height: 20.h,
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(30, 0, 0, 10),
-                    child: Text(
-                      'Ngày sinh',
-                      style: TextStyle(
-                          color: meerColorMain,
-                          fontFamily: 'Roboto-Regular.tff',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(30, 0, 0, 10),
+                child: Text(
+                  'Ngày sinh',
+                  style: kText16BoldMain,
+                ),
+              ),
+            ]),
             Padding(
               padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
               child: PassWordInput(
@@ -121,21 +103,15 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               height: 20.h,
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(30, 0, 0, 10),
-                    child: Text(
-                      'Số điện thoại',
-                      style: TextStyle(
-                          color: meerColorMain,
-                          fontFamily: 'Roboto-Regular.tff',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(30, 0, 0, 10),
+                child: Text(
+                  'Số điện thoại',
+                  style: kText16BoldMain,
+                ),
+              ),
+            ]),
             Padding(
                 padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
                 child: TextInput(
@@ -150,27 +126,22 @@ class _ProfileState extends State<Profile> {
             SizedBox(
               height: 20.h,
             ),
-            Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(30, 0, 0, 10),
-                    child: Text(
-                      'Giới tính',
-                      style: TextStyle(
-                          color: meerColorMain,
-                          fontFamily: 'Roboto-Regular.tff',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ]),
+            Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(30, 0, 0, 10),
+                child: Text(
+                  'Giới tính',
+                  style: kText16BoldMain,
+                ),
+              ),
+            ]),
             Padding(
               padding: EdgeInsets.fromLTRB(30, 0, 30, 10),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
+                      height: 50.h,
                       color: meerColorBackgroundButton.withOpacity(0.2),
                       width: MediaQuery.of(context).size.width / 2 - 40,
                       child: TextButton.icon(
@@ -180,14 +151,13 @@ class _ProfileState extends State<Profile> {
                           icon: Icon(
                             Icons.male,
                             color: !ismade ? meerColorMain : Colors.white,
-                            size: 40,
+                            size: 30.h,
                           ),
                           label: Text(
-                            'Phụ nữ',
-                            style: TextStyle(
-                                color: !ismade ? meerColorMain : Colors.white,
-                                fontFamily: 'Roboto',
-                                fontSize: 15),
+                            'Nữ',
+                            style: kText15BoldMain.copyWith(
+                              color: !ismade ? meerColorMain : Colors.white,
+                            ),
                           ),
                           style: ButtonStyle(
                             alignment: Alignment.center,
@@ -201,6 +171,7 @@ class _ProfileState extends State<Profile> {
                     Container(
                       color: meerColorBackgroundButton.withOpacity(0.2),
                       width: MediaQuery.of(context).size.width / 2 - 40,
+                      height: 50.h,
                       child: TextButton.icon(
                           onPressed: () => {
                                 setState(() => {ismade = false})
@@ -208,14 +179,13 @@ class _ProfileState extends State<Profile> {
                           icon: Icon(
                             Icons.female,
                             color: !ismade ? Colors.white : meerColorMain,
-                            size: 40,
+                            size: 30.h,
                           ),
                           label: Text(
-                            'Đàn ông',
-                            style: TextStyle(
-                                color: !ismade ? Colors.white : meerColorMain,
-                                fontFamily: 'Roboto',
-                                fontSize: 15),
+                            'Nam',
+                            style: kText15BoldMain.copyWith(
+                              color: !ismade ? Colors.white : meerColorMain,
+                            ),
                           ),
                           style: ButtonStyle(
                             alignment: Alignment.center,
@@ -288,6 +258,13 @@ class _ProfileState extends State<Profile> {
                         //         this.ismade ? Genders.Male : Genders.Female,
                         //     email: widget.email,
                         //     phone: phonecontroller.text.trim())))
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WelcomeView(
+                                email: '',
+                              ),
+                            ))
                       },
                   textInput: 'LƯU'),
             )
