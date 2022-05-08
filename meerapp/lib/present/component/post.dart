@@ -187,6 +187,7 @@ class Post extends StatelessWidget {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
+
                           builder: (context) =>  postData is CampaignPost ? 
                           DetailCampaignPage(mode: StatusCompaign.admin, postId: postData.id,) 
                           : DetailEmerencyPage(mode: StatusEmerency.admin, postId: postData.id,)),

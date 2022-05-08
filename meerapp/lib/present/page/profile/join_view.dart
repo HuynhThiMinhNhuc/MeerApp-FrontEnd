@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
-import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
-import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
 import 'package:meerapp/present/page/profile/Widgets/detail_join.dart';
 
 import '../../../constant/post.dart';
