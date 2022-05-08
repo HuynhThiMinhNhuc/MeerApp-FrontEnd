@@ -11,8 +11,9 @@ import 'package:meerapp/present/page/profile/Widgets/detail_join.dart';
 import '../../../constant/post.dart';
 
 class JoinedView extends StatefulWidget {
-  int currentTab = 0;
-  JoinedView(this.currentTab, {Key? key}) : super(key: key);
+  int currentTab;
+
+  JoinedView({required this.currentTab});
 
   @override
   State<JoinedView> createState() => _JoinedViewState();
@@ -24,7 +25,11 @@ class _JoinedViewState extends State<JoinedView> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(
+      length: 3,
+      vsync: this,
+    );
+    _tabController.index = widget.currentTab;
   }
 
   @override
