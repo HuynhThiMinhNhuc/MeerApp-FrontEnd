@@ -10,7 +10,7 @@ import 'package:meerapp/present/component/image_card.dart';
 import 'package:meerapp/present/page/new_campaign_page/widget/choice_location_time.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
-  CreateNewCampaignPage({Key? key}) : super(key: key);
+  const CreateNewCampaignPage({Key? key}) : super(key: key);
 
   static const List<String> _userName = <String>[
     'Huynh Nhuc',
@@ -99,28 +99,36 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: meerColorWhite,
-              ),
-              child: Column(
-                children: [
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: meerColorWhite,
+                ),
+                child: Column(children: [
                   ChoiceField(
                     controller: _locationTextController,
                     icon: Icons.keyboard_arrow_right_outlined,
-                    title: 'Thiết lập địa điểm, địa điểm',
+                    title: 'Thiết lập thời gian, địa điểm',
                     onPress: () {
-                      showModalBottomSheet<void>(
+                      showModalBottomSheet(
+                        isScrollControlled: true,
                         backgroundColor: Colors.transparent,
                         context: context,
                         builder: (BuildContext context) {
-                          return const ChoiceLocationTime();
+                          return DraggableScrollableSheet(
+                            initialChildSize: 0.95,
+                            maxChildSize: 1,
+                            minChildSize: 0.25,
+                            builder: (BuildContext context,
+                                ScrollController scrollController) {
+                              return const ChoiceLocationTime();
+                            },
+                          );
+                          //return const ChoiceLocationTime();
                         },
                       );
                     },
                   ),
-              ])
-            ),
+                ])),
             SizedBox(
               height: 10.h,
             ),
