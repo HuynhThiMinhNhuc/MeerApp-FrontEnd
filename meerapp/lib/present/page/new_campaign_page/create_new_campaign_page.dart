@@ -1,19 +1,86 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/user.dart';
 import 'package:meerapp/present/component/image_card.dart';
+import 'package:meerapp/present/page/new_campaign_page/widget/choice_location_time.dart';
 
-class CreateNewCampaignPage extends StatelessWidget {
-  const CreateNewCampaignPage({Key? key}) : super(key: key);
+class CreateNewCampaignPage extends StatefulWidget {
+  CreateNewCampaignPage({Key? key}) : super(key: key);
 
   static const List<String> _userName = <String>[
-    'aardvark',
-    'bobcat',
-    'chameleon',
+    'Huynh Nhuc',
+    'Nguyen Anh',
+    'Phạm võ',
   ];
+
+  @override
+  State<CreateNewCampaignPage> createState() => _CreateNewCampaignPageState();
+}
+
+class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
+  late TextEditingController _nameTextController;
+
+  late TextEditingController _dateTextController;
+
+  late TextEditingController _locationTextController;
+
+  late TextEditingController _descriptionTextController;
+
+  late TextEditingController _requireTextController;
+  late File avatarImage;
+  late File backgroundImage;
+  DateTime? startDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameTextController = TextEditingController();
+    _dateTextController = TextEditingController();
+    _locationTextController = TextEditingController();
+    _descriptionTextController = TextEditingController();
+    _requireTextController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _nameTextController.dispose();
+    _dateTextController.dispose();
+    _locationTextController.dispose();
+    _descriptionTextController.dispose();
+    _requireTextController.dispose();
+    super.dispose();
+  }
+
+  bool isValidation() {
+    if (_nameTextController.text.trim().isEmpty) {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Lỗi'),
+          content: const Text('Vui lòng nhập tên sự kiện'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: const Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('Lưu'),
+            ),
+          ],
+        ),
+      );
+      return false;
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,37 +107,16 @@ class CreateNewCampaignPage extends StatelessWidget {
               child: Column(
                 children: [
                   ChoiceField(
+                    controller: _locationTextController,
                     icon: Icons.keyboard_arrow_right_outlined,
-                    title: 'Chọn địa điểm',
-                    onPress: () {},
-                  ),
-                  ChoiceField(
-                    icon: Icons.keyboard_arrow_right_outlined,
-                    title: 'Chọn thời gian',
+                    title: 'Thiết lập địa điểm, địa điểm',
                     onPress: () {
-                      showDatePicker(
+                      showModalBottomSheet<void>(
                         context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(DateTime.now().year - 1,
-                            DateTime.now().month, DateTime.now().day),
-                        lastDate: DateTime(DateTime.now().year + 2),
-                      ).then((value) {
-                        // startDate = value;
-
-                        // if (startDate != null) {
-                        //   final formattedDate =
-                        //       DateFormat('dd/MM/yyyy').format(startDate!);
-                        //   if (formattedDate != _dateTextController.text)
-                        //     setState(() {
-                        //       _dateTextController.text = formattedDate;
-                        //       print("Date selected: $formattedDate");
-                        //     });
-                        // } else {
-                        //   setState(() {
-                        //     _dateTextController.text = '';
-                        //   });
-                        // }
-                      });
+                        builder: (BuildContext context) {
+                          return const ChoiceLocationTime();
+                        },
+                      );
                     },
                   ),
                 ],
@@ -157,13 +203,13 @@ class CreateNewCampaignPage extends StatelessWidget {
                         ImageCard(
                           hintTitle: "+ Ảnh bìa",
                           onImageChanged: (file) {
-                            // backgroundImage = file;
+                            backgroundImage = file;
                           },
                         ),
                         ImageCard(
                           hintTitle: "+ Ảnh đại diện",
                           onImageChanged: (file) {
-                            // avatarImage = file;
+                            avatarImage = file;
                           },
                         ),
                       ],
@@ -186,14 +232,14 @@ class CreateNewCampaignPage extends StatelessWidget {
                   children: [
                     TextFormField(
                       style: kText17BoldBlack,
-                      //controller: _nameTextController,
+                      controller: _nameTextController,
                       decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "Thêm tiêu đề tại đây"),
                     ),
                     TextFormField(
                         keyboardType: TextInputType.name,
-                        //controller: _descriptionTextController,
+                        controller: _descriptionTextController,
                         minLines: 15,
                         maxLines: 15,
                         style: TextStyle(
@@ -221,44 +267,37 @@ class CreateNewCampaignPage extends StatelessWidget {
 
   Future<String?> showDialogAddCampaignUser(BuildContext context) {
     return showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  AlertDialog(
-                                title: Text(
-                                  'Thêm người tham gia',
-                                  style: kText15BoldBlack,
-                                ),
-                                content: Autocomplete<String>(
-                                  optionsBuilder:
-                                      (TextEditingValue textEditingValue) {
-                                    if (textEditingValue.text == '') {
-                                      return const Iterable<String>.empty();
-                                    }
-                                    return _userName.where((String option) {
-                                      return option.contains(
-                                          textEditingValue.text
-                                              .toLowerCase());
-                                    });
-                                  },
-                                  onSelected: (String selection) {
-                                    debugPrint(
-                                        'You just selected $selection');
-                                  },
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'Cancel'),
-                                    child: const Text('Hủy'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'OK'),
-                                    child: const Text('Lưu'),
-                                  ),
-                                ],
-                              ),
-                            );
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          'Thêm người tham gia',
+          style: kText15BoldBlack,
+        ),
+        content: Autocomplete<String>(
+          optionsBuilder: (TextEditingValue textEditingValue) {
+            if (textEditingValue.text == '') {
+              return const Iterable<String>.empty();
+            }
+            return CreateNewCampaignPage._userName.where((String option) {
+              return option.contains(textEditingValue.text.toLowerCase());
+            });
+          },
+          onSelected: (String selection) {
+            debugPrint('You just selected $selection');
+          },
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: const Text('Hủy'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('Lưu'),
+          ),
+        ],
+      ),
+    );
   }
 
   AppBar getAppBar() {
@@ -274,7 +313,9 @@ class CreateNewCampaignPage extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            if (!isValidation()) return;
+          },
           child: Text(
             "Đăng",
             style: kText18BoldMain,
@@ -312,44 +353,48 @@ class ChoiceField extends StatefulWidget {
 class _ChoiceFieldState extends State<ChoiceField> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Text(
-            widget.title,
-            style: kText15BoldBlack,
-          ),
-          SizedBox(
-            width: 10.w,
-          ),
-          Flexible(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Flexible(
-                  child: TextFormField(
-                    readOnly: true,
-                    textAlign: TextAlign.end,
-                    style: kText15RegularMain,
-                    controller: widget.controller,
-                    decoration: new InputDecoration(border: InputBorder.none),
-                  ),
-                ),
-                IconButton(
-                    iconSize: 20.w,
-                    padding: EdgeInsets.all(1.0),
-                    onPressed: widget.onPress,
-                    icon: Icon(
-                      widget.icon,
-                      color: meerColorMain,
-                    ))
-              ],
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              widget.title,
+              style: kText15BoldBlack,
             ),
-          ),
-        ],
+            SizedBox(
+              width: 10.w,
+            ),
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: TextFormField(
+                      readOnly: true,
+                      textAlign: TextAlign.end,
+                      style: kText15RegularBlack,
+                      controller: widget.controller,
+                      decoration:
+                          const InputDecoration(border: InputBorder.none),
+                    ),
+                  ),
+                  IconButton(
+                      iconSize: 20.w,
+                      padding: const EdgeInsets.all(1.0),
+                      onPressed: widget.onPress,
+                      icon: Icon(
+                        widget.icon,
+                        color: meerColorMain,
+                      ))
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
+      onTap: () => {widget.onPress},
     );
   }
 }

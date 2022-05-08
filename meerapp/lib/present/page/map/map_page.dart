@@ -1,15 +1,25 @@
 import 'dart:async';
 import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/constant.dart';
+import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/constant/post.dart';
+import 'package:meerapp/controllers/controller.dart';
+import 'package:meerapp/injection.dart';
+import 'package:meerapp/present/models/status_compaign.dart';
+import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
-import '../../models/map.dart';
+import '../../../models/map.dart';
 
 class MapPage extends StatefulWidget {
   final String currentMarkerId = "test"; // ? Get account id
-  const MapPage({Key? key}) : super(key: key);
+  final MapController _mapController = sl.get<MapController>();
+
+  MapPage({Key? key}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -19,6 +29,7 @@ class _MapPageState extends State<MapPage> {
   late CameraPosition initialCameraPosition;
   final CustomInfoWindowController _infoWindowController =
       CustomInfoWindowController();
+  late List<bool> stateToggle = [true, false];
 
   Marker? currentLocation;
   final Map<IMapObject, Marker> nearEventLocation = <IMapObject, Marker>{};
@@ -98,13 +109,14 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     // ? Mock data
-    // IMapObject mapObject = CampaignMap(
-    //   id: 1,
-    //   position: DefaultLatLng,
-    //   name: 'test vị trí',
-    //   time: DateTime.now(),
-    // );
-    // nearEventLocation.addEntries({mapObject: createMaker(mapObject)}.entries);
+    IMapObject mapObject = CampaignMap(
+      id: 1,
+      lat: DefaultLatLng.latitude,
+      lng: DefaultLatLng.longitude,
+      title: 'test vị trí',
+      time: DateTime.now(),
+    );
+    nearEventLocation.addEntries({mapObject: createMaker(mapObject)}.entries);
 
     return Scaffold(
       body: Stack(
@@ -122,9 +134,56 @@ class _MapPageState extends State<MapPage> {
           ),
           CustomInfoWindow(
             controller: _infoWindowController,
-            height: 50,
+            height: 55,
             width: 150,
             offset: 50,
+          ),
+          Positioned.fill(
+            top: 30.h,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                padding: EdgeInsets.zero,
+                decoration: const BoxDecoration(
+                  color: meerColorBackground,
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                ),
+                child: ToggleButtons(
+                  borderRadius: BorderRadius.circular(30),
+                  fillColor: meerColorMain,
+                  color: meerColorBlack,
+                  selectedColor: meerColorWhite,
+                  onPressed: (index) => setState(() {
+                    stateToggle[index] = !stateToggle[index];
+                  }),
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
+                      child: const Text(
+                        "Chiến dịch",
+                        style: TextStyle(
+                          fontFamily: "Roboto",
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 0),
+                      child: const Text(
+                        "Khẩn cấp",
+                        style: TextStyle(
+                          fontFamily: "Roboto",
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                  isSelected: stateToggle,
+                ),
+              ),
+            ),
           )
         ],
       ),
@@ -139,34 +198,69 @@ class _MapPageState extends State<MapPage> {
     var newMarker = Marker(
         markerId: MarkerId(mapObject.id.toString()),
         position: mapObject.position,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         onTap: () {
+          //location
           _infoWindowController.addInfoWindow!(
-            GestureDetector(
-              onTap: () {
-                //TODO: open view post
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // TODO: Change InfoWindow here
-                      Text("Tên: ${mapObject.name}"),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            MyCustomInfoWindow(object: mapObject),
             mapObject.position,
           );
         });
 
     return newMarker;
+  }
+}
+
+class MyCustomInfoWindow extends StatelessWidget {
+  final PostController _postController = sl.get<PostController>();
+
+  MyCustomInfoWindow({
+    Key? key,
+    required this.object,
+  }) : super(key: key);
+
+  final IMapObject object;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        //TODO: add loading widget
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return const DetailCampaignPage(
+            mode: StatusCompaign.nonMember,
+            post: null,
+          );
+        }));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: meerColorWhite,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // TODO: Change InfoWindow here
+              Text(
+                object.title,
+                //mapObject.name,
+                style:
+                    kText13BoldBlack.copyWith(overflow: TextOverflow.ellipsis),
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Text(
+                "Nhấn để xem chi tiết",
+                style: kText11RegularHintText,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

@@ -16,7 +16,7 @@ class ReportCampignWidget extends StatelessWidget {
               'Danh sách tham gia',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: const Text('Gồm cả người đã và chưa chiến dịch '),
+            subtitle: const Text('Gồm cả người đã và chưa đăng ký '),
             children: List.generate(
                 users.length,
                 (index) => JoinCampaignUserItem(

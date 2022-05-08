@@ -1,17 +1,55 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/constant/post.dart';
+import 'package:meerapp/controllers/controller.dart';
+import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
+
+import 'package:meerapp/present/models/statusPost.dart';
 import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+import '../../../models/post.dart';
+
+class HomePage extends StatefulWidget {
+  final PostController _postController = sl.get<PostController>();
+
+  HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final bool isLoading = false;
+  late final List<CampaignPost> listPost;
+
+  @override
+  void initState() {
+    super.initState();
+    listPost = <CampaignPost>[];
+  }
+
+  void _fetchCampainPosts(int startIndex, int number) {
+
+    widget._postController.GetCampaigns(startIndex, number).then((value) {
+      setState(() {
+        listPost.addAll(value);
+      });
+    }).onError((error, stackTrace) {log(error.toString());});
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _fetchCampainPosts(0, 10);
+  }
 
   @override
   Widget build(BuildContext context) {
-    var w;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -29,19 +67,22 @@ class HomePage extends StatelessWidget {
               style: kText20MediumBlack,
             ),
           ),
-          Column(
-              children: List.generate(
-                  posts.length,
-                  (index) => Post(
-                        avatarUrl: posts[index]["avatarUrl"],
-                        name: posts[index]["name"],
-                        address: posts[index]["address"],
-                        postImageUrl: posts[index]["postImageUrl"],
-                        title: posts[index]["title"],
-                        time: posts[index]["time"],
-                        content: posts[index]["content"],
-                        addressUser: posts[index]["addressUser"],
-                      ))),
+          Builder(builder: (_) {
+            if (listPost.isEmpty) {
+              return Text('Không có bài viết');
+            }
+            return Column(
+              children: [
+                ...listPost
+                    .map((post) => Post(
+                          postData: post, mode: StatusPost.campaign,
+                        ))
+                    .toList(),
+                if (isLoading) const Text('loading')
+              ],
+            );
+          })
+
         ],
       ),
     );
@@ -82,9 +123,9 @@ class CreateNewCampaign extends StatelessWidget {
       ),
       onTap: () => {
         Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => CreateNewCampaignPage()),
-  )
+          context,
+          MaterialPageRoute(builder: (context) => CreateNewCampaignPage()),
+        )
       },
     );
   }

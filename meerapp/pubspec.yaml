@@ -43,12 +43,19 @@ dependencies:
   google_maps_flutter: ^2.1.4
   geolocator: ^8.2.1
   custom_info_window: ^1.0.1
+  http: ^0.13.4
+  json_annotation: ^4.5.0
+  path: ^1.8.0
+  get_it: ^7.2.0
+
   image_picker: ^0.8.5
   path_provider: ^2.0.9
   flutter_speed_dial: ^6.0.0
-  animations: ^2.0.2
+  dio: ^4.0.6
 
 dev_dependencies:
+  json_serializable: ^6.2.0
+  build_runner: ^2.1.10
   flutter_test:
     sdk: flutter
 
@@ -75,6 +82,7 @@ flutter:
     - asset/demo.jpg
     - asset/avt1.jpg
     - asset/avt3.jpg
+    - asset/location.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

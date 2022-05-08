@@ -1,29 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/config/helper.dart';
+import 'package:meerapp/present/models/statusPost.dart';
+import 'package:meerapp/present/models/status_compaign.dart';
+import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
+import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
+
+
+import '../../models/post.dart';
+
 
 class Post extends StatelessWidget {
-  final String avatarUrl;
-  final String name;
-  final String addressUser;
-  final String? postImageUrl;
-  final String title;
-  final String content;
-  final String time;
-  final String address;
+  final IPost postData;
+  // final String? avatarUrl;
+  // final String name;
+  // final String? addressUser;
+  // final String? postImageUrl;
+  // final String title;
+  // final String content;
+  // final String time;
+  // final String address;
+  final StatusPost mode;
 
   const Post(
       {Key? key,
-      required this.avatarUrl,
-      required this.name,
-      required this.address,
-      required this.postImageUrl,
-      required this.title,
-      required this.time,
-      required this.addressUser,
-      required this.content})
+      // required this.avatarUrl,
+      // required this.name,
+      // required this.address,
+      // required this.postImageUrl,
+      // required this.title,
+      // required this.time,
+      // required this.addressUser,
+      // required this.content,
+      required this.mode,
+      required this.postData,
+      })
+
       : super(key: key);
 
   @override
@@ -50,13 +64,12 @@ class Post extends StatelessWidget {
                     Container(
                       width: 40.h,
                       height: 40.h,
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage("asset/avt1.jpg"),
-                          )
-                          // NetworkImage(avatarUrl), fit: BoxFit.cover),
-                          ),
+                      decoration: const  BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: AssetImage("asset/avt1.jpg", ),fit: BoxFit.cover)
+                            // NetworkImage(avatarUrl), fit: BoxFit.cover),
+                      ),
                     ),
                     SizedBox(
                       width: 10.w,
@@ -66,12 +79,12 @@ class Post extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {},
-                          child: Text(name, style: kText15BoldBlack),
+                          child: Text(postData.creator.name, style: kText15BoldBlack),
                         ),
                         SizedBox(
                           height: 2.h,
                         ),
-                        Text(addressUser, style: kText12RegularBlack),
+                        if (postData.creator.address != null) Text(postData.creator.address!, style: kText12RegularBlack),
                       ],
                     )
                   ],
@@ -134,9 +147,10 @@ class Post extends StatelessWidget {
                           showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
-                              title: const Text('Xóa bài viết'),
-                              content:
-                                  Text("Bạn chắc chắn muốn xóa bài viết này?"),
+
+                              title: const Text(
+                                  'Xóa bài viết'),
+                              content:const  Text("Bạn chắc chắn muốn xóa bài viết này?"),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () =>
@@ -184,20 +198,20 @@ class Post extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10.w, 10.h, 5.w, 5.h),
                   child: Text(
-                    title,
+                    postData.title,
                     style: kText15BoldBlack,
                   ),
                 ),
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const DetailCampaignPage()),
+                          builder: (context) =>  mode == StatusPost.campaign? const DetailCampaignPage(mode: StatusCompaign.admin, post: null,) : const DetailEmerencyPage(mode: StatusEmerency.admin)),
                     )),
             Padding(
               padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),
               child: RichText(
                 text: TextSpan(
-                  text: content,
+                  text: postData.content,
                   style: DefaultTextStyle.of(context).style,
                   children: <TextSpan>[
                     TextSpan(
@@ -205,34 +219,20 @@ class Post extends StatelessWidget {
                       style: kText13BoldBlack,
                     ),
                     TextSpan(
-                      text: address,
+                      text: postData.address,
                       style: kText13RegularBlack,
                     ),
-                    TextSpan(
-                      text: "\n\nThời gian: ",
+                     TextSpan(
+                      text: "\n\nThời gian: " ,
                       style: kText13BoldBlack,
-                    ),
+                    ) ,
                     TextSpan(
-                      text: time,
+                      text: DateTimeToString(postData.timeCreate),
                       style: kText13RegularBlack,
                     ),
                   ],
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10.w, 0, 0, 10.h),
-              child: ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Tham gia ngay",
-                    style: kText13BoldWhite,
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    alignment: Alignment.center,
-                    fixedSize: Size(130.w, 30.h),
-                    primary: meerColorMain,
-                  )),
             ),
           ]),
     );

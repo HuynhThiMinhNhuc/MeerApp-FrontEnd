@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/present/page/home_page/home_page.dart';
 import 'package:meerapp/present/page/map/map_page.dart';
 import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.dart';
+import 'package:meerapp/present/page/new_campaign_page/widget/choice_location_time.dart';
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 import 'package:meerapp/present/page/profile/profilepage.dart';
 import 'package:meerapp/present/page/urgent_page/urgent_page.dart';
@@ -45,7 +46,7 @@ class _RootAppState extends State<RootApp> {
                 MaterialPageRoute(
                     builder: (context) => currentPage == 1
                         ? const CreateNewEmergencyPage()
-                        : const CreateNewCampaignPage()),
+                        : CreateNewCampaignPage()),
               );
             },
             child: const Icon(FontAwesomeIcons.pen)),
@@ -111,13 +112,8 @@ class _RootAppState extends State<RootApp> {
 
   AppBar mapAppbar() {
     return AppBar(
+      toolbarHeight: 0,
       backgroundColor: meerColorBackground,
-      title: Text(
-        "Bản đồ",
-        style: kText20MediumBlack,
-      ),
-      elevation: 0,
-      centerTitle: true,
     );
   }
 
@@ -134,7 +130,7 @@ class _RootAppState extends State<RootApp> {
         TabData(iconData: FontAwesomeIcons.house, title: "Bài viết"),
         TabData(iconData: FontAwesomeIcons.hotjar, title: "Khẩn cấp"),
         TabData(iconData: FontAwesomeIcons.locationDot, title: "Bản đồ"),
-        TabData(iconData: FontAwesomeIcons.idCard, title: "Hồ sơ")
+        TabData(iconData: FontAwesomeIcons.userLarge, title: "Hồ sơ")
       ],
       onTabChangedListener: (int position) {
         setState(() {
