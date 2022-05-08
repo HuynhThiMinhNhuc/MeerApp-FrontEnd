@@ -2,19 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
 
-enum Status { 
-   admin, 
-   member, 
-   nonMember, 
-}  
+enum Status {
+  admin,
+  member,
+  nonMember,
+}
 
 class DetailCampaignPage extends StatefulWidget {
   final Status mode;
-  const DetailCampaignPage({Key? key, required this.mode}) : super(key: key);
+  final CampaignPost? post;
+  const DetailCampaignPage({
+    Key? key,
+    required this.mode,
+    required this.post,
+  }) : super(key: key);
 
   @override
   State<DetailCampaignPage> createState() => _DetailCampaignPageState();
@@ -56,7 +62,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                         image: DecorationImage(
                             image: AssetImage("asset/demo.jpg"),
                             // NetworkImage(
-                              //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
+                            //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
                             fit: BoxFit.cover),
                       ),
                     ),
@@ -98,7 +104,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                     alignment: Alignment(0, -0.8.h),
                                     image: AssetImage("asset/demo.jpg"),
                                     //const NetworkImage(
-                                      //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
+                                    //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
                                     fit: BoxFit.cover),
                               ),
                             ),
@@ -117,7 +123,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Text(
-                                    "Chiến dịch làm sạch bãi biển Vũng Tàu",
+                                    widget.post?.title ?? "test nef",
                                     textAlign: TextAlign.start,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
@@ -134,31 +140,39 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                   SizedBox(height: 65.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children:  [ 
-                       Visibility(
-                         visible: widget.mode == Status.admin? true : false,
-                         child: ElevatedButton(
-                            onPressed: () {},                       style: ElevatedButton.styleFrom(
-                              alignment: Alignment.center,
-                              fixedSize: Size(100.w, 30.h),
-                              primary: meerColorMain,
-                            ), 
-                            child: Text(
-                              "Mời ",
-                              style: kText13BoldWhite,
-                            ),),
-                       ),
+                    children: [
+                      Visibility(
+                        visible: widget.mode == Status.admin ? true : false,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            alignment: Alignment.center,
+                            fixedSize: Size(100.w, 30.h),
+                            primary: meerColorMain,
+                          ),
+                          child: Text(
+                            "Mời ",
+                            style: kText13BoldWhite,
+                          ),
+                        ),
+                      ),
                       SizedBox(width: 10.w),
                       ElevatedButton(
                           onPressed: () {},
                           child: Text(
-                            widget.mode == Status.admin? "Kết thúc" : widget.mode == Status.member? "Hủy đăng ký" : "Đăng ký",
+                            widget.mode == Status.admin
+                                ? "Kết thúc"
+                                : widget.mode == Status.member
+                                    ? "Hủy đăng ký"
+                                    : "Đăng ký",
                             style: kText13BoldWhite,
                           ),
                           style: ElevatedButton.styleFrom(
                             alignment: Alignment.center,
                             fixedSize: Size(120.w, 30.h),
-                            primary: widget.mode == Status.nonMember? meerColorMain : meerColorRed,
+                            primary: widget.mode == Status.nonMember
+                                ? meerColorMain
+                                : meerColorRed,
                           )),
                       SizedBox(
                         width: 20.w,

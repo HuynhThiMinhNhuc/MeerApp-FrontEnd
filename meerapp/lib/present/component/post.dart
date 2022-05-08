@@ -5,7 +5,8 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/config/helper.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
-import '../models/post.dart';
+import '../../models/post.dart';
+
 
 class Post extends StatelessWidget {
   final IPost postData;

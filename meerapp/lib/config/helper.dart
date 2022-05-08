@@ -17,5 +17,6 @@ String DateTimeToString(DateTime time) {
 }
 
 Future<T> getResponse<T extends BaseResponse>(Future<T> request) {
-    return request.timeout(Duration(seconds: timeoutHttp));
+  return request
+      .timeout(Duration(seconds: timeoutHttp)).catchError((error, stackTrace) => throw Exception(error));
 }

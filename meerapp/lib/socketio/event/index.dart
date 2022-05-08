@@ -4,4 +4,5 @@ class UserNearby {}
 
 class SocketIOEvent {
   static final nearByUserUpdated = EventHandler<Function(List<UserNearby>)>();
+  static final postMapUpdated = EventHandler<Function(List<UserNearby>)>();
 }
