@@ -27,6 +27,8 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
 
   late TextEditingController _dateTextController;
 
+  late TextEditingController _timeTextController;
+
   late TextEditingController _locationTextController;
 
   late TextEditingController _descriptionTextController;
@@ -41,10 +43,11 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
   void initState() {
     super.initState();
     _nameTextController = TextEditingController();
-    _dateTextController = TextEditingController(text: "Chọn thời gian tổ chức");
+    _dateTextController = TextEditingController(text: "Chọn ngày tổ chức");
     _locationTextController = TextEditingController();
     _descriptionTextController = TextEditingController();
     _requireTextController = TextEditingController();
+    _timeTextController =TextEditingController(text: "Chọn giờ tổ chức");
   }
 
   @override
@@ -54,6 +57,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     _locationTextController.dispose();
     _descriptionTextController.dispose();
     _requireTextController.dispose();
+    _timeTextController.dispose();
     super.dispose();
   }
 
@@ -295,6 +299,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                                   FontAwesomeIcons.caretDown),
                                               onPressed: () => {
                                                 showDatePicker(
+                                                  cancelText: "Huỷ",
+                                                  confirmText: "Lưu",
+                                                  locale: Locale("vi","VN"),
                                                   context: context,
                                                   initialDate: DateTime.now(),
                                                   firstDate: DateTime(
@@ -337,6 +344,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                     ],
                                   )),
                             ),
+                            
                             SizedBox(
                               height: 15.h,
                             ),
@@ -359,20 +367,67 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            TimePickerDialog(
-                              hourLabelText: "Giờ",
-                              minuteLabelText: "Phút",
-                              initialTime: TimeOfDay(
-                                hour: DateTime.now().hour,
-                                minute: DateTime.now().minute,
-                              ),
-                              initialEntryMode: TimePickerEntryMode.input,
-                              cancelText: "",
-                              confirmText: "",
-                              onEntryModeChanged: (time) => {
-                                //Todo: save data time
-                              },
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10.w),
+                              child: InputDecorator(
+                                  decoration: InputDecoration(
+                                    contentPadding:
+                                        EdgeInsets.fromLTRB(7.w, 0, 0, 0),
+                                    border: const OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(4.0)),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Flexible(
+                                              child: TextFormField(
+                                                readOnly: true,
+                                                textAlign: TextAlign.start,
+                                                style: kText15RegularBlack,
+                                                controller: _timeTextController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        border:
+                                                            InputBorder.none),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(
+                                                  FontAwesomeIcons.caretDown),
+                                              onPressed: () => {
+                                                 showTimePicker(
+                                                     hourLabelText: "Giờ",
+                                                      minuteLabelText: "Phút",
+                                                      initialTime: TimeOfDay(
+                                                        hour: DateTime.now().hour,
+                                                        minute: DateTime.now().minute,
+                                                      ),
+                                                      initialEntryMode: TimePickerEntryMode.input,
+                                                      cancelText: "Hủy",
+                                                      confirmText: "Lưu",
+                                                      onEntryModeChanged: (time) => {
+                                                        //Todo: save data time
+                                                      },
+                                                  context: context,
+
+                                                  )
+                                              },
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )),
                             ),
+                            
                             SizedBox(
                               height: 10.h,
                             ),
@@ -381,49 +436,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 10.h),
-                  //   child: Row(
-                  //     mainAxisSize: MainAxisSize.max,
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     children: <Widget>[
-                  //       Text(
-                  //         "Thời gian",
-                  //         style: kText15BoldBlack,
-                  //       ),
-                  //       SizedBox(
-                  //         width: 15.w,
-                  //       ),
-                  //       Flexible(
-                  //           child: Text(
-                  //         "12:14 ngày 17/03/2022",
-                  //         style: kText15RegularBlack,
-                  //       ))
-                  //     ],
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: EdgeInsets.fromLTRB(15.w, 5.h, 10.w, 10.h),
-                  //   child: Row(
-                  //     mainAxisSize: MainAxisSize.max,
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     children: <Widget>[
-                  //       Text(
-                  //         "Địa điểm",
-                  //         style: kText15BoldBlack,
-                  //       ),
-                  //       SizedBox(
-                  //         width: 15.w,
-                  //       ),
-                  //       Flexible(
-                  //           child: Text(
-                  //         "Khu phố 6, thành phố Thủ Đức, thành phố Hồ Chí Minh",
-                  //         style: kText15RegularBlack.copyWith(
-                  //             overflow: TextOverflow.ellipsis),
-                  //       ))
-                  //     ],
-                  //   ),
-                  // ),
+                 
                 ])),
             SizedBox(
               height: 10.h,

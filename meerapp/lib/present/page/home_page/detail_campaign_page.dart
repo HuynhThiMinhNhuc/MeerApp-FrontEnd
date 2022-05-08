@@ -4,6 +4,7 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
+import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
@@ -157,15 +158,14 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                       SizedBox(width: 10.w),
                       ElevatedButton(
                           onPressed: () {
-                            switch (widget.mode) {
-                              case StatusCompaign.admin:
-                                return;
-                              case StatusCompaign.member:
-                                return;
-                              case StatusCompaign.nonMember:
-                                return;
-                              default:
-                            }
+                            widget.mode == StatusCompaign.admin
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AddJoinerPage(),
+                                    ))
+                                : null;
                           },
                           child: Text(
                             widget.mode == StatusCompaign.admin
