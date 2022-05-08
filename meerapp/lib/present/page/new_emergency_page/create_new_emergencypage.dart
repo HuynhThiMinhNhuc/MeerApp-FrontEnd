@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/component/image_card.dart';
@@ -11,14 +12,14 @@ class CreateNewEmergencyPage extends StatefulWidget {
   State<CreateNewEmergencyPage> createState() => _CreateNewEmergencyPageState();
 }
 
-  late TextEditingController _nameTextController;
-  late TextEditingController _locationTextController;
-  late TextEditingController _descriptionTextController;
-
+late TextEditingController _nameTextController;
+late TextEditingController _locationTextController;
+late TextEditingController _descriptionTextController;
 
 class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
-
-    bool isValidation() {
+  bool isSwitched = false;
+  
+  bool isValidation() {
     if (_nameTextController.text.trim().isEmpty) {
       showDialog<String>(
         context: context,
@@ -81,14 +82,95 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 color: meerColorWhite,
               ),
-              child: Column(
-                children: [
-                  ChoiceField(
-                    controller: _locationTextController,
-                    icon: Icons.keyboard_arrow_right_outlined,
-                    title: 'Chọn địa điểm',
-                    onPress: () {},
-                  ),  ],
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 5.h,),
+                   Padding(
+                     padding: EdgeInsets.only(left: 10.w),
+                     child: Text(
+                          "Địa điểm",
+                          style: kText17BoldBlack,
+                        ),
+                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 10.w),
+                      Text(
+                        "Sử dụng vị trí hiện tại của bạn ",
+                        style: kText15BoldGreyHintText,
+                      ),
+                      Flexible(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Switch(
+                              value: isSwitched,
+                              onChanged: (value) {
+                                setState(() {
+                                  isSwitched = value;
+                                  print(isSwitched);
+                                });
+                              },
+                              activeTrackColor: Colors.lightGreenAccent,
+                              activeColor: Colors.green,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 130.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            image: const DecorationImage(
+                                image: AssetImage("asset/location.png"),
+                                fit: BoxFit.cover)),
+                      ),
+                      Positioned(
+                          child: Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 10.w,
+                            ),
+                            Flexible(
+                              child: TextFormField(
+                                readOnly: true,
+                                textAlign: TextAlign.start,
+                                style: kText15RegularBlack.copyWith(
+                                    color: meerColorWhite),
+                                controller: _locationTextController,
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                FontAwesomeIcons.angleRight,
+                                color: meerColorBlack,
+                              ),
+                              onPressed: () => {
+                                //TODO: navigate to map to get location
+                              },
+                            )
+                          ],
+                        ),
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(92, 0, 0, 0),
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(20))),
+                      ))
+                    ],
+                  ),
+                ]),
               ),
             ),
             SizedBox(
@@ -190,7 +272,9 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
       ),
       actions: [
         TextButton(
-          onPressed: () {if (!isValidation()) return;},
+          onPressed: () {
+            if (!isValidation()) return;
+          },
           child: Text(
             "Đăng",
             style: kText18BoldMain,
