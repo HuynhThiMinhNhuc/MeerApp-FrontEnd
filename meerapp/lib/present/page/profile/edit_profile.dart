@@ -1,16 +1,45 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/api/route/user.dart';
 import 'package:meerapp/config/colorconfig.dart';
+import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
+import 'package:meerapp/singleton/user.dart';
 
 import '../../../config/fontconfig.dart';
 import '../../../constant/current_user.dart';
 
+class EditProfileData {
+  String fullname;
+  String birthday;
+  int gender;
+  String email;
+  String phone;
+  String description;
+  String? avatarImageURI;
+  EditProfileData({
+    this.fullname = "",
+    this.birthday = "",
+    this.gender = 0,
+    this.email = "",
+    this.phone = "",
+    this.description = "",
+    this.avatarImageURI,
+  });
+}
+
 class EditProfile extends StatefulWidget {
-  const EditProfile({
+  EditProfileData oldData;
+
+  List<String> genderList = ["Nữ", "Nam"];
+
+  EditProfile({
     Key? key,
+    required this.oldData,
   }) : super(key: key);
 
   @override
@@ -18,27 +47,73 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  late String fullname;
+  late DateTime birthday;
+  late int gender;
+  late String email;
+  late String phone;
+  late String description;
+  ImageProvider? sampleImage1;
+  File? selectedImage1;
+
   var editprofileBloc;
   var dropvalue = "Nữ";
-  var _datetextcontroler;
-  var backupUser;
+
+  void onSubmit() async {
+    final data = {
+      "fullname": fullname,
+      "birthday": birthday.toUtc().toIso8601String(),
+      "gender": gender,
+      "email": email,
+      "phone": phone,
+      "description": description,
+    };
+    if (selectedImage1 != null) {
+      data["avatarImage"] = await MultipartFile.fromFile(selectedImage1!.path);
+    }
+    final r = await UserAPI.updateUserInfo(FormData.fromMap(data));
+    if (r.errorCode == null) {
+      // OK
+      UserSingleton.instance.refreshUserInfo();
+      Navigator.pop(context);
+    } else {
+      // Failed
+      showDialog(
+        context: context,
+        builder: (c) => Text(
+          r.errorMessage!,
+        ),
+      );
+    }
+  }
 
   Future pickImage() async {
     final image = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (image == null) return;
 
-    final _imagetemporary = File(image.path);
-    ;
+    setState(() {
+      final f = File(image.path);
+      sampleImage1 = FileImage(f);
+      selectedImage1 = f;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    dropvalue = currentUser['gender'] == '0' ? "Nữ" : "Nam";
+    // Set old data as init value
+    fullname = widget.oldData.fullname;
+    birthday = DateTime.parse(widget.oldData.birthday);
+    gender = widget.oldData.gender;
+    email = widget.oldData.email;
+    phone = widget.oldData.phone;
+    description = widget.oldData.description;
+    // sampleImage1 = widget.oldData.avatarImageURI != null
+    //     ? MyImage(widget.oldData.avatarImageURI!)
+    //     : const AssetImage("asset/avt1.jpg");
+    sampleImage1 = const AssetImage("asset/avt1.jpg");
 
-    this._datetextcontroler =
-        new TextEditingController(text: currentUser['birthday'].toString());
-    backupUser = currentUser;
+    dropvalue = gender == 0 ? "Nữ" : "Nam";
   }
 
   @override
@@ -61,9 +136,7 @@ class _EditProfileState extends State<EditProfile> {
           toolbarHeight: 40,
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: onSubmit,
               child: Text(
                 "Lưu",
                 style: kText15BoldMain,
@@ -135,6 +208,48 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Widget buildBirthdayText() {
+    return TextFormField(
+      style: kText15MediumBlack,
+      controller: TextEditingController(
+          text: DateFormat('dd/MM/yyyy').format(birthday)),
+      decoration: InputDecoration(
+          border: const UnderlineInputBorder(
+            borderSide: BorderSide(color: meerColor25GreyNoteText, width: 1.0),
+          ),
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: meerColor25GreyNoteText, width: 1.0),
+          ),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(color: meerColor25GreyNoteText, width: 1.0),
+          ),
+          suffixIcon: Theme(
+            data: Theme.of(context).copyWith(
+              primaryColor: meerColorMain,
+            ),
+            child: IconButton(
+              icon:
+                  Icon(Icons.calendar_today, size: 20.w, color: meerColorMain),
+              onPressed: () {
+                showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(DateTime.now().year - 1,
+                      DateTime.now().month, DateTime.now().day),
+                  lastDate: DateTime(DateTime.now().year + 2),
+                ).then((value) {
+                  if (value != null && value != birthday) {
+                    setState(() {
+                      birthday = value;
+                    });
+                  }
+                });
+              },
+            ),
+          )),
+    );
+  }
+
   Widget getbody() {
     return SingleChildScrollView(
       child: SafeArea(
@@ -166,9 +281,7 @@ class _EditProfileState extends State<EditProfile> {
                               border:
                                   Border.all(color: Colors.white, width: 3.w),
                               image: DecorationImage(
-                                  image: AssetImage(
-                                      currentUser['avatarUrl'].toString()),
-                                  fit: BoxFit.cover),
+                                  image: sampleImage1!, fit: BoxFit.cover),
                             ),
                           ),
                           Positioned(
@@ -213,8 +326,12 @@ class _EditProfileState extends State<EditProfile> {
                     Flexible(
                       child: TextFormField(
                         style: kText15MediumBlack,
-                        initialValue: currentUser['fullname'].toString(),
-                        onChanged: (value) => {currentUser['fullname'] = value},
+                        initialValue: fullname.toString(),
+                        onChanged: (value) => setState(
+                          () {
+                            fullname = value;
+                          },
+                        ),
                         decoration: const InputDecoration(
                             border: UnderlineInputBorder(
                               borderSide: BorderSide(
@@ -242,58 +359,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Flexible(
-                      child: TextFormField(
-                        style: kText15MediumBlack,
-                        controller: _datetextcontroler,
-                        decoration: InputDecoration(
-                            border: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: meerColor25GreyNoteText, width: 1.0),
-                            ),
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: meerColor25GreyNoteText, width: 1.0),
-                            ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: meerColor25GreyNoteText, width: 1.0),
-                            ),
-                            suffixIcon: Theme(
-                              data: Theme.of(context).copyWith(
-                                primaryColor: meerColorMain,
-                              ),
-                              child: IconButton(
-                                icon: Icon(Icons.calendar_today,
-                                    size: 20.w, color: meerColorMain),
-                                onPressed: () {
-                                  showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(
-                                        DateTime.now().year - 1,
-                                        DateTime.now().month,
-                                        DateTime.now().day),
-                                    lastDate: DateTime(DateTime.now().year + 2),
-                                  ).then((value) {
-                                    if (value != null) {
-                                      currentUser['birthDay'] =
-                                          DateFormat('dd/MM/yyyy')
-                                              .format(value);
-                                      if (currentUser['birthday'] !=
-                                          _datetextcontroler.text)
-                                        setState(() {
-                                          _datetextcontroler.text =
-                                              currentUser['birthday']
-                                                  .toString();
-                                          print(
-                                              "Date selected: $widget.currentUser.birthDayString");
-                                        });
-                                    }
-                                  });
-                                },
-                              ),
-                            )),
-                      ),
+                      child: buildBirthdayText(),
                     ),
                   ],
                 ),
@@ -309,13 +375,11 @@ class _EditProfileState extends State<EditProfile> {
                     Flexible(
                       child: DropdownButton(
                         style: kText15MediumBlack,
-                        value: dropvalue,
+                        value: widget.genderList[gender],
                         icon: Icon(Icons.arrow_drop_down_outlined),
                         onChanged: (String? newValue) {
                           setState(() {
-                            dropvalue = newValue!;
-                            currentUser['gender'] =
-                                newValue == 'Nữ' ? '0' : "1";
+                            gender = newValue == 'Nữ' ? 0 : 1;
                           });
                         },
                         underline: Container(
@@ -346,8 +410,10 @@ class _EditProfileState extends State<EditProfile> {
                       child: TextFormField(
                         enabled: false,
                         style: kText15MediumBlack,
-                        initialValue: currentUser['email'].toString(),
-                        onChanged: (value) => {currentUser['email'] = value},
+                        initialValue: email.toString(),
+                        onChanged: (value) => setState(() {
+                          email = value;
+                        }),
                       ),
                     )
                   ],
@@ -364,9 +430,10 @@ class _EditProfileState extends State<EditProfile> {
                     Flexible(
                       child: TextFormField(
                         style: kText15MediumBlack,
-                        initialValue: currentUser['phoneNumber'].toString(),
-                        onChanged: (value) =>
-                            {currentUser['phoneNumber'] = value},
+                        initialValue: phone,
+                        onChanged: (value) => setState(() {
+                          phone = value;
+                        }),
                         decoration: const InputDecoration(
                             border: UnderlineInputBorder(
                               borderSide: BorderSide(
@@ -398,20 +465,21 @@ class _EditProfileState extends State<EditProfile> {
                         style: kText15MediumBlack,
                         decoration: const InputDecoration(
                             border: UnderlineInputBorder(
-                              borderSide:  BorderSide(
+                              borderSide: BorderSide(
                                   color: meerColor25GreyNoteText, width: 1.0),
                             ),
                             enabledBorder: UnderlineInputBorder(
-                              borderSide:  BorderSide(
+                              borderSide: BorderSide(
                                   color: meerColor25GreyNoteText, width: 1.0),
                             ),
                             focusedBorder: UnderlineInputBorder(
-                              borderSide:  BorderSide(
+                              borderSide: BorderSide(
                                   color: meerColor25GreyNoteText, width: 1.0),
                             )),
-                        initialValue: currentUser['description'].toString(),
-                        onChanged: (value) =>
-                            {currentUser['description'] = value},
+                        initialValue: description,
+                        onChanged: (value) => setState(() {
+                          description = value;
+                        }),
                       ),
                     ),
                   ],
