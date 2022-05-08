@@ -1,0 +1,5 @@
+
+enum StatusPost {
+  campaign,
+  emergency 
+}

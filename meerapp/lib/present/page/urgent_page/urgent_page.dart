@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/post.dart';
 import 'package:meerapp/present/models/post.dart';
+
+import 'package:meerapp/present/models/statusPost.dart';
+
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 
 class UrgentPage extends StatelessWidget {
@@ -21,11 +25,12 @@ class UrgentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CreateNewEmergency(),
           Container(
-            height: 20.h,
+            height: 15.h,
             color: meerColorBackground,
           ),
           Padding(
@@ -58,7 +63,7 @@ class UrgentPage extends StatelessWidget {
                 return Column(
                   children: data
                       .map((post) => Post(
-                            postData: post,
+                            postData: post, mode: StatusPost.emergency,
                           ))
                       .toList(),
                 );
@@ -69,6 +74,7 @@ class UrgentPage extends StatelessWidget {
               }
             },
           )
+
         ],
       ),
     );
@@ -82,38 +88,65 @@ class CreateNewEmergency extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              backgroundImage: AssetImage("asset/demo.jpg"),
-              radius: 26,
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: Container(
-                  height: 40.h,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Khẩn cấp? Đăng ngay..",
-                    style: kText15RegularGreyNotetext,
-                  ),
+    return Padding(
+      padding: EdgeInsets.all(20.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          IconButton(
+            iconSize: 130.w,
+            icon: Container(
+                height: 130.w,
+                width: 130.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: meerColorRed,
+                  boxShadow: [
+                    BoxShadow(
+                      color: meerColorRed.withOpacity(0.5),
+                      spreadRadius: 13,
+                      blurRadius: 5,
+                      offset: const Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
                 ),
-              ),
-            ),
-          ],
-        ),
+                child: IconButton(
+                    onPressed: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const CreateNewEmergencyPage()),
+                          )
+                        },
+                    icon: const Icon(FontAwesomeIcons.bell,
+                        size: 50, color: meerColorWhite))),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const CreateNewEmergencyPage()),
+              );
+            },
+          ),
+          SizedBox(
+            height: 15.h,
+          ),
+          Text(
+            "Khẩn cấp",
+            style: kText15BoldBlack,
+          ),
+          SizedBox(
+            height: 5.h,
+          ),
+          Text(
+            "Nhấn trong trường hợp khẩn cấp",
+            style: kText13RegularNote,
+          ),
+        ],
       ),
-      onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const CreateNewEmergencyPage()),
-        )
-      },
     );
   }
 }
