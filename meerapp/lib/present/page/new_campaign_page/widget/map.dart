@@ -1,18 +1,21 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meerapp/config/constant.dart';
 
 class MyMap extends StatefulWidget {
-  MyMap({Key? key}) : super(key: key);
+  final LatLng? initLocation;
+  MyMap({Key? key, this.initLocation}) : super(key: key);
 
   @override
   State<MyMap> createState() => _MyMapState();
 }
 
 class _MyMapState extends State<MyMap> {
-  final CameraPosition initialCameraPosition = CameraPosition(
-      target: LatLng(
+  late final CameraPosition initialCameraPosition = CameraPosition(
+      target: widget.initLocation ?? LatLng(
         DefaultLatLng.latitude,
         DefaultLatLng.longitude,
       ),
@@ -75,7 +78,11 @@ class _MyMapState extends State<MyMap> {
             onPressed: () {
               Navigator.pop(context, chooseLocation);
             },
-            child: const Text('Lưu'),
+            child: const Text('Lưu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20
+                )),
           )
         ],
       ),
@@ -86,6 +93,7 @@ class _MyMapState extends State<MyMap> {
         },
         onTap: (choosePosition) {
           setState(() {
+            log('change location: ' + chooseLocation.toString());
             chooseLocation = choosePosition;
           });
         },

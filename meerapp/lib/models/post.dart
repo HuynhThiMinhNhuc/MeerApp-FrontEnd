@@ -276,7 +276,6 @@ class _EmailConverter extends JsonConverter<String, Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson(String object) {
-    // TODO: implement toJson
     throw UnimplementedError();
   }
 }
@@ -290,7 +289,6 @@ class _PhoneConverter extends JsonConverter<String?, Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson(String? object) {
-    // TODO: implement toJson
     throw UnimplementedError();
   }
 }

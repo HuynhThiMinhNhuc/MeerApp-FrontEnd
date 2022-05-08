@@ -8,6 +8,7 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
+import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
@@ -69,9 +70,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
     return Scaffold(
       backgroundColor: meerColorWhite,
       body: (isLoading)
-          ? Center(
-              child: SpinKitFadingCircle(size: 100),
-            )
+          ? const LoadingPage()
           : SingleChildScrollView(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

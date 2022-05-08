@@ -7,6 +7,7 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
+import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
@@ -81,9 +82,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
     return Scaffold(
       backgroundColor: meerColorWhite,
       body: isLoading
-          ? const Center(
-              child: SpinKitFadingCircle(color: Colors.black, size: 100),
-            )
+          ? const LoadingPage()
           : NestedScrollView(
               floatHeaderSlivers: true,
               headerSliverBuilder: (context, value) {

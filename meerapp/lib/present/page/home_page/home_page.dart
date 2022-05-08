@@ -8,6 +8,7 @@ import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
+import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/post.dart';
 
 import '../../../models/post.dart';
@@ -123,7 +124,12 @@ class _HomePageState extends State<HomePage> {
             if (index < posts.length) {
               return Post(postData: posts[index]);
             } else {
-              return const Text('loading');
+              return Container(
+                height: 100,
+                child: const LoadingPage(
+                  size: 50,
+                ),
+              );
             }
           });
     } else {

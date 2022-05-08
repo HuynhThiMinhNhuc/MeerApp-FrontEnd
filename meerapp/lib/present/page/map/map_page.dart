@@ -305,7 +305,6 @@ class MyCustomInfoWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        //TODO: add loading widget
         if (object is EmergencyMap) {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return DetailEmerencyPage(

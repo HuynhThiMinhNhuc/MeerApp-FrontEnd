@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,15 +7,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/colorconfig.dart';
+import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
-import 'package:meerapp/constant/user.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
+import 'package:meerapp/models/user.dart';
 import 'package:meerapp/present/component/image_card.dart';
 import 'package:meerapp/present/page/new_campaign_page/widget/map.dart';
 import 'package:meerapp/singleton/user.dart';
+import 'package:debounce_throttle/debounce_throttle.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
@@ -48,6 +53,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
   late File? backgroundImage;
   DateTime? startDate;
   LatLng? location;
+  DateTime timeDay = DateTime.now();
+  TimeOfDay? timeHour;
+  List<UserOverview> listChooseUser = [];
 
   @override
   void initState() {
@@ -57,7 +65,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     _locationTextController = TextEditingController();
     _descriptionTextController = TextEditingController();
     _requireTextController = TextEditingController();
-    _timeTextController =TextEditingController(text: "Chọn giờ tổ chức");
+    _timeTextController = TextEditingController(text: "Chọn giờ tổ chức");
   }
 
   @override
@@ -72,44 +80,64 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
   }
 
   bool isValidation() {
-    if (_nameTextController.text.trim().isEmpty) {
+    void _showAlertDialog(String text) {
       showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: const Text('Lỗi'),
-          content: const Text('Vui lòng nhập tên sự kiện'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: const Text('Hủy'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('Lưu'),
-            ),
-          ],
-        ),
-      );
-      return false;
-    }
-    if (location == null) {
-      showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Lỗi'),
-          content: const Text('Vui lòng chọn địa điểm diễn ra sự kiện'),
+          content: Text(text),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Lưu'),
+              child: const Text('Ok'),
             ),
           ],
         ),
       );
+    }
+
+    if (_nameTextController.text.trim().isEmpty) {
+      _showAlertDialog('Vui lòng nhập tên sự kiện');
+      return false;
+    }
+    if (_locationTextController.text.trim().isEmpty) {
+      _showAlertDialog('Vui lòng nhập địa chỉ nơi diễn ra sự kiện');
+      return false;
+    }
+    if (location == null) {
+      _showAlertDialog('Vui lòng đánh dấu địa điểm trên bản đồ');
       return false;
     }
 
     return true;
+  }
+
+  void _addNewCampagin() async {
+    var currentUser = await UserSingleton.instance.userInfoStream.stream.last;
+
+    var post = CampaignPost(
+      id: 0,
+      address: _locationTextController.text,
+      lat: location!.latitude,
+      lng: location!.longitude,
+      title: _nameTextController.text,
+      content: _descriptionTextController.text,
+      creator: UserOverview.fromJson(currentUser),
+      timeCreate: DateTime.now(),
+      imageUrl: avatarImage?.path,
+      bannerUrl: backgroundImage?.path,
+      timeStart: DateTime(
+        timeDay.year,
+        timeDay.month,
+        timeDay.day,
+        timeHour!.hour,
+        timeHour!.minute,
+      ),
+    );
+    final success = await widget._postController.InsertPost(post);
+    if (success) {
+      // TODO: show dialog success
+    }
   }
 
   @override
@@ -182,7 +210,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: TextFormField(),
+                              child: TextFormField(
+                                controller: _locationTextController,
+                              ),
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -254,7 +284,13 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                           size: 20,
                                         ),
                                         onPressed: () async {
-                                          location = await Navigator.of(context).push<LatLng?>(MaterialPageRoute(builder: (_)=>MyMap()));
+                                          location = await Navigator.of(context)
+                                              .push<LatLng?>(
+                                            MaterialPageRoute(
+                                              builder: (_) =>
+                                                  MyMap(initLocation: location),
+                                            ),
+                                          );
                                         },
                                       )
                                     ],
@@ -288,89 +324,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.w),
-                              child: InputDecorator(
-                                  decoration: InputDecoration(
-                                    contentPadding:
-                                        EdgeInsets.fromLTRB(7.w, 0, 0, 0),
-                                    border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(4.0)),
-                                    ),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Flexible(
-                                              child: TextFormField(
-                                                readOnly: true,
-                                                textAlign: TextAlign.start,
-                                                style: kText15RegularBlack,
-                                                controller: _dateTextController,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        border:
-                                                            InputBorder.none),
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(
-                                                  FontAwesomeIcons.caretDown),
-                                              onPressed: () => {
-                                                showDatePicker(
-                                                  cancelText: "Huỷ",
-                                                  confirmText: "Lưu",
-                                                  locale: Locale("vi","VN"),
-                                                  context: context,
-                                                  initialDate: DateTime.now(),
-                                                  firstDate: DateTime(
-                                                      DateTime.now().year - 1,
-                                                      DateTime.now().month,
-                                                      DateTime.now().day),
-                                                  lastDate: DateTime(
-                                                      DateTime.now().year + 2),
-                                                ).then((value) {
-                                                  startDate = value;
-
-                                                  if (startDate != null &&
-                                                      startDate != "") {
-                                                    final formattedDate =
-                                                        DateFormat('dd/MM/yyyy')
-                                                            .format(startDate!);
-                                                    if (formattedDate !=
-                                                        _dateTextController
-                                                            .text) {
-                                                      setState(() {
-                                                        _dateTextController
-                                                                .text =
-                                                            formattedDate;
-                                                        print(
-                                                            "Date selected: $formattedDate");
-                                                      });
-                                                    }
-                                                  } else {
-                                                    setState(() {
-                                                      _dateTextController.text =
-                                                          '';
-                                                    });
-                                                  }
-                                                })
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                            
+                            _buildTimeDay(context),
                             SizedBox(
                               height: 15.h,
                             ),
@@ -393,16 +347,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            TimePickerDialog(
-                              hourLabelText: "Giờ",
-                              minuteLabelText: "Phút",
-                              initialTime: TimeOfDay(
-                                hour: DateTime.now().hour,
-                                minute: DateTime.now().minute,
-                              ),
-                              initialEntryMode: TimePickerEntryMode.input,
-                            ),
-                            
+                            _buildTimeHour(context),
                             SizedBox(
                               height: 10.h,
                             ),
@@ -411,7 +356,6 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                       ),
                     ),
                   ),
-                 
                 ])),
             SizedBox(
               height: 10.h,
@@ -433,8 +377,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                           style: kText15BoldBlack,
                         ),
                         TextButton(
-                            onPressed: () {
-                              showDialogAddCampaignUser(context);
+                            onPressed: () async {
+                              await showDialogAddCampaignUser(context);
+                              setState(() {});
                             },
                             child: Text(
                               "Thêm",
@@ -445,7 +390,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                     Wrap(
                       spacing: 8.0.h, // gap between adjacent chips
                       children: List.generate(
-                        users.length,
+                        listChooseUser.length,
                         (index) => Padding(
                           padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 0),
                           child: Chip(
@@ -455,7 +400,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                               color: meerColorWhite,
                             ),
                             label: Text(
-                              users[index]["fullName"],
+                              listChooseUser[index].name,
                               style: TextStyle(
                                   fontFamily: 'Roboto_Regular',
                                   fontSize: 13.sp,
@@ -562,38 +507,136 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     );
   }
 
+  Widget _buildTimeDay(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: InputDecorator(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(7.w, 0, 0, 0),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: TextFormField(
+                        readOnly: true,
+                        textAlign: TextAlign.start,
+                        style: kText15RegularBlack,
+                        controller: _dateTextController,
+                        decoration:
+                            const InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(FontAwesomeIcons.caretDown),
+                      onPressed: () async {
+                        var startDate = await showDatePicker(
+                          cancelText: "Huỷ",
+                          confirmText: "Lưu",
+                          locale: Locale("vi", "VN"),
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(DateTime.now().year - 1,
+                              DateTime.now().month, DateTime.now().day),
+                          lastDate: DateTime(DateTime.now().year + 2),
+                        );
+
+                        if (startDate != null) {
+                          timeDay = startDate;
+                          final formattedDate =
+                              DateFormat('dd/MM/yyyy').format(startDate!);
+                          setState(() {
+                            _dateTextController.text =
+                                "Ngày tổ chức: " + formattedDate;
+                            print("Date selected: $formattedDate");
+                          });
+                        } else {
+                          timeDay = DateTime.now();
+                          setState(() {
+                            _dateTextController.text = '';
+                          });
+                        }
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )),
+    );
+  }
+
+  Widget _buildTimeHour(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: InputDecorator(
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(7.w, 0, 0, 0),
+            border: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: TextFormField(
+                        readOnly: true,
+                        textAlign: TextAlign.start,
+                        style: kText15RegularBlack,
+                        controller: _timeTextController,
+                        decoration:
+                            const InputDecoration(border: InputBorder.none),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(FontAwesomeIcons.caretDown),
+                      onPressed: () async {
+                        timeHour = await showTimePicker(
+                          hourLabelText: "Giờ",
+                          minuteLabelText: "Phút",
+                          initialTime: TimeOfDay(
+                            hour: timeHour?.hour ?? DateTime.now().hour,
+                            minute: timeHour?.minute ?? DateTime.now().minute,
+                          ),
+                          initialEntryMode: TimePickerEntryMode.input,
+                          cancelText: "Hủy",
+                          confirmText: "Lưu",
+                          onEntryModeChanged: (time) => {
+                            //Todo: save data time
+                          },
+                          context: context,
+                        );
+                        if (timeHour != null) {
+                          _timeTextController.text =
+                              'Giờ tổ chức ${timeHour!.hour}:${timeHour!.minute}';
+                        }
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ],
+          )),
+    );
+  }
+
   Future<String?> showDialogAddCampaignUser(BuildContext context) {
     return showDialog<String>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(
-          'Thêm người tham gia',
-          style: kText15BoldBlack,
-        ),
-        content: Autocomplete<String>(
-          optionsBuilder: (TextEditingValue textEditingValue) {
-            if (textEditingValue.text == '') {
-              return const Iterable<String>.empty();
-            }
-            return CreateNewCampaignPage._userName.where((String option) {
-              return option.contains(textEditingValue.text.toLowerCase());
-            });
-          },
-          onSelected: (String selection) {
-            debugPrint('You just selected $selection');
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-            child: const Text('Hủy'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'OK'),
-            child: const Text('Lưu'),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) =>
+          AddParticipantAlert(listChooseUser: listChooseUser),
     );
   }
 
@@ -629,22 +672,71 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
       ],
     );
   }
+}
 
-  void _addNewCampagin() {
-    // var post = CampaignPost(
-    //     id: 0,
-    //     address: _locationTextController.text,
-    //     lat: location!.latitude,
-    //     lng: location!.longitude,
-    //     title: _nameTextController.text,
-    //     content: _descriptionTextController.text,
-    //     creator: ,
-    //     timeCreate: DateTime.now(),
-    //     imageUrl: avatarImage?.path,
-    //     bannerUrl: backgroundImage?.path,
-    //     timeStart: ,
-    //     );
-    // widget._postController.InsertPost(post);
+class AddParticipantAlert extends StatelessWidget {
+  AddParticipantAlert({
+    Key? key,
+    required this.listChooseUser,
+  }) : super(key: key);
+
+  final List<UserOverview> listChooseUser;
+  final List<UserOverview> _listUserBytext = [];
+  int count = 0;
+  late Debouncer<String> debouncer =
+      Debouncer<String>(Duration(microseconds: 3000), initialValue: '',
+          onChanged: (textSearch) async {
+    var queryParams = {
+      'searchby': 'fullname',
+      'searchvalue': textSearch,
+      'orderby': 'fullname',
+      'orderdirection': 'asc',
+      'start': 0,
+      'count': 5,
+    };
+    var response = await myAPIWrapper.get(
+      ServerUrl + '/user/select',
+      queryParameters: queryParams,
+    );
+
+    _listUserBytext.clear();
+    _listUserBytext.addAll((response.data as List<dynamic>)
+        .map((json) => UserOverview.fromJson(json)));
+    log('load complete: ' + (++count).toString());
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        'Thêm người tham gia',
+        style: kText15BoldBlack,
+      ),
+      content: Autocomplete<UserOverview>(
+        displayStringForOption: (option) => option.name,
+        optionsBuilder: (TextEditingValue textEditingValue) async {
+          if (textEditingValue.text.trim() == '') {
+            return [];
+          }
+          debouncer.setValue(textEditingValue.text);
+          return _listUserBytext;
+        },
+        onSelected: (UserOverview selection) {
+          debugPrint('You just selected ${selection.name}');
+          listChooseUser.add(selection);
+        },
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'Cancel'),
+          child: const Text('Hủy'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, 'OK'),
+          child: const Text('Lưu'),
+        ),
+      ],
+    );
   }
 }
 
