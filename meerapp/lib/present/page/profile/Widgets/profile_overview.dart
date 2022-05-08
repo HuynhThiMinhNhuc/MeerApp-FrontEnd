@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/constant/current_user.dart';
+import 'package:meerapp/present/page/Login/login_view.dart';
 import 'package:meerapp/present/page/profile/join_view.dart';
 
 import '../../../../config/fontconfig.dart';
@@ -138,11 +139,13 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                         showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: const Text(
+                            title: Text(
                               'Đăng xuất',
+                              style: kText16BoldBlack,
                             ),
-                            content: const Text(
+                            content: Text(
                               'Bạn thật sự muốn đăng xuất khỏi tài khoản này?',
+                              style: kText14RegularBlack,
                             ),
                             actions: <Widget>[
                               TextButton(
@@ -154,7 +157,13 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                                 ),
                               ),
                               TextButton(
-                                onPressed: () => Navigator.pop(context, 'Đăng'),
+                                onPressed: () => {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => LoginPage()),
+                                  ),
+                                },
                                 child:
                                     Text('Đăng xuất', style: kText15BoldMain),
                               ),
@@ -206,9 +215,9 @@ class _ProfileOverViewState extends State<ProfileOverView> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                joinedOverview('Đã tạo', 15, JoinedView(0)),
-                joinedOverview('Đã tham gia', 15, JoinedView(1)),
-                joinedOverview('Bỏ tham gia', 15, JoinedView(2)),
+                joinedOverview('Đã tạo', 15, JoinedView(currentTab: 0,)),
+                joinedOverview('Đã tham gia', 15, JoinedView(currentTab: 1,)),
+                joinedOverview('Bỏ tham gia', 15, JoinedView(currentTab: 2,)),
               ],
             ),
           ),
