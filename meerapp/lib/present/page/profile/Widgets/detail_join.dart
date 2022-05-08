@@ -20,7 +20,7 @@ class DetailJoinWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var future = Future.wait([
       UserAPI.getDonedCampaign(),
-      UserAPI.getDoneEmergency(),
+      UserAPI.getDonedEmergency(),
     ]);
     return SingleChildScrollView(
       child: Column(

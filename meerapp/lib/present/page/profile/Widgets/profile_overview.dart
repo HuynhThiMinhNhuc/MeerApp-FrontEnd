@@ -17,30 +17,62 @@ import '../edit_profile.dart';
 import '../menuView.dart';
 import '../profilepage.dart';
 
-class ProfileOverView extends StatefulWidget {
+class ProfileOverView extends StatelessWidget {
   mode modeProfile;
 
   ProfileOverView(this.modeProfile);
 
   @override
-  _ProfileOverViewState createState() => _ProfileOverViewState();
-}
-
-class _ProfileOverViewState extends State<ProfileOverView> {
-  @override
   Widget build(BuildContext context) {
-    return StreamBuilder<dynamic>(
-      stream: UserSingleton.instance.userInfoStream.stream,
+    Widget joinedOverview(
+        String title, int number, Widget clickJoinedOverview) {
+      return InkWell(
+        onTap: () => {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => clickJoinedOverview))
+        },
+        child: Container(
+          child: Column(children: [
+            Text(
+              number.toString(),
+              style: kText16BoldBlack,
+            ),
+            SizedBox(
+              height: 5.h,
+            ),
+            Text(
+              title,
+              style: kText11RegularHintText,
+            ),
+          ]),
+        ),
+      );
+    }
+
+    return StreamBuilder<List<dynamic>>(
+      stream: Stream.fromFuture(Future.wait([
+        UserAPI.getCurrentUserInfo(),
+        UserAPI.getCreatedCampaign(),
+        UserAPI.getDonedCampaign(),
+        UserAPI.getNotDoneCampaign(),
+      ])),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data == null) {
           return Column();
         }
 
-        final userInfo = snapshot.data as dynamic;
-        //final avatarImageURI = userInfo["avatarImageURI"];
-        final avatarImageURI = "asset/avt1.jpg";
+        if (snapshot.hasError) {
+          return Column();
+        }
+
+        final userInfo = snapshot.data![0].data as dynamic;
+        final avatarImageURI = userInfo["avatarImageURI"];
         final fullname = userInfo["fullname"];
         final description = userInfo["description"];
+
+        final countCreated = snapshot.data![1].data.length;
+        final countDoned = snapshot.data![2].data.length;
+        final countNotDone = snapshot.data![3].data.length;
 
         List name = fullname.toString().split(' ');
 
@@ -55,7 +87,9 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                     image: DecorationImage(
                         colorFilter: ColorFilter.mode(
                             Colors.black.withOpacity(0.3), BlendMode.darken),
-                        image: MyImage(avatarImageURI),
+                        image: avatarImageURI == null
+                            ? const AssetImage("assets/avt1.jpg")
+                            : MyImage(avatarImageURI),
                         fit: BoxFit.cover),
                   ),
                 ),
@@ -169,19 +203,19 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                   children: [
                     joinedOverview(
                         'Đã tạo',
-                        15,
+                        countCreated,
                         JoinedView(
                           currentTab: 0,
                         )),
                     joinedOverview(
                         'Đã tham gia',
-                        15,
+                        countDoned,
                         JoinedView(
                           currentTab: 1,
                         )),
                     joinedOverview(
                         'Bỏ tham gia',
-                        15,
+                        countNotDone,
                         JoinedView(
                           currentTab: 2,
                         )),
@@ -236,7 +270,7 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                   height: 20.h,
                 ),
                 SizedBox(
-                    child: widget.modeProfile == mode.My
+                    child: modeProfile == mode.My
                         ? InkWell(
                             child: Padding(
                               padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -262,24 +296,12 @@ class _ProfileOverViewState extends State<ProfileOverView> {
                                 ),
                               ),
                             ),
-                            onTap: () => {
+                            onTap: () {
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfile(
-                                          oldData: EditProfileData(
-                                            birthday: userInfo["birthday"],
-                                            description:
-                                                userInfo["description"],
-                                            email: userInfo["email"],
-                                            fullname: userInfo["fullname"],
-                                            gender: userInfo["gender"] as int,
-                                            phone: userInfo["phone"],
-                                            avatarImageURI:
-                                                userInfo["avatarImageURI"],
-                                          ),
-                                        )),
-                              ).then((value) => {})
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfile(),
+                                  ));
                             },
                           )
                         : Container()),
@@ -288,30 +310,6 @@ class _ProfileOverViewState extends State<ProfileOverView> {
           ],
         );
       },
-    );
-  }
-
-  Widget joinedOverview(String title, int number, Widget clickJoinedOverview) {
-    return InkWell(
-      onTap: () => {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => clickJoinedOverview))
-      },
-      child: Container(
-        child: Column(children: [
-          Text(
-            number.toString(),
-            style: kText16BoldBlack,
-          ),
-          SizedBox(
-            height: 5.h,
-          ),
-          Text(
-            title,
-            style: kText11RegularHintText,
-          ),
-        ]),
-      ),
     );
   }
 }

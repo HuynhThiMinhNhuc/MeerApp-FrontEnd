@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/api/route/user.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
@@ -33,31 +34,25 @@ class EditProfileData {
 }
 
 class EditProfile extends StatefulWidget {
-  EditProfileData oldData;
-
   List<String> genderList = ["Nữ", "Nam"];
 
-  EditProfile({
-    Key? key,
-    required this.oldData,
-  }) : super(key: key);
+  EditProfile({Key? key}) : super(key: key);
 
   @override
   _EditProfileState createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
-  late String fullname;
-  late DateTime birthday;
-  late int gender;
-  late String email;
-  late String phone;
-  late String description;
+  String fullname = "";
+  DateTime birthday = DateTime.now();
+  int gender = 0;
+  String email = "";
+  String phone = "";
+  String description = "";
   ImageProvider? sampleImage1;
   File? selectedImage1;
 
   var editprofileBloc;
-  var dropvalue = "Nữ";
 
   void onSubmit() async {
     final data = {
@@ -101,27 +96,40 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-    // Set old data as init value
-    fullname = widget.oldData.fullname;
-    birthday = DateTime.parse(widget.oldData.birthday);
-    gender = widget.oldData.gender;
-    email = widget.oldData.email;
-    phone = widget.oldData.phone;
-    description = widget.oldData.description;
-    // sampleImage1 = widget.oldData.avatarImageURI != null
-    //     ? MyImage(widget.oldData.avatarImageURI!)
-    //     : const AssetImage("asset/avt1.jpg");
-    sampleImage1 = const AssetImage("asset/avt1.jpg");
 
-    dropvalue = gender == 0 ? "Nữ" : "Nam";
+    sampleImage1 = const AssetImage("asset/avt1.jpg");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(50), child: getappbar()),
-        body: getbody());
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: getappbar(),
+      ),
+      body: FutureBuilder<MyResponse>(
+        future: UserAPI.getCurrentUserInfo(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Column();
+          }
+
+          // Set old data as init value
+          final oldData = snapshot.data!.data;
+          fullname = oldData["fullname"];
+          birthday = DateTime.parse(oldData["birthday"]);
+          gender = oldData["gender"];
+          email = oldData["email"];
+          phone = oldData["phone"];
+          description = oldData["description"];
+          if (oldData["avatarImageURI"] != null) {
+            sampleImage1 = MyImage(oldData["avatarImageURI"]);
+          }
+
+          return getbody();
+        },
+      ),
+    );
   }
 
   Widget getappbar() {
@@ -156,59 +164,12 @@ class _EditProfileState extends State<EditProfile> {
             "Chỉnh sửa",
             style: kText17BoldBlack,
           ),
-
-          // BlocListener<EditprofileBloc, EditprofileState>(
-          //   listener: (context, state) async {
-          //     if (state is EditprofilePhoneWrongFormatFail) {
-          //       showDialog(
-          //           context: context,
-          //           builder: (BuildContext buildercontext) =>
-          //               DialogWithCircleAbove(
-          //                   title: "Số điện thoại không hợp lệ",
-          //                   content:
-          //                       "Số điện thoại phải có 10 chữ số, bắt đầu bằng 0",
-          //                   mode: ModeDialog.warning)
-          //           // => MyAlertDialog(
-          //           //       content:
-          //           //           "Số điện thoại phải có 10 chữ số, bắt đầu bằng 0",
-          //           //       pathImage:
-          //           //           'asset/imagesample/ImageAlerDIalog/lostconnect.png',
-          //           //       title: "Số điện thoại không hợp lệ",
-          //           //     )
-          //           );
-          //     } else if (state is EditprofileSucess) {
-          //       await showDialog(
-          //           context: context,
-          //           builder: (BuildContext buildercontext) {
-          //             return DialogWithCircleAbove(
-          //                 title: "Cập nhật hồ sơ thành công",
-          //                 content:
-          //                     "Vui lòng nhấn Đồng ý để quay về màn hình Hồ sơ của bạn",
-          //                 mode: ModeDialog.anounce);
-          //             //  MyAlertDialog(
-          //             //   content:
-          //             //       "Vui lòng nhấn Đồng ý để quay về màn hình Hồ sơ của bạn",
-          //             //   pathImage:
-          //             //       'asset/imagesample/ImageAlerDIalog/updateprofile.png',
-          //             //   title: "Cập nhật hồ sơ thành công",
-          //             // );
-          //           });
-          //       widget.onEditPro.call();
-          //       Navigator.pop(context);
-
-          //  TextButton(
-          //     onPressed: close,
-          //     child: Text(
-          //       "Xong",
-          //       style: kText20BoldMain,
-          //     ),
-          //   ),
         ),
       ],
     );
   }
 
-  Widget buildBirthdayText() {
+  Widget buildBirthdayText(DateTime birthday) {
     return TextFormField(
       style: kText15MediumBlack,
       controller: TextEditingController(
@@ -359,7 +320,7 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     Flexible(
-                      child: buildBirthdayText(),
+                      child: buildBirthdayText(birthday),
                     ),
                   ],
                 ),
@@ -484,7 +445,6 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ],
                 ),
-               
                 Padding(
                   padding: EdgeInsets.only(top: 7.h),
                   child: Align(

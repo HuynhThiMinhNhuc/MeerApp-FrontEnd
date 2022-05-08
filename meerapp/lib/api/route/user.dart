@@ -22,7 +22,12 @@ class UserAPI {
         ServerUrl + "/user/detail/campaign/notdoned?start=0&count=1000");
   }
 
-  static Future<MyResponse> getDoneEmergency() async {
+  static Future<MyResponse> getCreatedEmergency() async {
+    return myAPIWrapper.getWithAuth(
+        ServerUrl + "/user/detail/emergency/created?start=0&count=1000");
+  }
+
+  static Future<MyResponse> getDonedEmergency() async {
     return myAPIWrapper.getWithAuth(
         ServerUrl + "/user/detail/emergency/doned?start=0&count=1000");
   }

@@ -26,13 +26,13 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
+    //UserSingleton.instance.refreshUserInfo();
     _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width;
-    UserSingleton.instance.refreshUserInfo();
 
     return SingleChildScrollView(
       child: StreamBuilder(
@@ -44,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage>
                 mode.My,
               ),
               _buildToggleButton(),
-              _buildListCreatedCampaign(),
+              _buildPost(stateToggle),
             ],
           );
         },
@@ -64,14 +64,19 @@ class _ProfilePageState extends State<ProfilePage>
           selectedColor: meerColorWhite,
           onPressed: (int index) {
             setState(() {
-              for (int buttonIndex = 0;
-                  buttonIndex < stateToggle.length;
-                  buttonIndex++) {
-                if (buttonIndex == index) {
-                  stateToggle[buttonIndex] = true;
-                } else {
-                  stateToggle[buttonIndex] = false;
-                }
+              // for (int buttonIndex = 0;
+              //     buttonIndex < stateToggle.length;
+              //     buttonIndex++) {
+              //   if (buttonIndex == index) {
+              //     stateToggle[buttonIndex] = true;
+              //   } else {
+              //     stateToggle[buttonIndex] = false;
+              //   }
+              // }
+              if (index == 0) {
+                stateToggle = [true, false];
+              } else {
+                stateToggle = [false, true];
               }
             });
           },
@@ -116,11 +121,19 @@ class _ProfilePageState extends State<ProfilePage>
     );
   }
 
+  Widget _buildPost(List<bool> stateToggle) {
+    if (stateToggle[0]) {
+      return _buildListCreatedCampaign();
+    } else {
+      return _buildListCreatedEmergency();
+    }
+  }
+
   Widget _buildListCreatedCampaign() {
     return FutureBuilder<MyResponse>(
       future: UserAPI.getCreatedCampaign(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (snapshot.hasError || !snapshot.hasData) {
           return Column(
             children: [CircularProgressIndicator()],
           );
@@ -129,7 +142,27 @@ class _ProfilePageState extends State<ProfilePage>
         final createdCampaigns = snapshot.data!.data as List<dynamic>;
         return Column(
           children: createdCampaigns
-              .map((e) => Post(postData: CampaignPost.fromJson(e)))
+              .map((e) => Post(postData: EmergencyPost.fromJson(e)))
+              .toList(),
+        );
+      },
+    );
+  }
+
+  Widget _buildListCreatedEmergency() {
+    return FutureBuilder<MyResponse>(
+      future: UserAPI.getCreatedEmergency(),
+      builder: (context, snapshot) {
+        if (snapshot.hasError || !snapshot.hasData) {
+          return Column(
+            children: [CircularProgressIndicator()],
+          );
+        }
+
+        final createdEmergencys = snapshot.data!.data as List<dynamic>;
+        return Column(
+          children: createdEmergencys
+              .map((e) => Post(postData: EmergencyPost.fromJson(e)))
               .toList(),
         );
       },

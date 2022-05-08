@@ -36,6 +36,7 @@ class UserSingleton {
 
   late StreamController<dynamic> userInfoStream;
   FutureOr<void> refreshUserInfo() async {
+    log("refreshUserInfo()");
     UserAPI.getCurrentUserInfo().then((value) {
       if (value.errorCode == null) {
         userInfoStream.sink.add(value.data);
