@@ -467,7 +467,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                           hintText: "Thêm tiêu đề tại đây"),
                     ),
                     TextFormField(
-                        keyboardType: TextInputType.name,
+                        keyboardType: TextInputType.multiline,
                         controller: _descriptionTextController,
                         minLines: 15,
                         maxLines: 15,
