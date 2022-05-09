@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/constant.dart';
+import 'package:meerapp/config/fontconfig.dart';
 
 class MyMap extends StatefulWidget {
   final LatLng? initLocation;
@@ -72,17 +74,17 @@ class _MyMapState extends State<MyMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bản đồ'),
+        backgroundColor: meerColorBackground,
+        iconTheme: const IconThemeData(color: meerColorBlackIcon),
+        centerTitle: true,
+        title: Text('Bản đồ', style: kText18BoldMain.copyWith(color: meerColorBlack),),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context, chooseLocation);
             },
-            child: const Text('Lưu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20
-                )),
+            child: Text('Lưu',
+               style: kText18BoldMain),
           )
         ],
       ),
