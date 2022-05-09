@@ -115,45 +115,15 @@ class ProfileOverView extends StatelessWidget {
                         ),
                         IconButton(
                           icon: const Icon(
-                            Icons.logout,
+                            FontAwesomeIcons.ellipsisVertical,
                             color: Colors.white,
                           ),
                           iconSize: 25.h,
                           onPressed: () {
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: Text(
-                                  'Đăng xuất',
-                                  style: kText16BoldBlack,
-                                ),
-                                content: Text(
-                                  'Bạn thật sự muốn đăng xuất khỏi tài khoản này?',
-                                  style: kText14RegularBlack,
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, 'Hủy'),
-                                    child: Text(
-                                      'Hủy',
-                                      style: kText15BoldBlack.copyWith(
-                                          color: meerColorGreyNoteText),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => LoginPage()),
-                                      ),
-                                    },
-                                    child: Text('Đăng xuất',
-                                        style: kText15BoldMain),
-                                  ),
-                                ],
-                              ),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MenuView()),
                             );
                           },
                         ),
@@ -269,42 +239,6 @@ class ProfileOverView extends StatelessWidget {
                 SizedBox(
                   height: 20.h,
                 ),
-                SizedBox(
-                    child: modeProfile == mode.My
-                        ? InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15.w),
-                              child: Container(
-                                height: 35.h,
-                                decoration: const BoxDecoration(
-                                  color: meerColorMain,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(5),
-                                  ), //BorderRadius.all
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Chỉnh sửa hồ sơ',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.white,
-                                        decoration: TextDecoration.none,
-                                        fontFamily: 'Roboto_Regular',
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditProfile(),
-                                  ));
-                            },
-                          )
-                        : Container()),
               ],
             ),
           ],
