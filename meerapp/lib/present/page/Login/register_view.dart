@@ -41,7 +41,7 @@ class _RegisterViewState extends State<RegisterView> {
       _showDialog("Thất bại", "Đã xảy ra lỗi. Vui lòng thử lại");
       return;
     }
-    if (res.data["data"] as bool) {
+    if (res.data as bool) {
       _showDialog("Thất bại", "Email đã được sử dụng");
       return;
     }
