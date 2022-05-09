@@ -120,7 +120,7 @@ class _EditProfileState extends State<EditProfile> {
           email = oldData["email"];
           phone = oldData["phone"];
           description = oldData["description"];
-          sampleImage1 = MyImage(
+          sampleImage1 = MyImageProvider(
               oldData["avatarImageURI"], const AssetImage("asset/avt1.jpg"));
 
           return getbody();

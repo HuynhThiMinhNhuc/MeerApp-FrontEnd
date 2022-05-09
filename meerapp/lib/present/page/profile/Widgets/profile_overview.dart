@@ -87,7 +87,7 @@ class ProfileOverView extends StatelessWidget {
                     image: DecorationImage(
                         colorFilter: ColorFilter.mode(
                             Colors.black.withOpacity(0.3), BlendMode.darken),
-                        image: MyImage(
+                        image: MyImageProvider(
                             avatarImageURI, const AssetImage("asset/avt1.jpg")),
                         fit: BoxFit.cover),
                   ),
@@ -152,7 +152,7 @@ class ProfileOverView extends StatelessWidget {
                             border: Border.all(color: Colors.white, width: 3),
                             image: DecorationImage(
                                 alignment: Alignment(0, -0.8.h),
-                                image: MyImage(avatarImageURI,
+                                image: MyImageProvider(avatarImageURI,
                                     const AssetImage("asset/avt1.jpg")),
                                 fit: BoxFit.cover),
                           ),
