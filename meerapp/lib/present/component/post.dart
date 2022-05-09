@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/config/helper.dart';
+import 'package:meerapp/controllers/controller.dart';
+import 'package:meerapp/injection.dart';
+import 'package:meerapp/present/component/my_alert_dialog_2.dart';
+import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
@@ -16,7 +21,9 @@ import '../page/new_campaign_page/create_new_campaign_page.dart';
 class Post extends StatelessWidget {
   final IPost postData;
   final Function? onDeletePost;
-  bool get isMainPost => UserSingleton.instance.auth != null && UserSingleton.instance.auth!.userId == postData.creator.id;
+  bool get isMainPost =>
+      UserSingleton.instance.auth != null &&
+      UserSingleton.instance.auth!.userId == postData.creator.id;
 
   const Post({
     Key? key,
@@ -206,10 +213,10 @@ class Post extends StatelessWidget {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => postData is CampaignPost
-                ? CreateNewCampaignPage(initData: postData as CampaignPost)
-                : CreateNewEmergencyPage(initData: postData as EmergencyPost),
-                ),
+          builder: (context) => postData is CampaignPost
+              ? CreateNewCampaignPage(initData: postData as CampaignPost)
+              : CreateNewEmergencyPage(initData: postData as EmergencyPost),
+        ),
       )
     };
   }
@@ -229,7 +236,26 @@ class Post extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () async {
+              var controller = sl.get<PostController>();
+              var isSuccess = await controller.DeletePost(
+                  postData is CampaignPost ? 'campaign' : 'emergency',
+                  [postData.id]);
+              if (isSuccess) {
+                showDialog(
+                  context: context,
+                  builder: (_) => const MyAlertDialog2(
+                      title: 'Thông báo', content: 'Xoá bài viết thành công'),
+                );
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (_) => const MyAlertDialog2(
+                      title: 'Lỗi', content: 'Không thể xoá bài viết'),
+                );
+              }
+              // Navigator.pop(context);
+            },
             child: Text('Xóa', style: kText13BoldMain),
           ),
         ],

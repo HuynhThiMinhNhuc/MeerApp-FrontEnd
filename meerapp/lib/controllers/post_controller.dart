@@ -189,7 +189,7 @@ class PostController extends BaseController {
     return response.errorCode == null;
   }
 
-  Future<bool> DeletePost(String namePath, List<String> ids) async {
+  Future<bool> DeletePost(String namePath, List<int> ids) async {
     var response =
         await myAPIWrapper.postWithAuth(ServerUrl + '/$namePath/delete', data: {'keys': ids});
     return response.errorCode == null;
