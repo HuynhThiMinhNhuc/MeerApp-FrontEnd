@@ -125,7 +125,7 @@ class IntroduceCampaintWidget extends StatelessWidget {
             Text.rich(
               TextSpan(text: 'Thời gian: ', style: kText15BoldBlack, children: [
                 TextSpan(
-                    text: datecreate,
+                    text: time,
                     style: kText15RegularBlack)
               ]),
             ),

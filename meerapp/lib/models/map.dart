@@ -1,5 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meerapp/models/converter_json/datetime_converter.dart';
 import 'package:meerapp/models/user.dart';
 
 part 'map.g.dart';
@@ -25,6 +26,7 @@ abstract class IMapObject {
 @JsonSerializable()
 class CampaignMap extends IMapObject {
   @JsonKey(name:'dateTimeStart')
+  @DateTimeConverter()
   final DateTime time;
   CampaignMap({
     required int id,

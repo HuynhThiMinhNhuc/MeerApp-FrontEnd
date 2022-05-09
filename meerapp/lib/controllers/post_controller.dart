@@ -12,8 +12,10 @@ class PostController extends BaseController {
         .toList();
   }
 
-  DetailCampaignPost _getCampaignPostFromResponse(Map<String, dynamic> jsonResponse) {
-    return DetailCampaignPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
+  DetailCampaignPost _getCampaignPostFromResponse(
+      Map<String, dynamic> jsonResponse) {
+    return DetailCampaignPost.fromJson(
+        jsonResponse['data'] as Map<String, dynamic>);
   }
 
   List<EmergencyPost> _getEmergencyPostsFromResponse(
@@ -25,9 +27,9 @@ class PostController extends BaseController {
 
   DetailEmergencyPost _getEmergencyPostFromResponse(
       Map<String, dynamic> jsonResponse) {
-    return DetailEmergencyPost.fromJson(jsonResponse['data'] as Map<String, dynamic>);
+    return DetailEmergencyPost.fromJson(
+        jsonResponse['data'] as Map<String, dynamic>);
   }
-
 
   // Campaign
   Future<List<CampaignPost>> _getCampaigns(
@@ -39,8 +41,10 @@ class PostController extends BaseController {
       var jsonResponse = await _mapResponseToJson(response);
 
       return _getCampaignPostsFromResponse(jsonResponse);
+    } on TimeoutException catch (_) {
+      return Future.error("Timeout when load getCampaigns");
     } catch (e) {
-      return Future.error(e);
+      return Future.error("Can not load getCampaigns");
     }
   }
 
@@ -60,8 +64,10 @@ class PostController extends BaseController {
       var jsonResponse = await _mapResponseToJson(response);
 
       return _getCampaignPostFromResponse(jsonResponse);
+    } on TimeoutException catch (_) {
+      return Future.error("Timeout when load getCampaignPostById");
     } catch (e) {
-      return Future.error(e);
+      return Future.error("Can not load getCampaignPostById");
     }
   }
 
@@ -89,8 +95,10 @@ class PostController extends BaseController {
       var jsonResponse = await _mapResponseToJson(response);
 
       return _getEmergencyPostsFromResponse(jsonResponse);
+    } on TimeoutException catch (_) {
+      return Future.error("Timeout when load getEmergencies");
     } catch (e) {
-      return Future.error(e);
+      return Future.error("Can not load getEmergencies");
     }
   }
 
@@ -110,8 +118,10 @@ class PostController extends BaseController {
       var jsonResponse = await _mapResponseToJson(response);
 
       return _getEmergencyPostFromResponse(jsonResponse);
+    } on TimeoutException catch (_) {
+      return Future.error("Timeout when load getEmergencyPostById");
     } catch (e) {
-      return Future.error(e);
+      return Future.error("Can not load getEmergencyPostById");
     }
   }
 
@@ -125,7 +135,7 @@ class PostController extends BaseController {
     return _getEmergencies(queryParams);
   }
 
-  Future<bool> InsertPost(IPost post) async {
+  Future<MyResponse> InsertPost(IPost post) async {
     Map<String, dynamic> data = post.toJson();
 
     if (post.imageUrl != null && !isImageURL(post.imageUrl!)) {
@@ -135,12 +145,23 @@ class PostController extends BaseController {
       data.addAll({'banner': await MultipartFile.fromFile(post.bannerUrl!)});
     }
 
-    var response = await dio.post(
+    data.remove('id');
+    data.remove('creator');
+    data.remove('imageURI');
+    data.remove('bannerUrl');
+
+    var response = await myAPIWrapper.postWithAuth(
       ServerUrl + '/${_getPathFromPost(post)}/insert',
       data: FormData.fromMap(data),
     );
 
-    return _isResponseSuccess(response);
+    return response;
+  }
+
+  Future<bool> InviteUserToCampaign(int campaignId, List<int> ids) async {
+    var response = await myAPIWrapper.postWithAuth(ServerUrl + '/campaign/inviteuser',
+        data: {'campaignId': campaignId, 'userIds': ids});
+    return response.errorCode == null;
   }
 
   Future<bool> UpdatePost(String key, IPost post) async {

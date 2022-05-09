@@ -206,12 +206,12 @@ class Post extends StatelessWidget {
                       text: postData.address,
                       style: kText13RegularBlack,
                     ),
-                     TextSpan(
-                      text: "\n\nThời gian: " ,
+                    TextSpan(
+                      text: "\n\nThời gian " + (postData is CampaignPost ? 'tổ chức: ' : 'kêu gọi: ') ,
                       style: kText13BoldBlack,
                     ) ,
                     TextSpan(
-                      text: DateTimeToString(postData.timeCreate),
+                      text: DateTimeToString((postData is CampaignPost) ? (postData as CampaignPost).timeStart : postData.timeCreate),
                       style: kText13RegularBlack,
                     ),
                   ],

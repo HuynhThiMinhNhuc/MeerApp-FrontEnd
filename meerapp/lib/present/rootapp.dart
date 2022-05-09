@@ -47,7 +47,7 @@ class _RootAppState extends State<RootApp> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => currentPage == 1
-                        ? const CreateNewEmergencyPage()
+                        ? CreateNewEmergencyPage()
                         : CreateNewCampaignPage()),
               );
             },

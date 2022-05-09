@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/helper.dart';
 import 'package:meerapp/injection.dart';

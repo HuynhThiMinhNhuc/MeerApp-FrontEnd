@@ -131,7 +131,10 @@ class _UrgentPageState extends State<UrgentPage> {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Text("Opps, chưa có bài viết nào", style: kText40BoldMain.copyWith(color: meerColor25GreyNoteText),),
+          child: Text(
+            "Opps, chưa có bài viết nào",
+            style: kText40BoldMain.copyWith(color: meerColor25GreyNoteText),
+          ),
         ),
       );
     }
@@ -168,7 +171,8 @@ class CreateNewEmergency extends StatelessWidget {
                           color: meerColorRed.withOpacity(0.5),
                           spreadRadius: 13,
                           blurRadius: 5,
-                          offset: const Offset(0, 0), // changes position of shadow
+                          offset:
+                              const Offset(0, 0), // changes position of shadow
                         ),
                       ],
                     ),
@@ -178,7 +182,7 @@ class CreateNewEmergency extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const CreateNewEmergencyPage()),
+                                        CreateNewEmergencyPage()),
                               )
                             },
                         icon: const Icon(FontAwesomeIcons.bell,
@@ -187,7 +191,7 @@ class CreateNewEmergency extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CreateNewEmergencyPage()),
+                        builder: (context) => CreateNewEmergencyPage()),
                   );
                 },
               ),

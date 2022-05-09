@@ -9,6 +9,7 @@ import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/component/loading_page.dart';
+import 'package:meerapp/present/component/map.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
@@ -29,7 +30,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
   bool isLoading = true;
-  late DetailEmergencyPost post;
+  DetailEmergencyPost? post;
   int currentTab = 0;
   @override
   void initState() {
@@ -44,8 +45,9 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
   }
 
   @override
-  void didChangeDependencies() async {
+  void didChangeDependencies() {
     super.didChangeDependencies();
+    _loadInit();
   }
 
   void _loadInit() {
@@ -54,8 +56,21 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
     });
     widget._postController.getEmergencyPostById(widget.postId).then((value) {
       post = value;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       log(error?.toString() ?? "Can not load campaign by id");
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Lỗi'),
+                content: const Text('Không thể tải trang sự kiện này, vui lòng thử lại sau'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Ok'),
+                  ),
+                ],
+              ));
+      Navigator.of(context).popUntil((route)=>route.isFirst);
     }).then((value) {
       setState(() {
         isLoading = false;
@@ -69,7 +84,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
 
     return Scaffold(
       backgroundColor: meerColorWhite,
-      body: (isLoading)
+      body: (isLoading || post == null)
           ? const LoadingPage()
           : SingleChildScrollView(
               child: Column(
@@ -101,7 +116,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                       padding: EdgeInsets.symmetric(
                           horizontal: 15.w, vertical: 10.h),
                       child: Text(
-                        "Khẩn cấp - " + "Tai nạn giao thông đoạn đường 12/06",
+                        "Khẩn cấp - " + post!.title,
                         style: kText20BoldRed,
                       ),
                     ),
@@ -168,7 +183,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                                 style: kText15BoldBlack,
                                 children: [
                                   TextSpan(
-                                      text: "Minh Nhực",
+                                      text: post!.creator.name,
                                       style: kText15RegularBlack)
                                 ]),
                           ),
@@ -179,14 +194,19 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                                   style: kText15BoldBlack,
                                   children: [
                                     TextSpan(
-                                        text: "Đoạn đường Linh Trung Thủ đức",
+                                        text: post!.address,
                                         style: ktext15RegularBlue.copyWith(
                                             decoration:
                                                 TextDecoration.underline))
                                   ]),
                             ),
                             onTap: () => {
-                              //Todo: navigator to map
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      MyMap(initLocation: post!.position),
+                                ),
+                              )
                             },
                           ),
                           Text.rich(
@@ -195,7 +215,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                                 style: kText15BoldBlack,
                                 children: [
                                   TextSpan(
-                                      text: "0348771034",
+                                      text: post!.phone ?? "Không có",
                                       style: kText15RegularBlack)
                                 ]),
                           ),
@@ -205,7 +225,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                                 style: kText15BoldBlack,
                                 children: [
                                   TextSpan(
-                                      text: "huynhthiminhnhuc@gmail.com",
+                                      text: post!.email,
                                       style: kText15RegularBlack)
                                 ]),
                           ),
@@ -225,25 +245,26 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                           SizedBox(
                             height: 10.h,
                           ),
-                          Text(
-                              "Trên đường đi học về mình bị 1 xe máy va chạm rồi bỏ chạy, hiện tại đang bị thương ở chân",
-                              style: kText15RegularBlack),
+                          Text(post!.content, style: kText15RegularBlack),
                         ],
                       ),
                     ),
                     ExpansionTile(
-                      title: Text(
-                        'Danh sách tham gia',
-                        style: TextStyle(
-                            fontSize: 18.sp, fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: const Text('Tình nguyện viên đã giúp đỡ'),
-                      children: List.generate(
-                          5,
-                          (index) => const JoinCampaignUserItem(
-                              fullName: "Minh Nhuc",
-                              avatarUrl: "asset/avt1.jpg")),
-                    ),
+                        title: Text(
+                          'Danh sách tham gia',
+                          style: TextStyle(
+                              fontSize: 18.sp, fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: const Text('Tình nguyện viên đã giúp đỡ'),
+                        children: post!.joined
+                            .map((user) => JoinCampaignUserItem(user: user))
+                            .toList()
+                        // List.generate(
+                        //     5,
+                        //     (index) => const JoinCampaignUserItem(
+                        //         fullName: "Minh Nhuc",
+                        //         avatarUrl: "asset/avt1.jpg")),
+                        ),
                   ]),
             ),
     );

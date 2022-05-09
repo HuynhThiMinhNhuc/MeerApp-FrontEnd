@@ -16,7 +16,7 @@ import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/models/user.dart';
 import 'package:meerapp/present/component/image_card.dart';
-import 'package:meerapp/present/page/new_campaign_page/widget/map.dart';
+import 'package:meerapp/present/component/map.dart';
 import 'package:meerapp/singleton/user.dart';
 import 'package:debounce_throttle/debounce_throttle.dart';
 
@@ -47,10 +47,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
 
   late TextEditingController _requireTextController;
 
-  DateTime hourTimeStart = DateTime(1);
   bool isSwitched = false;
-  late File? avatarImage;
-  late File? backgroundImage;
+  File? avatarImage;
+  File? backgroundImage;
   DateTime? startDate;
   LatLng? location;
   DateTime timeDay = DateTime.now();
@@ -113,7 +112,10 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
   }
 
   void _addNewCampagin() async {
-    var currentUser = await UserSingleton.instance.userInfoStream.stream.last;
+    var response =
+        await myAPIWrapper.getWithAuth(ServerUrl + '/user/detailbytoken');
+    var json = response.data as Map<String, dynamic>;
+    var myUser = UserOverview.fromJson(json);
 
     var post = CampaignPost(
       id: 0,
@@ -122,7 +124,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
       lng: location!.longitude,
       title: _nameTextController.text,
       content: _descriptionTextController.text,
-      creator: UserOverview.fromJson(currentUser),
+      creator: myUser,
       timeCreate: DateTime.now(),
       imageUrl: avatarImage?.path,
       bannerUrl: backgroundImage?.path,
@@ -134,9 +136,33 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
         timeHour!.minute,
       ),
     );
-    final success = await widget._postController.InsertPost(post);
-    if (success) {
-      // TODO: show dialog success
+
+    final insertResponse = await widget._postController.InsertPost(post);
+    if (insertResponse.errorCode == null) {
+      var campaignId = insertResponse.data['id'];
+      final inviteSuccess = await widget._postController
+          .InviteUserToCampaign(8, listChooseUser.map((e) => e.id).toList());
+      if (inviteSuccess) {
+        // TODO: success and exit page
+        await showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => const AlertDialog(
+            title: Text('Thông báo'),
+            content: Text('Tạo bài viết mới thành công'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: null,
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        );
+        Navigator.of(context).pop();
+      } else {
+        log('cannot invite user to campaign $campaignId');
+      }
+    } else {
+      log('cannot insert campaign');
     }
   }
 
@@ -406,7 +432,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                   fontSize: 13.sp,
                                   color: meerColorWhite),
                             ),
-                            onDeleted: () {},
+                            onDeleted: () {
+                              listChooseUser.removeAt(index);
+                            },
                           ),
                         ),
                       ),
@@ -551,7 +579,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                         if (startDate != null) {
                           timeDay = startDate;
                           final formattedDate =
-                              DateFormat('dd/MM/yyyy').format(startDate!);
+                              DateFormat('dd/MM/yyyy').format(startDate);
                           setState(() {
                             _dateTextController.text =
                                 "Ngày tổ chức: " + formattedDate;

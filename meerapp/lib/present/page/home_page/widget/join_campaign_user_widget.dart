@@ -20,7 +20,7 @@ class JoinCamPaignUser extends StatelessWidget {
           ),
           Column(
             children: List.generate(users.length, (index) => 
-            JoinCampaignUserItem(fullName: users[index].name, avatarUrl: users[index].avatarUri)
+            JoinCampaignUserItem(user: users[index])
           ),)
         ],
       ),
@@ -29,12 +29,10 @@ class JoinCamPaignUser extends StatelessWidget {
 }
 
 class JoinCampaignUserItem extends StatelessWidget {
-  final String fullName;
-  final String? avatarUrl;
+  final UserOverview user;
   const JoinCampaignUserItem({
     Key? key,
-    required this.fullName,
-    required this.avatarUrl
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -57,13 +55,13 @@ class JoinCampaignUserItem extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 3),
               image: DecorationImage(
-                  image: avatarUrl == null ? NetworkImage(avatarUrl!) as ImageProvider : const AssetImage("asset/demo.jpg"),
+                  image: user.avatarUri == null ? NetworkImage(user.avatarUri!) as ImageProvider : const AssetImage("asset/demo.jpg"),
                   fit: BoxFit.cover),
             ),
           ),
         ),
       ),
-        title: Text(fullName, style: kText15RegularBlack,),
+        title: Text(user.name, style: kText15RegularBlack,),
         selectedColor: Color.fromARGB(16, 2, 1, 1),
         onTap: () {},
       ),

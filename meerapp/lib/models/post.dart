@@ -2,6 +2,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meerapp/models/user.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'converter_json/datetime_converter.dart';
+
 part 'post.g.dart';
 
 abstract class IPost {
@@ -20,6 +22,7 @@ abstract class IPost {
   final String? imageUrl;
   final String? bannerUrl;
   @JsonKey(name: 'createdAt')
+  @DateTimeConverter()
   final DateTime timeCreate;
 
   @JsonKey(ignore: true)
@@ -44,6 +47,7 @@ abstract class IPost {
 @JsonSerializable()
 class CampaignPost extends IPost {
   @JsonKey(name: 'dateTimeStart')
+  @DateTimeConverter()
   final DateTime timeStart;
 
   CampaignPost({
