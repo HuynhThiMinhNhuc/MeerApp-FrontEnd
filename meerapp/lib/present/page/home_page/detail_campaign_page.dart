@@ -10,6 +10,7 @@ import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
+import 'package:meerapp/present/page/home_page/invite_member_page.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
@@ -190,7 +191,13 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                   ? true
                                   : false,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                   Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const InviteMembetPage(),
+                              ));
+                                },
                                 style: ElevatedButton.styleFrom(
                                   alignment: Alignment.center,
                                   fixedSize: Size(100.w, 30.h),
