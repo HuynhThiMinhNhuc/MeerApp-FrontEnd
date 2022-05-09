@@ -59,6 +59,7 @@ dependencies:
   debounce_throttle: ^2.0.0
   skeleton_loader: ^2.0.0+4
   shared_preferences: ^2.0.13
+  flutter_svg: ^1.0.3
 
 dev_dependencies:
   json_serializable: ^6.2.0
@@ -92,6 +93,7 @@ flutter:
     - asset/location.png
     - asset/Login.png
     - asset/welcome.png
+    - asset/notification.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
