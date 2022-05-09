@@ -27,22 +27,22 @@ class _RegisterViewState extends State<RegisterView> {
     if (emailcontroller.text.isEmpty ||
         passwordcontroller.text.isEmpty ||
         emailcontroller.text.isEmpty) {
-      _showDialog("Thất bại", "Mời bạn vui lòng điền đầy đủ thông tin");
+      _showDialog("Thất bại", "Vui lòng điền đầy đủ thông tin!");
       return;
     }
 
     if (passwordcontroller.text != confirmpasswordcontroller.text) {
-      _showDialog("Thất bại", "Nhập lại mật khẩu chưa chính xác");
+      _showDialog("Thất bại", "Mật khẩu xác nhận chưa chính xác!");
       return;
     }
 
     final res = await AuthAPI.checkExistUsername(email);
     if (res.errorCode != null) {
-      _showDialog("Thất bại", "Đã xảy ra lỗi. Vui lòng thử lại");
+      _showDialog("Thất bại", "Đã xảy ra lỗi. Vui lòng thử lại!");
       return;
     }
     if (res.data as bool) {
-      _showDialog("Thất bại", "Email đã được sử dụng");
+      _showDialog("Thất bại", "Email đã được sử dụng.");
       return;
     }
 
