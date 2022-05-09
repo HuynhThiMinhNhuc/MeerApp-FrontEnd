@@ -8,16 +8,20 @@ import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
 import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
+import 'package:meerapp/singleton/user.dart';
 
 import '../../models/post.dart';
 import '../page/new_campaign_page/create_new_campaign_page.dart';
 
 class Post extends StatelessWidget {
   final IPost postData;
+  final Function? onDeletePost;
+  bool get isMainPost => UserSingleton.instance.auth != null && UserSingleton.instance.auth!.userId == postData.creator.id;
 
   const Post({
     Key? key,
     required this.postData,
+    this.onDeletePost,
   }) : super(key: key);
 
   @override
@@ -81,7 +85,6 @@ class Post extends StatelessWidget {
                         break;
                       case 2:
                         getFuctionEdit(context);
-
                         break;
                       case 3:
                         getFuctionDeletePost(context);
@@ -103,7 +106,7 @@ class Post extends StatelessWidget {
                       ),
                       value: 1,
                     ),
-                    PopupMenuItem(
+                    if (isMainPost) PopupMenuItem(
                       value: 2,
                       child: ListTile(
                         title: Text(
@@ -112,7 +115,7 @@ class Post extends StatelessWidget {
                         ),
                       ),
                     ),
-                    PopupMenuItem(
+                    if (isMainPost) PopupMenuItem(
                       value: 3,
                       child: ListTile(
                         title: Text(
@@ -201,12 +204,9 @@ class Post extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => postData is CampaignPost
-                ? CreateNewCampaignPage(
-                    isCreate: false,
-                  )
-                :  CreateNewEmergencyPage(
-                    isCreate: false,
-                  )),
+                ? CreateNewCampaignPage(initData: postData as CampaignPost)
+                : CreateNewEmergencyPage(initData: postData as EmergencyPost),
+                ),
       )
     };
   }
@@ -219,14 +219,14 @@ class Post extends StatelessWidget {
         content: const Text("Bạn chắc chắn muốn xóa bài viết này?"),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'Hủy'),
+            onPressed: () => Navigator.pop(context),
             child: Text(
               'Hủy',
               style: kText13BoldMain,
             ),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, 'Xóa'),
+            onPressed: () => Navigator.pop(context),
             child: Text('Xóa', style: kText13BoldMain),
           ),
         ],

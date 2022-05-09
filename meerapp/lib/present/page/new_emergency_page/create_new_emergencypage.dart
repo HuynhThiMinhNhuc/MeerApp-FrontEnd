@@ -16,9 +16,10 @@ import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 import 'package:meerapp/present/component/open_map.dart';
 
 class CreateNewEmergencyPage extends StatefulWidget {
-  final bool isCreate;
+  get isAddData => initData == null;
+  final EmergencyPost? initData;
   final PostController _postController = sl.get<PostController>();
-  CreateNewEmergencyPage({Key? key, required this.isCreate}) : super(key: key);
+  CreateNewEmergencyPage({Key? key, this.initData}) : super(key: key);
 
   @override
   State<CreateNewEmergencyPage> createState() => _CreateNewEmergencyPageState();
@@ -31,8 +32,8 @@ late TextEditingController _descriptionTextController;
 class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
   bool isSwitched = false;
   LatLng? location;
-  File? avatarImage;
-  File? backgroundImage;
+  String? avatarImagePath;
+  String? backgroundImagePath;
 
   bool isValidation() {
     void _showAlertDialog(String text) {
@@ -76,8 +77,8 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
       content: _descriptionTextController.text,
       creator: myUser,
       timeCreate: DateTime.now(),
-      imageUrl: avatarImage?.path,
-      bannerUrl: backgroundImage?.path,
+      imageUrl: avatarImagePath,
+      bannerUrl: backgroundImagePath,
     );
 
     var insertResponse = await widget._postController.InsertPost(post);
@@ -113,6 +114,20 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
     _locationTextController.dispose();
     _descriptionTextController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.initData != null) {
+      var data = widget.initData!;
+      _nameTextController.text = data.title;
+      _locationTextController.text = data.address;
+      _descriptionTextController.text = data.content;
+      location = LatLng(data.lat, data.lng);
+      avatarImagePath = data.imageUrl;
+      backgroundImagePath = data.bannerUrl;
+    }
   }
 
   @override
@@ -212,21 +227,24 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                     Row(
                       children: [
                         ImageCard(
+
+                          initData: backgroundImagePath,
                           hintTitle: "+ Ảnh 1",
+
                           onImageChanged: (file) {
-                            backgroundImage = file;
+                            backgroundImagePath = file;
                           },
                           onImageDeleted: () {
-                            backgroundImage = null;
+                            backgroundImagePath = null;
                           },
                         ),
                         ImageCard(
-                          hintTitle: "+ Ảnh 2",
+                          initData: avatarImagePath,
                           onImageChanged: (file) {
-                            avatarImage = file;
+                            avatarImagePath = file;
                           },
                           onImageDeleted: () {
-                            avatarImage = null;
+                            avatarImagePath = null;
                           },
                         ),
                       ],
@@ -290,7 +308,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
       centerTitle: true,
       backgroundColor: meerColorBackground,
       title: Text(
-        widget.isCreate ? "Tạo tin khẩn cấp" : "Chỉnh sửa",
+        widget.isAddData ? "Tạo tin khẩn cấp" : "Chỉnh sửa",
         style: ktext18BoldBlack,
       ),
       actions: [
@@ -299,7 +317,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
             if (!isValidation()) return;
           },
           child: Text(
-            widget.isCreate ? "Đăng" : "Lưu",
+            widget.isAddData ? "Đăng" : "Lưu",
             style: kText18BoldMain,
           ),
           style: ButtonStyle(

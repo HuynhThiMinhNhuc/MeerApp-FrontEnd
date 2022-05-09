@@ -4,6 +4,9 @@ import 'package:meerapp/api/route/auth.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/component/dialog_with_circle_above.dart';
+import 'package:meerapp/present/component/my_alert_dialog.dart';
+import 'package:meerapp/present/component/my_alert_dialog_2.dart';
+import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 import 'package:meerapp/present/page/Login/profile_view.dart';
 import 'package:meerapp/present/page/profile/profilepage.dart';
 
@@ -27,22 +30,34 @@ class _RegisterViewState extends State<RegisterView> {
     if (emailcontroller.text.isEmpty ||
         passwordcontroller.text.isEmpty ||
         emailcontroller.text.isEmpty) {
-      _showDialog("Thất bại", "Mời bạn vui lòng điền đầy đủ thông tin");
+      _showDialog("Thất bại", "Vui lòng điền đầy đủ thông tin!");
+      return;
+    }
+
+    if (!RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email)) {
+      _showDialog("Thất bại", "Email sai định dạng");
       return;
     }
 
     if (passwordcontroller.text != confirmpasswordcontroller.text) {
-      _showDialog("Thất bại", "Nhập lại mật khẩu chưa chính xác");
+      _showDialog("Thất bại", "Mật khẩu xác nhận chưa chính xác!");
+      return;
+    }
+
+    if (passwordcontroller.text.length < 6) {
+      _showDialog("Thất bại", "Mật khẩu phải có hơn 6 ký tự");
       return;
     }
 
     final res = await AuthAPI.checkExistUsername(email);
     if (res.errorCode != null) {
-      _showDialog("Thất bại", "Đã xảy ra lỗi. Vui lòng thử lại");
+      _showDialog("Thất bại", "Đã xảy ra lỗi. Vui lòng thử lại!");
       return;
     }
     if (res.data as bool) {
-      _showDialog("Thất bại", "Email đã được sử dụng");
+      _showDialog("Thất bại", "Email đã được sử dụng.");
       return;
     }
 
@@ -63,9 +78,9 @@ class _RegisterViewState extends State<RegisterView> {
   _showDialog(String title, String message) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) => DialogWithCircleAbove(
+      builder: (BuildContext context) => MyAlertDialog2(
         content: message,
-        mode: ModeDialog.warning,
+        isTwoActions: false,
         title: title,
       ),
     );

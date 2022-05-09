@@ -183,10 +183,7 @@ class CreateNewCampaign extends StatelessWidget {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => CreateNewCampaignPage(
-                    isCreate: true,
-                  )),
+          MaterialPageRoute(builder: (context) => CreateNewCampaignPage()),
         )
       },
     );

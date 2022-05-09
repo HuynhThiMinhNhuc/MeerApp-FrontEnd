@@ -25,8 +25,9 @@ import '../../component/my_alert_dialog_3.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
-  final bool isCreate;
-  CreateNewCampaignPage({Key? key, required this.isCreate}) : super(key: key);
+  final CampaignPost? initData;
+  get isAddData => initData == null;
+  CreateNewCampaignPage({Key? key, this.initData}) : super(key: key);
 
   static const List<String> _userName = <String>[
     'Huynh Nhuc',
@@ -49,11 +50,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
 
   late TextEditingController _descriptionTextController;
 
-  late TextEditingController _requireTextController;
-
   bool isSwitched = false;
-  File? avatarImage;
-  File? backgroundImage;
+  String? avatarImagePath;
+  String? backgroundImagePath;
   DateTime? startDate;
   LatLng? location;
   DateTime timeDay = DateTime.now();
@@ -67,7 +66,6 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     _dateTextController = TextEditingController(text: "Chọn ngày tổ chức");
     _locationTextController = TextEditingController();
     _descriptionTextController = TextEditingController();
-    _requireTextController = TextEditingController();
     _timeTextController = TextEditingController(text: "Chọn giờ tổ chức");
   }
 
@@ -77,9 +75,27 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     _dateTextController.dispose();
     _locationTextController.dispose();
     _descriptionTextController.dispose();
-    _requireTextController.dispose();
     _timeTextController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.initData != null) {
+      var data = widget.initData!;
+      _nameTextController.text = data.title;
+      _locationTextController.text = data.address;
+      _descriptionTextController.text = data.content;
+      location = LatLng(data.lat, data.lng);
+      avatarImagePath = data.imageUrl;
+      backgroundImagePath = data.bannerUrl;
+      startDate = data.timeStart;
+      timeHour =
+          TimeOfDay(hour: data.timeStart.hour, minute: data.timeStart.minute);
+      _setHourTextController(timeHour!);
+      if (startDate != null) _setDateTextController(startDate!);
+    }
   }
 
   bool isValidation() {
@@ -109,7 +125,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     return true;
   }
 
-  void _addNewCampagin() async {
+  void _addNewCampaign() async {
     var response =
         await myAPIWrapper.getWithAuth(ServerUrl + '/user/detailbytoken');
     var json = response.data as Map<String, dynamic>;
@@ -124,8 +140,8 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
       content: _descriptionTextController.text,
       creator: myUser,
       timeCreate: DateTime.now(),
-      imageUrl: avatarImage?.path,
-      bannerUrl: backgroundImage?.path,
+      imageUrl: avatarImagePath,
+      bannerUrl: backgroundImagePath,
       timeStart: DateTime(
         timeDay.year,
         timeDay.month,
@@ -138,8 +154,8 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     final insertResponse = await widget._postController.InsertPost(post);
     if (insertResponse.errorCode == null) {
       var campaignId = insertResponse.data['id'];
-      final inviteSuccess = await widget._postController
-          .InviteUserToCampaign(campaignId, listChooseUser.map((e) => e.id).toList());
+      final inviteSuccess = await widget._postController.InviteUserToCampaign(
+          campaignId, listChooseUser.map((e) => e.id).toList());
       if (inviteSuccess) {
         await showDialog<String>(
           context: context,
@@ -161,6 +177,17 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
         ),
       );
     }
+  }
+
+  void _saveCampaign() {}
+
+  void _setDateTextController(DateTime value) {
+    final formattedDate = DateFormat('dd/MM/yyyy').format(value);
+    _dateTextController.text = "Ngày tổ chức: " + formattedDate;
+  }
+
+  void _setHourTextController(TimeOfDay value) {
+    _timeTextController.text = 'Giờ tổ chức: ${value.hour}:${value.minute}';
   }
 
   @override
@@ -334,68 +361,15 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
             SizedBox(
               height: 10.h,
             ),
-            Container(
-              decoration: BoxDecoration(
-                  color: meerColorWhite,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Người tham gia",
-                          style: kText15BoldBlack,
-                        ),
-                        TextButton(
-                            onPressed: () async {
-                              UserOverview? object =
-                                  await showDialogAddCampaignUser(context);
-                              if (object != null) {
-                                setState(() {
-                                  listChooseUser.add(object);
-                                });
-                              }
-                            },
-                            child: Text(
-                              "Thêm",
-                              style: kText15BoldMain,
-                            ))
-                      ],
-                    ),
-                    Wrap(
-                      spacing: 8.0.h, // gap between adjacent chips
-                      children: List.generate(
-                        listChooseUser.length,
-                        (index) => Padding(
-                          padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 0),
-                          child: Chip(
-                            backgroundColor: meerColorMain,
-                            deleteIcon: const Icon(
-                              FontAwesomeIcons.circleXmark,
-                              color: meerColorWhite,
-                            ),
-                            label: Text(
-                              listChooseUser[index].name,
-                              style: TextStyle(
-                                  fontFamily: 'Roboto_Regular',
-                                  fontSize: 13.sp,
-                                  color: meerColorWhite),
-                            ),
-                            onDeleted: () {
-                              listChooseUser.removeAt(index);
-                            },
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+            if (widget.initData == null)
+              ParticipantView(
+                listChooseUser: listChooseUser,
+                onAddUser: (object) {
+                  setState(() {
+                    listChooseUser.add(object);
+                  });
+                },
               ),
-            ),
             SizedBox(
               height: 10.h,
             ),
@@ -418,21 +392,23 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                     Row(
                       children: [
                         ImageCard(
+                          initData: backgroundImagePath,
                           hintTitle: "+ Ảnh bìa",
                           onImageChanged: (file) {
-                            backgroundImage = file;
+                            backgroundImagePath = file;
                           },
                           onImageDeleted: () {
-                            backgroundImage = null;
+                            backgroundImagePath = null;
                           },
                         ),
                         ImageCard(
+                          initData: avatarImagePath,
                           hintTitle: "+ Ảnh đại diện",
                           onImageChanged: (file) {
-                            avatarImage = file;
+                            avatarImagePath = file;
                           },
                           onImageDeleted: () {
-                            avatarImage = null;
+                            avatarImagePath = null;
                           },
                         ),
                       ],
@@ -531,12 +507,8 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
 
                         if (startDate != null) {
                           timeDay = startDate;
-                          final formattedDate =
-                              DateFormat('dd/MM/yyyy').format(startDate);
                           setState(() {
-                            _dateTextController.text =
-                                "Ngày tổ chức: " + formattedDate;
-                            print("Date selected: $formattedDate");
+                            _setDateTextController(startDate);
                           });
                         } else {
                           timeDay = DateTime.now();
@@ -600,8 +572,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                           context: context,
                         );
                         if (timeHour != null) {
-                          _timeTextController.text =
-                              'Giờ tổ chức ${timeHour!.hour}:${timeHour!.minute}';
+                          _setHourTextController(timeHour!);
                         }
                       },
                     )
@@ -629,17 +600,21 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
       centerTitle: true,
       backgroundColor: meerColorBackground,
       title: Text(
-        widget.isCreate ? "Tạo chiến dịch" : "Chỉnh sửa",
+        widget.isAddData ? "Tạo chiến dịch" : "Chỉnh sửa",
         style: ktext18BoldBlack,
       ),
       actions: [
         TextButton(
           onPressed: () {
             if (!isValidation()) return;
-            _addNewCampagin();
+            if (widget.isAddData) {
+              _addNewCampaign();
+            } else {
+              _saveCampaign();
+            }
           },
           child: Text(
-            widget.isCreate ? "Đăng" : "Lưu",
+            widget.isAddData ? "Đăng" : "Lưu",
             style: kText18BoldMain,
           ),
           style: ButtonStyle(
@@ -716,6 +691,80 @@ class _ChoiceFieldState extends State<ChoiceField> {
         ],
       ),
       onTap: () => {widget.onPress},
+    );
+  }
+}
+
+class ParticipantView extends StatelessWidget {
+  final List<UserOverview> listChooseUser;
+  final Function(UserOverview)? onAddUser;
+  ParticipantView({Key? key, required this.listChooseUser, this.onAddUser})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: meerColorWhite, borderRadius: BorderRadius.circular(10)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Người tham gia",
+                  style: kText15BoldBlack,
+                ),
+                TextButton(
+                    onPressed: () async {
+                      UserOverview? object = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) =>
+                            AddParticipantAlert(listChooseUser: listChooseUser),
+                      );
+                      ;
+                      if (object != null) {
+                        onAddUser?.call(object);
+                      }
+                    },
+                    child: Text(
+                      "Thêm",
+                      style: kText15BoldMain,
+                    ))
+              ],
+            ),
+            Wrap(
+              spacing: 8.0.h, // gap between adjacent chips
+              children: List.generate(
+                listChooseUser.length,
+                (index) => Padding(
+                  padding: EdgeInsets.fromLTRB(5.w, 0, 5.w, 0),
+                  child: Chip(
+                    backgroundColor: meerColorMain,
+                    deleteIcon: const Icon(
+                      FontAwesomeIcons.circleXmark,
+                      color: meerColorWhite,
+                    ),
+                    label: Text(
+                      listChooseUser[index].name,
+                      style: TextStyle(
+                          fontFamily: 'Roboto_Regular',
+                          fontSize: 13.sp,
+                          color: meerColorWhite),
+                    ),
+                    onDeleted: () {
+                      listChooseUser.removeAt(index);
+                    },
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

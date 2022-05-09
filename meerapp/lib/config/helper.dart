@@ -24,3 +24,11 @@ Future<T> getResponse<T extends BaseResponse>(Future<T> request) {
   return request
       .timeout(Duration(seconds: timeoutHttp)).catchError((error, stackTrace) => throw Exception(error));
 }
+
+bool isHttpImage(String imagePath) {
+  return imagePath.contains('uploads/');
+}
+
+String tranferToDbPath(String path) {
+  return ServerUrl + "/public/" + path;
+}

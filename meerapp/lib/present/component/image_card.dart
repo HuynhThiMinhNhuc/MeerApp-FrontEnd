@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/config/helper.dart';
+import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
 import 'package:path/path.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,7 +15,8 @@ class ImageCard extends StatefulWidget {
   final double height;
   final String? hintTitle;
   final IconData? icon;
-  final Function(File)? onImageChanged;
+  final String? initData;
+  final Function(String)? onImageChanged;
   final Function()? onImageDeleted;
 
   ImageCard({
@@ -24,6 +27,7 @@ class ImageCard extends StatefulWidget {
     this.onImageChanged,
     this.onImageDeleted,
     this.icon,
+    this.initData,
   }) : super(key: key);
 
   @override
@@ -31,7 +35,10 @@ class ImageCard extends StatefulWidget {
 }
 
 class _ImageCardState extends State<ImageCard> {
-  File? imageFile;
+  late String? imageFileDir = widget.initData;
+  File get imageFile => File(imageFileDir!);
+  bool get isUrl => imageFileDir != null && isHttpImage(imageFileDir!);
+
   Future<void> _galleryImage() async {
     final _picker = ImagePicker();
     var picture = await _picker.pickImage(source: ImageSource.gallery);
@@ -42,21 +49,21 @@ class _ImageCardState extends State<ImageCard> {
       final image = File('${directory.path}/${basename(picture.path)}');
 
       //Create new image from source image, add temporary to storage app
-      final file = File(picture.path); //.copy(image.path);
+      // final file = File(picture.path); //.copy(image.path);
 
       setState(() {
         //Update UI with image
-        imageFile = file;
+        imageFileDir = image.path;
       });
-      widget.onImageChanged?.call(imageFile!);
+      widget.onImageChanged?.call(imageFileDir!);
     }
   }
 
   Future<void> _deleteImage() async {
-    if (imageFile != null) {
+    if (imageFileDir != null) {
       print('request delete if image not null');
       setState(() {
-        imageFile = null;
+        imageFileDir = null;
       });
       widget.onImageDeleted?.call();
     }
@@ -69,23 +76,30 @@ class _ImageCardState extends State<ImageCard> {
 
     return Container(
       child: InkWell(
-        child: imageFile != null
+        child: imageFileDir != null
             ? Stack(children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.file(
-                    imageFile!,
-                    width: width,
-                    height: height,
-                    fit: BoxFit.cover,
-                  ),
+                  child: isUrl
+                      ? Image.network(
+                          tranferToDbPath(imageFileDir!),
+                          width: width,
+                          height: height,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.file(
+                          imageFile,
+                          width: width,
+                          height: height,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 Positioned(
                     top: 0,
                     right: 0,
                     child: IconButton(
                       icon: const Icon(
-                       Icons.cancel_rounded,
+                        Icons.cancel_rounded,
                         color: Color.fromARGB(206, 173, 173, 173),
                       ),
                       onPressed: _deleteImage,
@@ -96,8 +110,7 @@ class _ImageCardState extends State<ImageCard> {
                 children: [
                   if (widget.hintTitle != null)
                     Text(widget.hintTitle!,
-                        textAlign: TextAlign.center,
-                        style: kText13RegularNote),
+                        textAlign: TextAlign.center, style: kText13RegularNote),
                   if (widget.icon != null)
                     Icon(widget.icon, color: meerColorMain, size: 25),
                 ],

@@ -7,6 +7,7 @@ import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/main.dart';
 import 'package:meerapp/present/component/dialog_with_circle_above.dart';
+import 'package:meerapp/present/component/my_alert_dialog_2.dart';
 import 'package:meerapp/present/page/Login/welcome_view.dart';
 
 import '../../component/custom_btn.dart';
@@ -86,9 +87,9 @@ class _ProfileState extends State<ProfileCreate> {
   _showDialog(String title, String message) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) => DialogWithCircleAbove(
+      builder: (BuildContext context) => MyAlertDialog2(
         content: message,
-        mode: ModeDialog.warning,
+        isTwoActions: false,
         title: title,
       ),
     );
