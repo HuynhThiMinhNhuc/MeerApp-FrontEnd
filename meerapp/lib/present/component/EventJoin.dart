@@ -6,7 +6,6 @@ import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 
 class EventJoinItem extends StatelessWidget {
   final String userName;
-  final String? postImageUrl;
   final String title;
   final String time;
   final int status;
@@ -14,7 +13,6 @@ class EventJoinItem extends StatelessWidget {
   const EventJoinItem({
     Key? key,
     required this.userName,
-    required this.postImageUrl,
     required this.title,
     required this.time,
     required this.status,

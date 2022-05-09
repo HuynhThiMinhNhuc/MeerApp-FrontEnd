@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/constant.dart';
+import 'package:meerapp/singleton/user.dart';
 
 class UserAPI {
   static Future<MyResponse> getCurrentUserInfo() async {
