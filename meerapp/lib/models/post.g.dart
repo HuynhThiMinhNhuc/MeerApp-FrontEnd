@@ -14,10 +14,12 @@ CampaignPost _$CampaignPostFromJson(Map<String, dynamic> json) => CampaignPost(
       title: json['title'] as String,
       content: json['content'] as String,
       creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
-      timeCreate: DateTime.parse(json['createdAt'] as String),
+      timeCreate:
+          const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
       bannerUrl: json['bannerUrl'] as String?,
-      timeStart: DateTime.parse(json['dateTimeStart'] as String),
+      timeStart:
+          const DateTimeConverter().fromJson(json['dateTimeStart'] as String),
     );
 
 Map<String, dynamic> _$CampaignPostToJson(CampaignPost instance) =>
@@ -31,8 +33,8 @@ Map<String, dynamic> _$CampaignPostToJson(CampaignPost instance) =>
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
       'bannerUrl': instance.bannerUrl,
-      'createdAt': instance.timeCreate.toIso8601String(),
-      'dateTimeStart': instance.timeStart.toIso8601String(),
+      'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
+      'dateTimeStart': const DateTimeConverter().toJson(instance.timeStart),
     };
 
 DetailCampaignPost _$DetailCampaignPostFromJson(Map<String, dynamic> json) =>
@@ -44,10 +46,12 @@ DetailCampaignPost _$DetailCampaignPostFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       content: json['content'] as String,
       creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
-      timeCreate: DateTime.parse(json['createdAt'] as String),
+      timeCreate:
+          const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
       bannerUrl: json['bannerUrl'] as String?,
-      timeStart: DateTime.parse(json['dateTimeStart'] as String),
+      timeStart:
+          const DateTimeConverter().fromJson(json['dateTimeStart'] as String),
       joined: (json['joined'] as List<dynamic>)
           .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -80,8 +84,8 @@ Map<String, dynamic> _$DetailCampaignPostToJson(DetailCampaignPost instance) =>
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
       'bannerUrl': instance.bannerUrl,
-      'createdAt': instance.timeCreate.toIso8601String(),
-      'dateTimeStart': instance.timeStart.toIso8601String(),
+      'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
+      'dateTimeStart': const DateTimeConverter().toJson(instance.timeStart),
       'joined': instance.joined,
       'doned': instance.doned,
       'absent': instance.absent,
@@ -100,7 +104,8 @@ EmergencyPost _$EmergencyPostFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       content: json['content'] as String,
       creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
-      timeCreate: DateTime.parse(json['createdAt'] as String),
+      timeCreate:
+          const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
       bannerUrl: json['bannerUrl'] as String?,
     );
@@ -116,7 +121,7 @@ Map<String, dynamic> _$EmergencyPostToJson(EmergencyPost instance) =>
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
       'bannerUrl': instance.bannerUrl,
-      'createdAt': instance.timeCreate.toIso8601String(),
+      'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
     };
 
 DetailEmergencyPost _$DetailEmergencyPostFromJson(Map<String, dynamic> json) =>
@@ -128,7 +133,8 @@ DetailEmergencyPost _$DetailEmergencyPostFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       content: json['content'] as String,
       creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
-      timeCreate: DateTime.parse(json['createdAt'] as String),
+      timeCreate:
+          const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
       bannerUrl: json['bannerUrl'] as String?,
       joined: (json['joined'] as List<dynamic>)
@@ -164,7 +170,7 @@ Map<String, dynamic> _$DetailEmergencyPostToJson(
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
       'bannerUrl': instance.bannerUrl,
-      'createdAt': instance.timeCreate.toIso8601String(),
+      'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
       'joined': instance.joined,
       'doned': instance.doned,
       'absent': instance.absent,

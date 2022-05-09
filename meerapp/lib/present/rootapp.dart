@@ -46,6 +46,7 @@ class _RootAppState extends State<RootApp> {
                     builder: (context) => currentPage == 1
                         ? const CreateNewEmergencyPage(isCreate: true,)
                         : CreateNewCampaignPage(isCreate: true,)),
+
               );
             },
             child: const Icon(FontAwesomeIcons.pen)),

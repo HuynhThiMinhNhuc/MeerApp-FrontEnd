@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
@@ -10,8 +11,10 @@ import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/post.dart';
+import 'package:skeleton_loader/skeleton_loader.dart';
 
 import '../../../models/post.dart';
+import '../../component/skeleton_post.dart';
 import '../new_campaign_page/create_new_campaign_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -125,16 +128,16 @@ class _HomePageState extends State<HomePage> {
             if (index < posts.length) {
               return Post(postData: posts[index]);
             } else {
-              return Container(
-                height: 100,
-                child: const LoadingPage(
-                  size: 50,
-                ),
-              );
+              return const  SkeletonPost();
             }
           });
     } else {
-      return Text('Không có bài viết');
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text("Opps, chưa có bài viết nào", style: kText40BoldMain.copyWith(color: meerColor25GreyNoteText),),
+        ),
+      );
     }
   }
 }
@@ -180,3 +183,4 @@ class CreateNewCampaign extends StatelessWidget {
     );
   }
 }
+

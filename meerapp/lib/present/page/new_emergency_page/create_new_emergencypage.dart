@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/colorconfig.dart';
+import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/models/post.dart';
+import 'package:meerapp/models/user.dart';
 import 'package:meerapp/present/component/image_card.dart';
 
 class CreateNewEmergencyPage extends StatefulWidget {
@@ -19,6 +26,9 @@ late TextEditingController _descriptionTextController;
 
 class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
   bool isSwitched = false;
+  LatLng? location;
+  File? avatarImage;
+  File? backgroundImage;
   
   bool isValidation() {
     if (_nameTextController.text.trim().isEmpty) {
@@ -29,12 +39,8 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
           content: const Text('Vui lòng nhập tên sự kiện'),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-              child: const Text('Hủy'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('Lưu'),
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok'),
             ),
           ],
         ),
@@ -43,6 +49,26 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
     }
 
     return true;
+  }
+
+  void _addNewCampagin() async {
+    var response =
+        await myAPIWrapper.getWithAuth(ServerUrl + '/user/detailbytoken');
+    var json = response.data as Map<String, dynamic>;
+    var myUser = UserOverview.fromJson(json);
+
+    var post = EmergencyPost(
+      id: 0,
+      address: _locationTextController.text,
+      lat: location!.latitude,
+      lng: location!.longitude,
+      title: _nameTextController.text,
+      content: _descriptionTextController.text,
+      creator: myUser,
+      timeCreate: DateTime.now(),
+      imageUrl: avatarImage?.path,
+      bannerUrl: backgroundImage?.path,
+    );
   }
 
   @override

@@ -66,8 +66,22 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
         .getCampaignPostById(widget.postId)
         .then((value) async {
       post = value;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       log(error?.toString() ?? "Can not load campaign by id");
+      await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Lỗi'),
+                content: const Text(
+                    'Không thể tải trang sự kiện này, vui lòng thử lại sau'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Ok'),
+                  ),
+                ],
+              ));
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }).then((value) {
       setState(() {
         isLoading = false;
@@ -81,7 +95,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
 
     return Scaffold(
       backgroundColor: meerColorWhite,
-      body: isLoading
+      body: (isLoading || post == null)
           ? const LoadingPage()
           : NestedScrollView(
               floatHeaderSlivers: true,
@@ -269,7 +283,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                       content: post!.title,
                       numberjoiner: post!.joined.length,
                       address: post!.address,
-                      time: DateTimeToString2(post!.timeStart),
+                      time: DateTimeToString(post!.timeStart),
                       email: post!.email,
                       phone: post!.phone,
                     )

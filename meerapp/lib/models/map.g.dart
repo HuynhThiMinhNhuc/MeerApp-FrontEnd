@@ -11,7 +11,7 @@ CampaignMap _$CampaignMapFromJson(Map<String, dynamic> json) => CampaignMap(
       lat: (json['latitude'] as num).toDouble(),
       lng: (json['longitude'] as num).toDouble(),
       title: json['title'] as String,
-      time: DateTime.parse(json['dateTimeStart'] as String),
+      time: const DateTimeConverter().fromJson(json['dateTimeStart'] as String),
     );
 
 Map<String, dynamic> _$CampaignMapToJson(CampaignMap instance) =>
@@ -20,7 +20,7 @@ Map<String, dynamic> _$CampaignMapToJson(CampaignMap instance) =>
       'latitude': instance.lat,
       'longitude': instance.lng,
       'title': instance.title,
-      'dateTimeStart': instance.time.toIso8601String(),
+      'dateTimeStart': const DateTimeConverter().toJson(instance.time),
     };
 
 EmergencyMap _$EmergencyMapFromJson(Map<String, dynamic> json) => EmergencyMap(

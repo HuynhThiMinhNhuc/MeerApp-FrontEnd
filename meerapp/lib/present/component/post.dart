@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/config/helper.dart';
-import 'package:meerapp/present/models/statusPost.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
@@ -223,11 +222,13 @@ class Post extends StatelessWidget {
                       style: kText13RegularBlack,
                     ),
                     TextSpan(
-                      text: "\n\nThời gian: ",
+
+                      text: "\n\nThời gian " + (postData is CampaignPost ? 'tổ chức: ' : 'kêu gọi: ') ,
+
                       style: kText13BoldBlack,
                     ),
                     TextSpan(
-                      text: DateTimeToString(postData.timeCreate),
+                      text: DateTimeToString((postData is CampaignPost) ? (postData as CampaignPost).timeStart : postData.timeCreate),
                       style: kText13RegularBlack,
                     ),
                   ],
@@ -236,5 +237,6 @@ class Post extends StatelessWidget {
             ),
           ]),
     );
+ 
   }
 }
