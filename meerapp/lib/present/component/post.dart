@@ -5,7 +5,6 @@ import 'package:meerapp/config/helper.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
-import 'package:meerapp/present/page/home_page/home_page.dart';
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
 
@@ -76,60 +75,37 @@ class Post extends StatelessWidget {
                   ],
                 ),
                 PopupMenuButton(
+                  onSelected: (selection) {
+                    switch (selection) {
+                      case 1:
+                        getFunctionReport(context);
+                        break;
+                      case 2:
+                        getFuctionEdit(context);
+
+                        break;
+                      case 3:
+                        getFuctionDeletePost(context);
+                        break;
+                      default:
+                    }
+                  },
                   icon: const Icon(
                     Icons.more_vert,
                     color: Colors.black,
                   ),
                   itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                     PopupMenuItem(
-                      onTap: () {
-                        {
-                          showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text(
-                                  'Nhập chi tiết điều bạn muốn báo cáo'),
-                              content: TextFormField(),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'Hủy'),
-                                  child: Text(
-                                    'Hủy',
-                                    style: kText13BoldMain,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'Đăng'),
-                                  child: Text('Đăng', style: kText13BoldMain),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
                       child: ListTile(
                         title: Text(
                           'Báo cáo',
                           style: kText13RegularBlack,
                         ),
                       ),
+                      value: 1,
                     ),
                     PopupMenuItem(
-                      onTap: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => postData is CampaignPost
-                                  ? CreateNewCampaignPage(
-                                      isCreate: false,
-                                    )
-                                  : CreateNewEmergencyPage(
-                                      isCreate: false,
-                                    )),
-                        )
-                      },
+                      value: 2,
                       child: ListTile(
                         title: Text(
                           'Chỉnh sửa',
@@ -138,29 +114,7 @@ class Post extends StatelessWidget {
                       ),
                     ),
                     PopupMenuItem(
-                      onTap: () => {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Xóa bài viết'),
-                            content: const Text(
-                                "Bạn chắc chắn muốn xóa bài viết này?"),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Hủy'),
-                                child: Text(
-                                  'Hủy',
-                                  style: kText13BoldMain,
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => Navigator.pop(context, 'Xóa'),
-                                child: Text('Xóa', style: kText13BoldMain),
-                              ),
-                            ],
-                          ),
-                        )
-                      },
+                      value: 3,
                       child: ListTile(
                         title: Text(
                           'Xóa',
@@ -222,13 +176,16 @@ class Post extends StatelessWidget {
                       style: kText13RegularBlack,
                     ),
                     TextSpan(
-
-                      text: "\n\nThời gian " + (postData is CampaignPost ? 'tổ chức: ' : 'kêu gọi: ') ,
-
+                      text: "\n\nThời gian " +
+                          (postData is CampaignPost
+                              ? 'tổ chức: '
+                              : 'kêu gọi: '),
                       style: kText13BoldBlack,
                     ),
                     TextSpan(
-                      text: DateTimeToString((postData is CampaignPost) ? (postData as CampaignPost).timeStart : postData.timeCreate),
+                      text: DateTimeToString((postData is CampaignPost)
+                          ? (postData as CampaignPost).timeStart
+                          : postData.timeCreate),
                       style: kText13RegularBlack,
                     ),
                   ],
@@ -237,6 +194,67 @@ class Post extends StatelessWidget {
             ),
           ]),
     );
- 
+  }
+
+  Set<Future> getFuctionEdit(BuildContext context) {
+    return {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => postData is CampaignPost
+                ? CreateNewCampaignPage(
+                    isCreate: false,
+                  )
+                : const CreateNewEmergencyPage(
+                    isCreate: false,
+                  )),
+      )
+    };
+  }
+
+  Future<String?> getFuctionDeletePost(BuildContext context) {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Xóa bài viết'),
+        content: const Text("Bạn chắc chắn muốn xóa bài viết này?"),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Hủy'),
+            child: Text(
+              'Hủy',
+              style: kText13BoldMain,
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Xóa'),
+            child: Text('Xóa', style: kText13BoldMain),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<String?> getFunctionReport(BuildContext context) {
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Nhập chi tiết điều bạn muốn báo cáo'),
+        content: TextFormField(),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Hủy'),
+            child: Text(
+              'Hủy',
+              style: kText13BoldMain,
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Đăng'),
+            child: Text('Đăng', style: kText13BoldMain),
+          ),
+        ],
+      ),
+    );
   }
 }

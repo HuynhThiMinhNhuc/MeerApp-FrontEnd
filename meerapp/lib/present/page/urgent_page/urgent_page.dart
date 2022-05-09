@@ -214,7 +214,8 @@ class CreateNewEmergency extends StatelessWidget {
               ),
             ],
           ),
-
+        ])
+        
     );
   }
 }
