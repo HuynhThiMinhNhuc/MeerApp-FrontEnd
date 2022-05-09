@@ -76,16 +76,30 @@ class ProfileOverView extends StatelessWidget {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                Container(
-                  height: 250.h,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.3), BlendMode.darken),
-                        image: MyImageProvider(avatarImageURI, const AssetImage("asset/defaultavatar.png")),
-                        fit: BoxFit.cover),
-                  ),
-                ),
+                avatarImageURI != null
+                    ? Container(
+                        height: 250.h,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: meerColorGradientActive2,
+                          ),
+                          image: DecorationImage(
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.3),
+                                  BlendMode.darken),
+                              image: MyImageProvider(avatarImageURI,
+                                  const AssetImage("asset/defaultavatar.png")),
+                              fit: BoxFit.cover),
+                        ),
+                      )
+                    : Container(
+                        height: 250.h,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: meerColorGradientActive2,
+                          ),
+                        ),
+                      ),
                 Positioned.fill(
                     top: 0,
                     right: 0,
@@ -146,8 +160,10 @@ class ProfileOverView extends StatelessWidget {
                             border: Border.all(color: Colors.white, width: 3),
                             image: DecorationImage(
                                 alignment: Alignment(0, -0.8.h),
-                                image: MyImageProvider(avatarImageURI,
-                                    const AssetImage("asset/avt1.jpg")),
+                                image: MyImageProvider(
+                                    avatarImageURI,
+                                    const AssetImage(
+                                        "asset/avatardefault.png")),
                                 fit: BoxFit.cover),
                           ),
                         ),

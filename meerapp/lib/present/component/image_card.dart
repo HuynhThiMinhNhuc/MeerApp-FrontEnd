@@ -53,7 +53,7 @@ class _ImageCardState extends State<ImageCard> {
 
       setState(() {
         //Update UI with image
-        imageFileDir = image.path;
+        imageFileDir = picture.path;
       });
       widget.onImageChanged?.call(imageFileDir!);
     }
