@@ -256,7 +256,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                               fontSize: 18.sp, fontWeight: FontWeight.bold),
                         ),
                         subtitle: const Text('Tình nguyện viên đã giúp đỡ'),
-                        children: post!.joined
+                        children: post!.doned
                             .map((user) => JoinCampaignUserItem(user: user))
                             .toList()
                         // List.generate(
