@@ -159,7 +159,8 @@ class PostController extends BaseController {
   }
 
   Future<bool> InviteUserToCampaign(int campaignId, List<int> ids) async {
-    var response = await myAPIWrapper.postWithAuth(ServerUrl + '/campaign/inviteuser',
+    var response = await myAPIWrapper.postWithAuth(
+        ServerUrl + '/campaign/inviteuser',
         data: {'campaignId': campaignId, 'userIds': ids});
     return response.errorCode == null;
   }
@@ -185,5 +186,17 @@ class PostController extends BaseController {
     var response =
         await dio.post(ServerUrl + '/$namePath/delete', data: {'keys': ids});
     return _isResponseSuccess(response);
+  }
+
+  Future<bool> FinishPost(
+      String namePath, int id, List<int> doneIds, List<int> absentIds) async {
+    var data = {
+      'campaignId': id,
+      'doneIds': doneIds,
+      'absentIds': absentIds,
+    };
+    var response = await myAPIWrapper
+        .postWithAuth(ServerUrl + '/$namePath/finish', data: data);
+    return response.errorCode == null;
   }
 }

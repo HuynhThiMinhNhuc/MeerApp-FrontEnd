@@ -17,7 +17,7 @@ CampaignPost _$CampaignPostFromJson(Map<String, dynamic> json) => CampaignPost(
       timeCreate:
           const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
-      bannerUrl: json['bannerUrl'] as String?,
+      bannerUrl: json['bannerURI'] as String?,
       timeStart:
           const DateTimeConverter().fromJson(json['dateTimeStart'] as String),
     );
@@ -32,7 +32,7 @@ Map<String, dynamic> _$CampaignPostToJson(CampaignPost instance) =>
       'gpslati': instance.lat,
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
-      'bannerUrl': instance.bannerUrl,
+      'bannerURI': instance.bannerUrl,
       'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
       'dateTimeStart': const DateTimeConverter().toJson(instance.timeStart),
     };
@@ -49,7 +49,7 @@ DetailCampaignPost _$DetailCampaignPostFromJson(Map<String, dynamic> json) =>
       timeCreate:
           const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
-      bannerUrl: json['bannerUrl'] as String?,
+      bannerUrl: json['bannerURI'] as String?,
       timeStart:
           const DateTimeConverter().fromJson(json['dateTimeStart'] as String),
       joined: (json['joined'] as List<dynamic>)
@@ -83,7 +83,7 @@ Map<String, dynamic> _$DetailCampaignPostToJson(DetailCampaignPost instance) =>
       'gpslati': instance.lat,
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
-      'bannerUrl': instance.bannerUrl,
+      'bannerURI': instance.bannerUrl,
       'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
       'dateTimeStart': const DateTimeConverter().toJson(instance.timeStart),
       'joined': instance.joined,
@@ -107,7 +107,7 @@ EmergencyPost _$EmergencyPostFromJson(Map<String, dynamic> json) =>
       timeCreate:
           const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
-      bannerUrl: json['bannerUrl'] as String?,
+      bannerUrl: json['bannerURI'] as String?,
     );
 
 Map<String, dynamic> _$EmergencyPostToJson(EmergencyPost instance) =>
@@ -120,7 +120,7 @@ Map<String, dynamic> _$EmergencyPostToJson(EmergencyPost instance) =>
       'gpslati': instance.lat,
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
-      'bannerUrl': instance.bannerUrl,
+      'bannerURI': instance.bannerUrl,
       'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
     };
 
@@ -136,20 +136,11 @@ DetailEmergencyPost _$DetailEmergencyPostFromJson(Map<String, dynamic> json) =>
       timeCreate:
           const DateTimeConverter().fromJson(json['createdAt'] as String),
       imageUrl: json['imageURI'] as String?,
-      bannerUrl: json['bannerUrl'] as String?,
-      joined: (json['joined'] as List<dynamic>)
-          .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      bannerUrl: json['bannerURI'] as String?,
       doned: (json['doned'] as List<dynamic>)
           .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
           .toList(),
-      absent: (json['absent'] as List<dynamic>)
-          .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
-          .toList(),
       reported: (json['reported'] as List<dynamic>)
-          .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      notdone: (json['notdone'] as List<dynamic>)
           .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
           .toList(),
       email: const _EmailConverter()
@@ -169,13 +160,10 @@ Map<String, dynamic> _$DetailEmergencyPostToJson(
       'gpslati': instance.lat,
       'gpslongti': instance.lng,
       'imageURI': instance.imageUrl,
-      'bannerUrl': instance.bannerUrl,
+      'bannerURI': instance.bannerUrl,
       'createdAt': const DateTimeConverter().toJson(instance.timeCreate),
-      'joined': instance.joined,
       'doned': instance.doned,
-      'absent': instance.absent,
       'reported': instance.reported,
-      'notdone': instance.notdone,
       'email': const _EmailConverter().toJson(instance.email),
       'phone': const _PhoneConverter().toJson(instance.phone),
     };

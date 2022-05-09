@@ -20,6 +20,7 @@ abstract class IPost {
   final double lng;
   @JsonKey(name: 'imageURI')
   final String? imageUrl;
+  @JsonKey(name: 'bannerURI')
   final String? bannerUrl;
   @JsonKey(name: 'createdAt')
   @DateTimeConverter()
@@ -137,7 +138,7 @@ class DetailCampaignPost extends CampaignPost {
         creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
         timeCreate: DateTime.parse(json['createdAt'] as String),
         imageUrl: json['imageURI'] as String?,
-        bannerUrl: json['bannerUrl'] as String?,
+        bannerUrl: json['bannerURI'] as String?,
         timeStart: DateTime.parse(json['dateTimeStart'] as String),
         joined: (json['joined'] as List<dynamic>)
             .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
@@ -196,11 +197,8 @@ class EmergencyPost extends IPost {
 
 @JsonSerializable()
 class DetailEmergencyPost extends EmergencyPost {
-  final List<UserOverview> joined;
   final List<UserOverview> doned;
-  final List<UserOverview> absent;
   final List<UserOverview> reported;
-  final List<UserOverview> notdone;
   @_EmailConverter()
   final String email;
   @_PhoneConverter()
@@ -217,11 +215,8 @@ class DetailEmergencyPost extends EmergencyPost {
     required DateTime timeCreate,
     required String? imageUrl,
     required String? bannerUrl,
-    required this.joined,
     required this.doned,
-    required this.absent,
     required this.reported,
-    required this.notdone,
     required this.email,
     this.phone,
   }) : super(
@@ -248,22 +243,14 @@ class DetailEmergencyPost extends EmergencyPost {
         creator: UserOverview.fromJson(json['creator'] as Map<String, dynamic>),
         timeCreate: DateTime.parse(json['createdAt'] as String),
         imageUrl: json['imageURI'] as String?,
-        bannerUrl: json['bannerUrl'] as String?,
-        joined: (json['joined'] as List<dynamic>)
-            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
-            .toList(),
+        bannerUrl: json['bannerURI'] as String?,
         doned: (json['doned'] as List<dynamic>)
             .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
             .toList(),
-        absent: (json['absent'] as List<dynamic>)
-            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        reported: (json['reported'] as List<dynamic>)
-            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        notdone: (json['notdone'] as List<dynamic>)
-            .map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
-            .toList(),
+        reported: (json['reported'] as List<dynamic>?)
+                ?.map((e) => UserOverview.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
         email: json['creator']['email'] as String,
         phone: json['creator']['phone'] as String?,
       );

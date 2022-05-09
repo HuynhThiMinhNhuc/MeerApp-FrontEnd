@@ -1,14 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:meerapp/api/route/auth.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/main.dart';
 import 'package:meerapp/present/component/menu_item.dart';
 import 'package:meerapp/present/page/Login/change_password.dart';
+import 'package:meerapp/present/rootapp.dart';
 
 import '../Login/login_view.dart';
 import 'edit_profile.dart';
 
 class MenuView extends StatelessWidget {
+  onSignOut(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text(
+          'Đăng xuất',
+          style: kText16BoldBlack,
+        ),
+        content: Text(
+          'Bạn thật sự muốn đăng xuất khỏi tài khoản này?',
+          style: kText14RegularBlack,
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text(
+              'Hủy',
+              style: kText15BoldBlack.copyWith(color: meerColorGreyNoteText),
+            ),
+            onPressed: () => Navigator.pop(context, 'Hủy'),
+          ),
+          TextButton(
+            child: Text('Đăng xuất', style: kText15BoldMain),
+            onPressed: () {
+              AuthAPI.signout().then((value) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const MeerApp(),
+                  ),
+                  (Route<dynamic> route) => false,
+                );
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double c_width = MediaQuery.of(context).size.width;
@@ -81,41 +122,7 @@ class MenuView extends StatelessWidget {
                   ),
                 ),
               ),
-              onTap: () => {
-                    showDialog<String>(
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: Text(
-                          'Đăng xuất',
-                          style: kText16BoldBlack,
-                        ),
-                        content: Text(
-                          'Bạn thật sự muốn đăng xuất khỏi tài khoản này?',
-                          style: kText14RegularBlack,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, 'Hủy'),
-                            child: Text(
-                              'Hủy',
-                              style: kText15BoldBlack.copyWith(
-                                  color: meerColorGreyNoteText),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () => {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
-                              ),
-                            },
-                            child: Text('Đăng xuất', style: kText15BoldMain),
-                          ),
-                        ],
-                      ),
-                    )
-                  }),
+              onTap: () => onSignOut(context)),
         ]));
   }
 }

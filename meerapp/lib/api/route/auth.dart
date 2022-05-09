@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:meerapp/api/MyWrapper.dart';
+import 'package:meerapp/api/route/user.dart';
 import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/singleton/user.dart';
 
@@ -17,28 +18,41 @@ class AuthAPI {
             "account": {
               "username": username,
               "password": password,
-            }
+            },
+            "deviceInfo": json.encode({})
           },
         ));
-    if (response.errorCode != null) {
-      var auth = AuthData();
-      auth.username = username;
-      auth.password = password;
-      auth.token = response.data["token"];
-      UserSingleton.instance.currentUserId = response.data["userId"];
-      UserSingleton.instance.auth = auth;
-      UserSingleton.instance.isLogined = true;
+    if (response.errorCode == null) {
+      UserSingleton.instance.auth = AuthData(
+        username: username,
+        password: password,
+        token: response.data["token"],
+        userId: response.data["userId"] as int,
+      );
+      UserSingleton.instance.refreshUserInfo();
+      UserSingleton.instance.saveAuth();
     }
     return response;
   }
 
-  static Future<MyResponse> signout() async {
-    var response = await myAPIWrapper.postWithAuth(ServerUrl + "/signout");
-    if (response.errorCode != null) {
-      UserSingleton.instance.currentUserId = null;
-      UserSingleton.instance.auth = null;
-      UserSingleton.instance.isLogined = false;
-    }
+  static Future<void> signout() async {
+    // notify to server
+    myAPIWrapper.postWithAuth(ServerUrl + "/login/signout");
+
+    UserSingleton.instance.auth = null;
+    UserSingleton.instance.refreshUserInfo();
+    UserSingleton.instance.saveAuth();
+  }
+
+  static Future<MyResponse> signup(dynamic jsonData) async {
+    var response = await myAPIWrapper.postWithAuth(
+      ServerUrl + "/signup",
+      options: Options(headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+      }),
+      data: jsonEncode(jsonData),
+    );
+
     return response;
   }
 }
