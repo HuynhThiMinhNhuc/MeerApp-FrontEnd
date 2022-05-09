@@ -272,7 +272,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                       children: [
                         ImageCard(
                           initData: backgroundImagePath,
-                          hintTitle: "+ Ảnh 1",
+                          hintTitle: "+ Ảnh bìa",
                           onImageChanged: (file) {
                             backgroundImagePath = file;
                           },
@@ -282,6 +282,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                         ),
                         ImageCard(
                           initData: avatarImagePath,
+                          hintTitle: "+ Ảnh đại diện",
                           onImageChanged: (file) {
                             avatarImagePath = file;
                           },
