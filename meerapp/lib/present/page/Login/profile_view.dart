@@ -8,7 +8,6 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/main.dart';
 import 'package:meerapp/present/component/dialog_with_circle_above.dart';
 import 'package:meerapp/present/component/my_alert_dialog_2.dart';
-import 'package:meerapp/present/page/Login/welcome_view.dart';
 
 import '../../component/custom_btn.dart';
 import '../../component/password_input.dart';
@@ -53,7 +52,7 @@ class _ProfileState extends State<ProfileCreate> {
       "email": widget.tag["email"],
       "phone": phonecontroller.text.trim(),
       "description": "",
-      "gender": ismade ? 1 : 0,
+      "gender": ismade ? 0 : 1,
       "birthday": DateFormat("dd/MM/yyyy")
           .parse(birthcontroller.text.trim())
           .toUtc()

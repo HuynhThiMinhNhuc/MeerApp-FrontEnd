@@ -121,7 +121,7 @@ class _EditProfileState extends State<EditProfile> {
           phone = oldData["phone"];
           description = oldData["description"];
           sampleImage1 = MyImageProvider(
-              oldData["avatarImageURI"], const AssetImage("asset/avt1.jpg"));
+              oldData["avatarImageURI"], const AssetImage("asset/avatardefault.png"));
 
           return getbody();
         },
