@@ -55,7 +55,7 @@ class JoinCampaignUserItem extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 3),
               image: DecorationImage(
-                  image: user.avatarUri == null ? NetworkImage(user.avatarUri!) as ImageProvider : const AssetImage("asset/demo.jpg"),
+                  image: user.avatarUri != null ? NetworkImage(user.avatarUri!) as ImageProvider : const AssetImage("asset/avatardefault.png"),
                   fit: BoxFit.cover),
             ),
           ),

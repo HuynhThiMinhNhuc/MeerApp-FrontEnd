@@ -6,6 +6,7 @@ import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
+import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
 import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
 
 import '../../models/post.dart';
@@ -43,12 +44,10 @@ class Post extends StatelessWidget {
                     Container(
                       width: 40.h,
                       height: 40.h,
-                      decoration: const BoxDecoration(
+                      decoration:  BoxDecoration(
                           shape: BoxShape.circle,
                           image: DecorationImage(
-                              image: AssetImage(
-                                "asset/avt1.jpg",
-                              ),
+                              image: MyImageProvider(postData.imageUrl, const AssetImage("asset/avatardefault.png")),
                               fit: BoxFit.cover)
                           // NetworkImage(avatarUrl), fit: BoxFit.cover),
                           ),
@@ -129,16 +128,16 @@ class Post extends StatelessWidget {
             SizedBox(
               height: 10.h,
             ),
+            postData.bannerUrl != null?
             Container(
               height: 400.h,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("asset/demo.jpg"),
-                  //NetworkImage(postImageUrl != null ? postImageUrl! : ""),
-                  fit: BoxFit.cover,
+                  image: MyImageProvider(postData.bannerUrl, const AssetImage("asset/failedimage.png")),
+                  fit: BoxFit.cover, 
                 ),
               ),
-            ),
+            ): Container(height: 0,),
             InkWell(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(10.w, 7.h, 5.w, 7.h),

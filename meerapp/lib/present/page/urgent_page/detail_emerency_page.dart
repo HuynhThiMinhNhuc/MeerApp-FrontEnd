@@ -13,8 +13,7 @@ import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
-
-
+import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
 
 class DetailEmerencyPage extends StatefulWidget {
   final StatusEmerency mode;
@@ -29,6 +28,7 @@ class DetailEmerencyPage extends StatefulWidget {
 
 class _DetailEmerencyPageState extends State<DetailEmerencyPage>
     with TickerProviderStateMixin {
+  late List imagePost;
   late TabController _tabController;
   bool isLoading = true;
   DetailEmergencyPost? post;
@@ -76,6 +76,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
     }).then((value) {
       setState(() {
         isLoading = false;
+        imagePost = [post!.imageUrl, post!.bannerUrl];
       });
     });
   }
@@ -97,10 +98,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                         height: 300.h,
                         child: Swiper(
                           itemBuilder: (context, index) {
-                            return Image.asset(
-                              "asset/demo.jpg",
-                              fit: BoxFit.fill,
-                            );
+                            return  MyImage(imagePost[index], Image.asset("asset/failedimage.png", fit: BoxFit.cover,));
                           },
                           indicatorLayout: PageIndicatorLayout.COLOR,
                           autoplay: false,
@@ -177,28 +175,34 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                           SizedBox(
                             height: 10.h,
                           ),
-                          Text.rich(
-                            TextSpan(
-                                text: 'Họ và tên: ',
-                                style: kText15BoldBlack,
-                                children: [
-                                  TextSpan(
-                                      text: post!.creator.name,
-                                      style: kText15RegularBlack)
-                                ]),
-                          ),
-                          InkWell(
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5.h),
                             child: Text.rich(
                               TextSpan(
-                                  text: 'Địa điểm gặp nạn: ',
+                                  text: 'Họ và tên: ',
                                   style: kText15BoldBlack,
                                   children: [
                                     TextSpan(
-                                        text: post!.address,
-                                        style: ktext15RegularBlue.copyWith(
-                                            decoration:
-                                                TextDecoration.underline))
+                                        text: post!.creator.name,
+                                        style: kText15RegularBlack)
                                   ]),
+                            ),
+                          ),
+                          InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5.h),
+                              child: Text.rich(
+                                TextSpan(
+                                    text: 'Địa điểm gặp nạn: ',
+                                    style: kText15BoldBlack,
+                                    children: [
+                                      TextSpan(
+                                          text: post!.address,
+                                          style: ktext15RegularBlue.copyWith(
+                                              decoration:
+                                                  TextDecoration.underline))
+                                    ]),
+                              ),
                             ),
                             onTap: () => {
                               Navigator.of(context).push(
@@ -209,25 +213,31 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                               )
                             },
                           ),
-                          Text.rich(
-                            TextSpan(
-                                text: 'Số điện thoại: ',
-                                style: kText15BoldBlack,
-                                children: [
-                                  TextSpan(
-                                      text: post!.phone ?? "Không có",
-                                      style: kText15RegularBlack)
-                                ]),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5.h),
+                            child: Text.rich(
+                              TextSpan(
+                                  text: 'Số điện thoại: ',
+                                  style: kText15BoldBlack,
+                                  children: [
+                                    TextSpan(
+                                        text: post!.phone ?? "Không có",
+                                        style: kText15RegularBlack)
+                                  ]),
+                            ),
                           ),
-                          Text.rich(
-                            TextSpan(
-                                text: 'Email: ',
-                                style: kText15BoldBlack,
-                                children: [
-                                  TextSpan(
-                                      text: post!.email,
-                                      style: kText15RegularBlack)
-                                ]),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5.h),
+                            child: Text.rich(
+                              TextSpan(
+                                  text: 'Email: ',
+                                  style: kText15BoldBlack,
+                                  children: [
+                                    TextSpan(
+                                        text: post!.email,
+                                        style: kText15RegularBlack)
+                                  ]),
+                            ),
                           ),
                         ],
                       ),
