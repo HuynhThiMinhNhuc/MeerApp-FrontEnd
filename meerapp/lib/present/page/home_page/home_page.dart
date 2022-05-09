@@ -62,6 +62,7 @@ class _HomePageState extends State<HomePage> {
       isLoading = true;
     });
     widget._postController.GetCampaigns(startIndex, number).then((value) {
+      value.removeWhere((i1) => posts.any((i2) => i1.id == i2.id));
       setState(() {
         posts.addAll(value);
       });
@@ -111,7 +112,9 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           _buildListPosts(),
-          SizedBox(height: 50.h,)
+          SizedBox(
+            height: 50.h,
+          )
         ],
       ),
     );
@@ -128,14 +131,17 @@ class _HomePageState extends State<HomePage> {
             if (index < posts.length) {
               return Post(postData: posts[index]);
             } else {
-              return const  SkeletonPost();
+              return const SkeletonPost();
             }
           });
     } else {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Text("Opps, chưa có bài viết nào", style: kText40BoldMain.copyWith(color: meerColor25GreyNoteText),),
+          child: Text(
+            "Opps, chưa có bài viết nào",
+            style: kText40BoldMain.copyWith(color: meerColor25GreyNoteText),
+          ),
         ),
       );
     }
@@ -177,10 +183,12 @@ class CreateNewCampaign extends StatelessWidget {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CreateNewCampaignPage(isCreate: true,)),
+          MaterialPageRoute(
+              builder: (context) => CreateNewCampaignPage(
+                    isCreate: true,
+                  )),
         )
       },
     );
   }
 }
-

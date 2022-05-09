@@ -44,6 +44,8 @@ class _AddParticipantAlertState extends State<AddParticipantAlert> {
     _listUserBytext.clear();
     _listUserBytext.addAll((response.data as List<dynamic>)
         .map((json) => UserOverview.fromJson(json)));
+    _listUserBytext
+        .removeWhere((i1) => widget.listChooseUser.any((i2) => i1.id == i2.id));
     log('load get list from text the number: ' + (++_count).toString());
   });
 

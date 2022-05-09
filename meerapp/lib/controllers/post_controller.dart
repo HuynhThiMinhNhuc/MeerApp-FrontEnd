@@ -148,7 +148,7 @@ class PostController extends BaseController {
     data.remove('id');
     data.remove('creator');
     data.remove('imageURI');
-    data.remove('bannerUrl');
+    data.remove('bannerURI');
 
     var response = await myAPIWrapper.postWithAuth(
       ServerUrl + '/${_getPathFromPost(post)}/insert',

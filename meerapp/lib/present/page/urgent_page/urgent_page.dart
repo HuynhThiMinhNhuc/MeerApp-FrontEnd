@@ -63,6 +63,7 @@ class _UrgentPageState extends State<UrgentPage> {
       isLoading = true;
     });
     widget._postController.GetEmergencies(startIndex, number).then((value) {
+      value.removeWhere((i1) => posts.any((i2) => i1.id == i2.id));
       setState(() {
         posts.addAll(value);
       });
@@ -178,7 +179,7 @@ class CreateNewEmergency extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const CreateNewEmergencyPage(
+                                        CreateNewEmergencyPage(
                                           isCreate: true,
                                         )),
                               )
@@ -189,7 +190,7 @@ class CreateNewEmergency extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CreateNewEmergencyPage(
+                        builder: (context) => CreateNewEmergencyPage(
                               isCreate: true,
                             )),
                   );

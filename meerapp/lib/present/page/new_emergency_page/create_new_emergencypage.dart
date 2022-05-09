@@ -8,14 +8,18 @@ import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/controllers/controller.dart';
+import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/models/user.dart';
 import 'package:meerapp/present/component/image_card.dart';
+import 'package:meerapp/present/component/my_alert_dialog_3.dart';
+import 'package:meerapp/present/component/open_map.dart';
 
 class CreateNewEmergencyPage extends StatefulWidget {
   final bool isCreate;
-  const CreateNewEmergencyPage({Key? key, required this.isCreate})
-      : super(key: key);
+  final PostController _postController = sl.get<PostController>();
+  CreateNewEmergencyPage({Key? key, required this.isCreate}) : super(key: key);
 
   @override
   State<CreateNewEmergencyPage> createState() => _CreateNewEmergencyPageState();
@@ -32,20 +36,26 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
   File? backgroundImage;
 
   bool isValidation() {
-    if (_nameTextController.text.trim().isEmpty) {
+    void _showAlertDialog(String text) {
       showDialog<String>(
         context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Lỗi'),
-          content: const Text('Vui lòng nhập tên sự kiện'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Ok'),
-            ),
-          ],
+        builder: (BuildContext context) => MyAlertDialog3(
+          title: 'Lỗi',
+          content: text,
         ),
       );
+    }
+
+    if (_nameTextController.text.trim().isEmpty) {
+      _showAlertDialog('Vui lòng nhập tên sự kiện');
+      return false;
+    }
+    if (_locationTextController.text.trim().isEmpty) {
+      _showAlertDialog('Vui lòng nhập địa chỉ nơi diễn ra sự kiện');
+      return false;
+    }
+    if (location == null) {
+      _showAlertDialog('Vui lòng đánh dấu địa điểm trên bản đồ');
       return false;
     }
 
@@ -70,6 +80,24 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
       imageUrl: avatarImage?.path,
       bannerUrl: backgroundImage?.path,
     );
+
+    var insertResponse = await widget._postController.InsertPost(post);
+    if (insertResponse.errorCode == null) {
+      await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => MyAlertDialog3(
+          title: 'Thông báo',
+          content: 'Tạo bài viết mới thành công',
+        ),
+      );
+      Navigator.of(context).pop();
+    } else {
+      showDialog(
+          context: context,
+          builder: (_) => MyAlertDialog3(
+              title: 'Lỗi',
+              content: 'Không thể tạo bài viết, vui lòng thử lại sau'));
+    }
   }
 
   @override
@@ -125,22 +153,6 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                           style: kText17BoldBlack,
                         ),
                       ),
-                      SizedBox(
-                        height: 10.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.w),
-                        child: Text(
-                          "Tên địa điểm",
-                          style: kText15RegularGreyNotetext,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: TextFormField(
-                          controller: _locationTextController,
-                        ),
-                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -169,56 +181,13 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                           ),
                         ],
                       ),
-                      Stack(
-                        children: [
-                          Container(
-                            height: 130.h,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                image: const DecorationImage(
-                                    image: AssetImage("asset/location.png"),
-                                    fit: BoxFit.cover)),
-                          ),
-                          Positioned(
-                              child: Container(
-                            height: 35.h,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 10.w,
-                                ),
-                                Flexible(
-                                  child: TextFormField(
-                                    readOnly: true,
-                                    textAlign: TextAlign.start,
-                                    style: kText13RegularBlack.copyWith(
-                                        color: meerColorWhite),
-                                    controller: _locationTextController,
-                                    decoration: const InputDecoration(
-                                        border: InputBorder.none),
-                                  ),
-                                ),
-                                IconButton(
-                                  padding: const EdgeInsets.all(3),
-                                  icon: const Icon(
-                                    FontAwesomeIcons.angleRight,
-                                    color: meerColorBlack,
-                                    size: 15,
-                                  ),
-                                  onPressed: () => {
-                                    //TODO: navigate to map to get location
-                                  },
-                                )
-                              ],
-                            ),
-                            decoration: const BoxDecoration(
-                                color: Color.fromARGB(92, 0, 0, 0),
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20))),
-                          ))
-                        ],
-                      ),
+                      OpenMap(
+                        locationTextController: _locationTextController,
+                        onChooseLocationFinish: (newLocation) {
+                          location = newLocation;
+                        },
+                        initLocation: location,
+                      )
                     ]),
               ),
             ),
@@ -246,13 +215,19 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                         ImageCard(
                           hintTitle: "+ Ảnh bìa",
                           onImageChanged: (file) {
-                            // backgroundImage = file;
+                            backgroundImage = file;
+                          },
+                          onImageDeleted: () {
+                            backgroundImage = null;
                           },
                         ),
                         ImageCard(
                           hintTitle: "+ Ảnh đại diện",
                           onImageChanged: (file) {
-                            // avatarImage = file;
+                            avatarImage = file;
+                          },
+                          onImageDeleted: () {
+                            avatarImage = null;
                           },
                         ),
                       ],
