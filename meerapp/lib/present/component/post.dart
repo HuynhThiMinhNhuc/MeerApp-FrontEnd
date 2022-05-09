@@ -205,7 +205,7 @@ class Post extends StatelessWidget {
                 ? CreateNewCampaignPage(
                     isCreate: false,
                   )
-                : const CreateNewEmergencyPage(
+                : CreateNewEmergencyPage(
                     isCreate: false,
                   )),
       )
