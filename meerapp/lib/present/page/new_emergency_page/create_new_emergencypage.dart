@@ -6,7 +6,8 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/component/image_card.dart';
 
 class CreateNewEmergencyPage extends StatefulWidget {
-  const CreateNewEmergencyPage({Key? key}) : super(key: key);
+  final bool isCreate;
+  const CreateNewEmergencyPage({Key? key, required this.isCreate}) : super(key: key);
 
   @override
   State<CreateNewEmergencyPage> createState() => _CreateNewEmergencyPageState();
@@ -267,7 +268,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
       centerTitle: true,
       backgroundColor: meerColorBackground,
       title: Text(
-        "Tạo tin khẩn cấp",
+        widget.isCreate? "Tạo tin khẩn cấp" : "Chỉnh sửa",
         style: ktext18BoldBlack,
       ),
       actions: [
@@ -276,7 +277,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
             if (!isValidation()) return;
           },
           child: Text(
-            "Đăng",
+            widget.isCreate?"Đăng":"Lưu",
             style: kText18BoldMain,
           ),
           style: ButtonStyle(

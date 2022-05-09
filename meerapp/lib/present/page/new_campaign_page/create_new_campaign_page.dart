@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -22,7 +21,8 @@ import 'package:debounce_throttle/debounce_throttle.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
-  CreateNewCampaignPage({Key? key}) : super(key: key);
+  final bool isCreate; 
+  CreateNewCampaignPage({Key? key, required this.isCreate}) : super(key: key);
 
   static const List<String> _userName = <String>[
     'Huynh Nhuc',
@@ -648,7 +648,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
       centerTitle: true,
       backgroundColor: meerColorBackground,
       title: Text(
-        "Tạo chiến dịch",
+        widget.isCreate? "Tạo chiến dịch" : "Chỉnh sửa",
         style: ktext18BoldBlack,
       ),
       actions: [
@@ -658,7 +658,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
             _addNewCampagin();
           },
           child: Text(
-            "Đăng",
+            widget.isCreate? "Đăng" : "Lưu",
             style: kText18BoldMain,
           ),
           style: ButtonStyle(

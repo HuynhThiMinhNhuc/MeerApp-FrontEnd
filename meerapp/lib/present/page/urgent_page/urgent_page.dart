@@ -9,15 +9,14 @@ import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
-import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/post.dart';
 import 'package:meerapp/models/post.dart';
 
-import 'package:meerapp/present/models/statusPost.dart';
 
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 
 import '../../../models/post.dart';
+import '../../component/loading_page.dart';
 
 class UrgentPage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
@@ -107,6 +106,7 @@ class _UrgentPageState extends State<UrgentPage> {
             ),
           ),
           _buildListPosts(),
+          SizedBox(height: 50.h,)
         ],
       ),
     );
@@ -164,44 +164,44 @@ class CreateNewEmergency extends StatelessWidget {
                       spreadRadius: 13,
                       blurRadius: 5,
                       offset: const Offset(0, 0), // changes position of shadow
+                    )
+                    ,]
                     ),
-                  ],
-                ),
-                child: IconButton(
-                    onPressed: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateNewEmergencyPage()),
-                          )
-                        },
-                    icon: const Icon(FontAwesomeIcons.bell,
-                        size: 50, color: meerColorWhite))),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CreateNewEmergencyPage()),
-              );
-            },
+                    child: IconButton(
+                        onPressed: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateNewEmergencyPage(isCreate:true,)),
+                              )
+                            },
+                        icon: const Icon(FontAwesomeIcons.bell,
+                            size: 50, color: meerColorWhite))),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateNewEmergencyPage(isCreate: true,)),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              Text(
+                "Khẩn cấp",
+                style: kText15BoldBlack,
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Text(
+                "Nhấn trong trường hợp khẩn cấp",
+                style: kText13RegularNote,
+              ),
+            ],
           ),
-          SizedBox(
-            height: 15.h,
-          ),
-          Text(
-            "Khẩn cấp",
-            style: kText15BoldBlack,
-          ),
-          SizedBox(
-            height: 5.h,
-          ),
-          Text(
-            "Nhấn trong trường hợp khẩn cấp",
-            style: kText13RegularNote,
-          ),
-        ],
-      ),
     );
   }
 }

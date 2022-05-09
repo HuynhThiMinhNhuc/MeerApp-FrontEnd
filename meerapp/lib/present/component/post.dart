@@ -6,21 +6,20 @@ import 'package:meerapp/present/models/statusPost.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
+import 'package:meerapp/present/page/home_page/home_page.dart';
+import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 import 'package:meerapp/present/page/urgent_page/detail_emerency_page.dart';
 
-
 import '../../models/post.dart';
-
+import '../page/new_campaign_page/create_new_campaign_page.dart';
 
 class Post extends StatelessWidget {
   final IPost postData;
 
-  const Post(
-      {Key? key,
-      required this.postData,
-      })
-
-      : super(key: key);
+  const Post({
+    Key? key,
+    required this.postData,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +45,15 @@ class Post extends StatelessWidget {
                     Container(
                       width: 40.h,
                       height: 40.h,
-                      decoration: const  BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: AssetImage("asset/avt1.jpg", ),fit: BoxFit.cover)
-                            // NetworkImage(avatarUrl), fit: BoxFit.cover),
-                      ),
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: AssetImage(
+                                "asset/avt1.jpg",
+                              ),
+                              fit: BoxFit.cover)
+                          // NetworkImage(avatarUrl), fit: BoxFit.cover),
+                          ),
                     ),
                     SizedBox(
                       width: 10.w,
@@ -61,12 +63,15 @@ class Post extends StatelessWidget {
                       children: [
                         GestureDetector(
                           onTap: () {},
-                          child: Text(postData.creator.name, style: kText15BoldBlack),
+                          child: Text(postData.creator.name,
+                              style: kText15BoldBlack),
                         ),
                         SizedBox(
                           height: 2.h,
                         ),
-                        if (postData.creator.address != null) Text(postData.creator.address!, style: kText12RegularBlack),
+                        if (postData.creator.address != null)
+                          Text(postData.creator.address!,
+                              style: kText12RegularBlack),
                       ],
                     )
                   ],
@@ -78,8 +83,8 @@ class Post extends StatelessWidget {
                   ),
                   itemBuilder: (BuildContext context) => <PopupMenuEntry>[
                     PopupMenuItem(
-                      child: InkWell(
-                        onTap: () {
+                      onTap: () {
+                        {
                           showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
@@ -103,59 +108,64 @@ class Post extends StatelessWidget {
                               ],
                             ),
                           );
-                        },
-                        child: ListTile(
-                          title: Text(
-                            'Báo cáo',
-                            style: kText13RegularBlack,
-                          ),
+                        }
+                      },
+                      child: ListTile(
+                        title: Text(
+                          'Báo cáo',
+                          style: kText13RegularBlack,
                         ),
                       ),
                     ),
                     PopupMenuItem(
-                      child: InkWell(
-                        onTap: () {},
-                        child: ListTile(
-                          title: Text(
-                            'Chỉnh sửa',
-                            style: kText13RegularBlack,
-                          ),
+                      onTap: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => postData is CampaignPost
+                                  ? CreateNewCampaignPage(
+                                      isCreate: false,
+                                    )
+                                  : CreateNewEmergencyPage(
+                                      isCreate: false,
+                                    )),
+                        )
+                      },
+                      child: ListTile(
+                        title: Text(
+                          'Chỉnh sửa',
+                          style: kText13RegularBlack,
                         ),
                       ),
                     ),
                     PopupMenuItem(
-                      child: InkWell(
-                        onTap: () {
-                          showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-
-                              title: const Text(
-                                  'Xóa bài viết'),
-                              content:const  Text("Bạn chắc chắn muốn xóa bài viết này?"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'Hủy'),
-                                  child: Text(
-                                    'Hủy',
-                                    style: kText13BoldMain,
-                                  ),
+                      onTap: () => {
+                        showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: const Text('Xóa bài viết'),
+                            content: const Text(
+                                "Bạn chắc chắn muốn xóa bài viết này?"),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Hủy'),
+                                child: Text(
+                                  'Hủy',
+                                  style: kText13BoldMain,
                                 ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.pop(context, 'Xóa'),
-                                  child: Text('Xóa', style: kText13BoldMain),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        child: ListTile(
-                          title: Text(
-                            'Xóa',
-                            style: kText13RegularBlack,
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, 'Xóa'),
+                                child: Text('Xóa', style: kText13BoldMain),
+                              ),
+                            ],
                           ),
+                        )
+                      },
+                      child: ListTile(
+                        title: Text(
+                          'Xóa',
+                          style: kText13RegularBlack,
                         ),
                       ),
                     ),
@@ -178,7 +188,7 @@ class Post extends StatelessWidget {
             ),
             InkWell(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.w, 10.h, 5.w, 5.h),
+                  padding: EdgeInsets.fromLTRB(10.w, 7.h, 5.w, 7.h),
                   child: Text(
                     postData.title,
                     style: kText15BoldBlack,
@@ -187,13 +197,18 @@ class Post extends StatelessWidget {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-
-                          builder: (context) =>  postData is CampaignPost ? 
-                          DetailCampaignPage(mode: StatusCompaign.admin, postId: postData.id,) 
-                          : DetailEmerencyPage(mode: StatusEmerency.admin, postId: postData.id,)),
+                          builder: (context) => postData is CampaignPost
+                              ? DetailCampaignPage(
+                                  mode: StatusCompaign.admin,
+                                  postId: postData.id,
+                                )
+                              : DetailEmerencyPage(
+                                  mode: StatusEmerency.admin,
+                                  postId: postData.id,
+                                )),
                     )),
             Padding(
-              padding: EdgeInsets.fromLTRB(10.w, 5.h, 5.w, 10.h),
+              padding: EdgeInsets.fromLTRB(10.w, 3.h, 5.w, 7.h),
               child: RichText(
                 text: TextSpan(
                   text: postData.content,
@@ -207,10 +222,10 @@ class Post extends StatelessWidget {
                       text: postData.address,
                       style: kText13RegularBlack,
                     ),
-                     TextSpan(
-                      text: "\n\nThời gian: " ,
+                    TextSpan(
+                      text: "\n\nThời gian: ",
                       style: kText13BoldBlack,
-                    ) ,
+                    ),
                     TextSpan(
                       text: DateTimeToString(postData.timeCreate),
                       style: kText13RegularBlack,
