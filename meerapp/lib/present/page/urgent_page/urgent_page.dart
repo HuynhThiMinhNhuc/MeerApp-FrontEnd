@@ -144,10 +144,8 @@ class CreateNewEmergency extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(20.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        padding: EdgeInsets.all(20.w),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -179,9 +177,7 @@ class CreateNewEmergency extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        CreateNewEmergencyPage(
-                                          isCreate: true,
-                                        )),
+                                        CreateNewEmergencyPage()),
                               )
                             },
                         icon: const Icon(FontAwesomeIcons.warning,
@@ -190,9 +186,7 @@ class CreateNewEmergency extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CreateNewEmergencyPage(
-                              isCreate: true,
-                            )),
+                        builder: (context) => CreateNewEmergencyPage()),
                   );
                 },
               ),
@@ -212,9 +206,6 @@ class CreateNewEmergency extends StatelessWidget {
               ),
             ],
           ),
-        ])
-        
-
-    );
+        ]));
   }
 }
