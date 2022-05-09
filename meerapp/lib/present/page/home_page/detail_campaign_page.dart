@@ -190,7 +190,9 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                   ? true
                                   : false,
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  
+                                },
                                 style: ElevatedButton.styleFrom(
                                   alignment: Alignment.center,
                                   fixedSize: Size(100.w, 30.h),
