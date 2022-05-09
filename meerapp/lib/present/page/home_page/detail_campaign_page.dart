@@ -13,6 +13,7 @@ import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/introduce_campaignwidget.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 import 'package:meerapp/present/page/home_page/widget/report_campaign_widget.dart';
+import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
 
 import '../../../config/helper.dart';
 import '../../../controllers/controller.dart';
@@ -107,12 +108,9 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                         Stack(clipBehavior: Clip.none, children: [
                           Container(
                             height: 200.h,
-                            decoration: const BoxDecoration(
+                            decoration:  BoxDecoration(
                               image: DecorationImage(
-                                  image: AssetImage("asset/demo.jpg"),
-                                  // NetworkImage(
-                                  //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
-                                  fit: BoxFit.cover),
+                                  image: MyImageProvider( post!.bannerUrl, const AssetImage("asset/failedimage.png")),  fit: BoxFit.cover),
                             ),
                           ),
                           Positioned(
@@ -151,10 +149,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                           color: Colors.white, width: 3),
                                       image: DecorationImage(
                                           alignment: Alignment(0, -0.8.h),
-                                          image: AssetImage("asset/demo.jpg"),
-                                          //const NetworkImage(
-                                          //  "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Y2hhcml0eXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"),
-                                          fit: BoxFit.cover),
+                                          image: MyImageProvider(post!.imageUrl, const AssetImage("asset/avatardefault.png")),  fit: BoxFit.cover),
                                     ),
                                   ),
                                 ),

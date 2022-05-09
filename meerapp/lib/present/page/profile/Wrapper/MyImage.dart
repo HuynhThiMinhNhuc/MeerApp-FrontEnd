@@ -35,5 +35,6 @@ Image MyImage(String? uri, Image defaultImage) {
     errorBuilder: ((context, error, stackTrace) {
       return defaultImage;
     }),
+    fit: BoxFit.cover,
   );
 }

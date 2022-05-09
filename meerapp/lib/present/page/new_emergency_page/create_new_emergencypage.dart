@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/colorconfig.dart';
@@ -228,8 +227,10 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                     Row(
                       children: [
                         ImageCard(
+
                           initData: backgroundImagePath,
-                          hintTitle: "+ Ảnh bìa",
+                          hintTitle: "+ Ảnh 1",
+
                           onImageChanged: (file) {
                             backgroundImagePath = file;
                           },
@@ -239,7 +240,6 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                         ),
                         ImageCard(
                           initData: avatarImagePath,
-                          hintTitle: "+ Ảnh đại diện",
                           onImageChanged: (file) {
                             avatarImagePath = file;
                           },

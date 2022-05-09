@@ -152,7 +152,7 @@ class _AddJoinerPageState extends State<AddJoinerPage>
   AppBar getAppBar() {
     return AppBar(
       actions: [
-        ElevatedButton(
+       TextButton(
             onPressed: () async {
               var isSuccess = await widget._postController.FinishPost(
                 (widget.post is CampaignPost) ? 'campaign' : 'emergency',
@@ -182,7 +182,7 @@ class _AddJoinerPageState extends State<AddJoinerPage>
                 );
               }
             },
-            child: Text("Đồng ý"))
+            child: Text("Lưu", style: kText15BoldMain,))
       ],
       backgroundColor: meerColorBackground,
       centerTitle: true,
