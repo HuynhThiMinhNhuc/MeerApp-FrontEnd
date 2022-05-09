@@ -10,10 +10,13 @@ import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/map.dart';
+import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
+
+import '../../component/my_alert_dialog.dart';
 
 class DetailEmerencyPage extends StatefulWidget {
   final StatusEmerency mode;
@@ -62,7 +65,8 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
           context: context,
           builder: (context) => AlertDialog(
                 title: const Text('Lỗi'),
-                content: const Text('Không thể tải trang sự kiện này, vui lòng thử lại sau'),
+                content: const Text(
+                    'Không thể tải trang sự kiện này, vui lòng thử lại sau'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.pop(context),
@@ -70,7 +74,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                   ),
                 ],
               ));
-      Navigator.of(context).popUntil((route)=>route.isFirst);
+      Navigator.of(context).popUntil((route) => route.isFirst);
     }).then((value) {
       setState(() {
         isLoading = false;
@@ -126,9 +130,7 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                            onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               //alignment: Alignment.center,
                               primary: meerColorMain,
@@ -143,13 +145,21 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                             width: 15.w,
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
+                            onPressed: () async {
+                              var result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const AddJoinerPage()),
                               );
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) => MyAlertDialog3(
+                                        title: 'Thông báo',
+                                        content:
+                                            'Sự kiện đã chuyển sang chế độ kết thúc',
+                                      ));
+                              Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.all(10),

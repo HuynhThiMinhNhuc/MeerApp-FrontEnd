@@ -13,7 +13,6 @@ import 'package:meerapp/present/component/post.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/component/skeleton_post.dart';
 
-
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 
 import '../../../models/post.dart';
@@ -107,7 +106,9 @@ class _UrgentPageState extends State<UrgentPage> {
             ),
           ),
           _buildListPosts(),
-          SizedBox(height: 50.h,)
+          SizedBox(
+            height: 50.h,
+          )
         ],
       ),
     );
@@ -153,7 +154,6 @@ class CreateNewEmergency extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -183,8 +183,9 @@ class CreateNewEmergency extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const CreateNewEmergencyPage(isCreate:true,)),
-
+                                        const CreateNewEmergencyPage(
+                                          isCreate: true,
+                                        )),
                               )
                             },
                         icon: const Icon(FontAwesomeIcons.bell,
@@ -193,8 +194,9 @@ class CreateNewEmergency extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CreateNewEmergencyPage(isCreate: true,)),
-
+                        builder: (context) => const CreateNewEmergencyPage(
+                              isCreate: true,
+                            )),
                   );
                 },
               ),
@@ -214,7 +216,8 @@ class CreateNewEmergency extends StatelessWidget {
               ),
             ],
           ),
-
+        ],
+      ),
     );
   }
 }

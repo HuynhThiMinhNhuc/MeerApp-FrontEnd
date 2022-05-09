@@ -14,6 +14,7 @@ import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/models/user.dart';
+import 'package:meerapp/present/component/add_participant_dialog.dart';
 import 'package:meerapp/present/component/image_card.dart';
 import 'package:meerapp/present/component/map.dart';
 import 'package:meerapp/singleton/user.dart';
@@ -696,72 +697,6 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class AddParticipantAlert extends StatelessWidget {
-  AddParticipantAlert({
-    Key? key,
-    required this.listChooseUser,
-  }) : super(key: key);
-
-  final List<UserOverview> listChooseUser;
-  final List<UserOverview> _listUserBytext = [];
-  int count = 0;
-  late Debouncer<String> debouncer =
-      Debouncer<String>(Duration(microseconds: 3000), initialValue: '',
-          onChanged: (textSearch) async {
-    var queryParams = {
-      'searchby': 'fullname',
-      'searchvalue': textSearch,
-      'orderby': 'fullname',
-      'orderdirection': 'asc',
-      'start': 0,
-      'count': 5,
-    };
-    var response = await myAPIWrapper.get(
-      ServerUrl + '/user/select',
-      queryParameters: queryParams,
-    );
-
-    _listUserBytext.clear();
-    _listUserBytext.addAll((response.data as List<dynamic>)
-        .map((json) => UserOverview.fromJson(json)));
-    log('load complete: ' + (++count).toString());
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        'Thêm người tham gia',
-        style: kText15BoldBlack,
-      ),
-      content: Autocomplete<UserOverview>(
-        displayStringForOption: (option) => option.name,
-        optionsBuilder: (TextEditingValue textEditingValue) async {
-          if (textEditingValue.text.trim() == '') {
-            return [];
-          }
-          debouncer.setValue(textEditingValue.text);
-          return _listUserBytext;
-        },
-        onSelected: (UserOverview selection) {
-          debugPrint('You just selected ${selection.name}');
-          listChooseUser.add(selection);
-        },
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'Cancel'),
-          child: const Text('Hủy'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'OK'),
-          child: const Text('Lưu'),
         ),
       ],
     );
