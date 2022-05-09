@@ -192,11 +192,13 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                   : false,
                               child: ElevatedButton(
                                 onPressed: () {
+
                                    Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const InviteMembetPage(),
                               ));
+
                                 },
                                 style: ElevatedButton.styleFrom(
                                   alignment: Alignment.center,

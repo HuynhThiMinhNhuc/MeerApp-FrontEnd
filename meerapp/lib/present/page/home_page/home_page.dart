@@ -4,6 +4,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:meerapp/api/MyWrapper.dart';
+import 'package:meerapp/api/route/user.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/constant.dart';
 import 'package:meerapp/config/fontconfig.dart';
@@ -11,6 +13,7 @@ import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/post.dart';
+import 'package:meerapp/present/page/profile/Wrapper/MyImage.dart';
 import 'package:skeleton_loader/skeleton_loader.dart';
 
 import '../../../models/post.dart';
@@ -155,37 +158,50 @@ class CreateNewCampaign extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        child: Row(
-          children: [
-            const CircleAvatar(
-              backgroundImage: AssetImage("asset/demo.jpg"),
-              radius: 26,
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                child: Container(
-                  height: 40.h,
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Tạo 1 chiến dịch mới nào!",
-                    style: kText15RegularGreyNotetext,
+    return FutureBuilder<MyResponse>(
+        future: UserAPI.getCurrentUserInfo(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          final userInfo = snapshot.data!.data as dynamic;
+          return InkWell(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: MyImageProvider(userInfo["avatarImageURI"],
+                        AssetImage("asset/demo.jpg")),
+                    radius: 26,
                   ),
-                ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: Container(
+                        height: 40.h,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Tạo 1 chiến dịch mới nào!",
+                          style: kText15RegularGreyNotetext,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
-      onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CreateNewCampaignPage()),
-        )
-      },
-    );
+            onTap: () => {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateNewCampaignPage()),
+              )
+            },
+          );
+        });
   }
 }
