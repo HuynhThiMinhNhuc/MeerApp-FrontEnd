@@ -59,6 +59,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void loadInit() {
+    setState(() {
+      posts.clear();
+    });
+    _fetchCampainPosts(0, pageSize);
+  }
+
   void _fetchCampainPosts(int startIndex, int number) async {
     log('Fetch data');
     setState(() {
@@ -85,7 +92,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _fetchCampainPosts(0, pageSize);
+    loadInit();
   }
 
   @override
@@ -102,7 +109,9 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CreateNewCampaign(),
+          CreateNewCampaign(onAddSuccess: () {
+            loadInit();
+          }),
           Container(
             color: meerColorBackground,
             height: 10,
@@ -152,8 +161,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class CreateNewCampaign extends StatelessWidget {
-  const CreateNewCampaign({
+  final Function()? onAddSuccess;
+  CreateNewCampaign({
     Key? key,
+    this.onAddSuccess,
   }) : super(key: key);
 
   @override
@@ -194,12 +205,13 @@ class CreateNewCampaign extends StatelessWidget {
                 ],
               ),
             ),
-            onTap: () => {
-              Navigator.push(
+            onTap: () async {
+              var rs = await Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => CreateNewCampaignPage()),
-              )
+              );
+              if (rs == 'ok') onAddSuccess?.call();
             },
           );
         });

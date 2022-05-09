@@ -174,7 +174,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
             content: 'Tạo bài viết mới thành công',
           ),
         );
-        Navigator.of(context).pop();
+        Navigator.of(context).pop('ok');
       } else {
         log('cannot invite user to campaign $campaignId');
       }
@@ -201,7 +201,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
           content: 'Cập nhật bài viết mới thành công',
         ),
       );
-      Navigator.of(context).pop();
+      Navigator.of(context).pop('ok');
     } else {
       showDialog(
           context: context,

@@ -49,13 +49,13 @@ class _ImageCardState extends State<ImageCard> {
       final image = File('${directory.path}/${basename(picture.path)}');
 
       //Create new image from source image, add temporary to storage app
-      // final file = File(picture.path); //.copy(image.path);
+      final file = File(picture.path); //.copy(image.path);
 
       setState(() {
         //Update UI with image
-        imageFileDir = picture.path;
+        imageFileDir = file.path;
       });
-      widget.onImageChanged?.call(image.path);
+      widget.onImageChanged?.call(imageFileDir!);
     }
   }
 

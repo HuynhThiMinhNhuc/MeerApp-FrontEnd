@@ -33,6 +33,13 @@ class _RootAppState extends State<RootApp> {
     super.dispose();
   }
 
+  // final bodies = [
+  //   HomePage(),
+  //   UrgentPage(),
+  //   MapPage(),
+  //   ProfilePage()
+  // ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,8 +54,11 @@ class _RootAppState extends State<RootApp> {
                     builder: (context) => currentPage == 1
                         ? CreateNewEmergencyPage()
                         : CreateNewCampaignPage()),
-
-              );
+              ).then((value) {
+                if (value == 'ok') {
+                  setState(() {});
+                }
+              });
             },
             child: const Icon(FontAwesomeIcons.pen)),
       ),
@@ -59,6 +69,7 @@ class _RootAppState extends State<RootApp> {
   }
 
   Widget getBody() {
+    // return bodies[currentPage];
     switch (currentPage) {
       case 0:
         return HomePage();

@@ -96,7 +96,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
           content: 'Thêm bài viết mới thành công',
         ),
       );
-      Navigator.of(context).pop();
+      Navigator.of(context).pop('ok');
     } else {
       showDialog(
           context: context,
@@ -118,7 +118,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
           content: 'Cập nhật bài viết mới thành công',
         ),
       );
-      Navigator.of(context).pop();
+      Navigator.of(context).pop('ok');
     } else {
       showDialog(
           context: context,
