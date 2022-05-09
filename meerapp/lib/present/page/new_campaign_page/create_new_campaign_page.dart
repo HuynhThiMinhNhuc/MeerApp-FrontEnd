@@ -276,6 +276,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                             Stack(
                               children: [
                                 Container(
+                                  alignment: Alignment.topCenter,
                                   height: 120.h,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
@@ -288,6 +289,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                                     child: Container(
                                   height: 35.h,
                                   child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       SizedBox(

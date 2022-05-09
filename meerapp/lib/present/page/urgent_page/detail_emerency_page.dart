@@ -9,13 +9,12 @@ import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/map.dart';
-import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 
-import '../../component/my_alert_dialog.dart';
+
 
 class DetailEmerencyPage extends StatefulWidget {
   final StatusEmerency mode;

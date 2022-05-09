@@ -14,7 +14,8 @@ import 'package:meerapp/present/component/image_card.dart';
 
 class CreateNewEmergencyPage extends StatefulWidget {
   final bool isCreate;
-  const CreateNewEmergencyPage({Key? key, required this.isCreate}) : super(key: key);
+  const CreateNewEmergencyPage({Key? key, required this.isCreate})
+      : super(key: key);
 
   @override
   State<CreateNewEmergencyPage> createState() => _CreateNewEmergencyPageState();
@@ -29,7 +30,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
   LatLng? location;
   File? avatarImage;
   File? backgroundImage;
-  
+
   bool isValidation() {
     if (_nameTextController.text.trim().isEmpty) {
       showDialog<String>(
@@ -112,92 +113,113 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 5.h,),
-                   Padding(
-                     padding: EdgeInsets.only(left: 10.w),
-                     child: Text(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10.w),
+                        child: Text(
                           "Địa điểm",
                           style: kText17BoldBlack,
                         ),
-                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 10.w),
-                      Text(
-                        "Sử dụng vị trí hiện tại của bạn ",
-                        style: kText15BoldGreyHintText,
                       ),
-                      Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Switch(
-                              value: isSwitched,
-                              onChanged: (value) {
-                                setState(() {
-                                  isSwitched = value;
-                                  print(isSwitched);
-                                });
-                              },
-                              activeTrackColor: Colors.lightGreenAccent,
-                              activeColor: Colors.green,
-                            ),
-                          ],
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10.w),
+                        child: Text(
+                          "Tên địa điểm",
+                          style: kText15RegularGreyNotetext,
                         ),
                       ),
-                    ],
-                  ),
-                  Stack(
-                    children: [
-                      Container(
-                        height: 130.h,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            image: const DecorationImage(
-                                image: AssetImage("asset/location.png"),
-                                fit: BoxFit.cover)),
-                      ),
-                      Positioned(
-                          child: Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 10.w,
-                            ),
-                            Flexible(
-                              child: TextFormField(
-                                readOnly: true,
-                                textAlign: TextAlign.start,
-                                style: kText15RegularBlack.copyWith(
-                                    color: meerColorWhite),
-                                controller: _locationTextController,
-                                decoration: const InputDecoration(
-                                    border: InputBorder.none),
-                              ),
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                FontAwesomeIcons.angleRight,
-                                color: meerColorBlack,
-                              ),
-                              onPressed: () => {
-                                //TODO: navigate to map to get location
-                              },
-                            )
-                          ],
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: TextFormField(
+                          controller: _locationTextController,
                         ),
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(92, 0, 0, 0),
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(20))),
-                      ))
-                    ],
-                  ),
-                ]),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(width: 10.w),
+                          Text(
+                            "Sử dụng vị trí hiện tại của bạn ",
+                            style: kText15BoldGreyHintText,
+                          ),
+                          Flexible(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Switch(
+                                  value: isSwitched,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isSwitched = value;
+                                      print(isSwitched);
+                                    });
+                                  },
+                                  activeTrackColor: Colors.lightGreenAccent,
+                                  activeColor: Colors.green,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Stack(
+                        children: [
+                          Container(
+                            height: 130.h,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                image: const DecorationImage(
+                                    image: AssetImage("asset/location.png"),
+                                    fit: BoxFit.cover)),
+                          ),
+                          Positioned(
+                              child: Container(
+                            height: 35.h,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 10.w,
+                                ),
+                                Flexible(
+                                  child: TextFormField(
+                                    readOnly: true,
+                                    textAlign: TextAlign.start,
+                                    style: kText13RegularBlack.copyWith(
+                                        color: meerColorWhite),
+                                    controller: _locationTextController,
+                                    decoration: const InputDecoration(
+                                        border: InputBorder.none),
+                                  ),
+                                ),
+                                IconButton(
+                                  padding: const EdgeInsets.all(3),
+                                  icon: const Icon(
+                                    FontAwesomeIcons.angleRight,
+                                    color: meerColorBlack,
+                                    size: 15,
+                                  ),
+                                  onPressed: () => {
+                                    //TODO: navigate to map to get location
+                                  },
+                                )
+                              ],
+                            ),
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(92, 0, 0, 0),
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20))),
+                          ))
+                        ],
+                      ),
+                    ]),
               ),
             ),
             SizedBox(
@@ -294,7 +316,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
       centerTitle: true,
       backgroundColor: meerColorBackground,
       title: Text(
-        widget.isCreate? "Tạo tin khẩn cấp" : "Chỉnh sửa",
+        widget.isCreate ? "Tạo tin khẩn cấp" : "Chỉnh sửa",
         style: ktext18BoldBlack,
       ),
       actions: [
@@ -303,7 +325,7 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
             if (!isValidation()) return;
           },
           child: Text(
-            widget.isCreate?"Đăng":"Lưu",
+            widget.isCreate ? "Đăng" : "Lưu",
             style: kText18BoldMain,
           ),
           style: ButtonStyle(
