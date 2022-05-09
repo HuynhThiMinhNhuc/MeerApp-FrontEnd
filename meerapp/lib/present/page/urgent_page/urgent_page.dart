@@ -98,13 +98,6 @@ class _UrgentPageState extends State<UrgentPage> {
             height: 15.h,
             color: meerColorBackground,
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(10.w, 10.w, 0, 0),
-            child: Text(
-              "Tin khẩn cấp",
-              style: kText20MediumBlack,
-            ),
-          ),
           _buildListPosts(),
           SizedBox(
             height: 50.h,
@@ -161,17 +154,19 @@ class CreateNewEmergency extends StatelessWidget {
             children: [
               IconButton(
                 iconSize: 130.w,
+                hoverColor: Color.fromARGB(132, 241, 33, 44).withOpacity(0.15),
                 icon: Container(
                     height: 130.w,
                     width: 130.w,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
-                      color: meerColorRed,
+                      color: Color.fromARGB(174, 247, 29, 40),
                       boxShadow: [
                         BoxShadow(
-                          color: meerColorRed.withOpacity(0.5),
+                          color:
+                              Color.fromARGB(174, 247, 29, 40).withOpacity(0.5),
                           spreadRadius: 13,
-                          blurRadius: 5,
+                          blurRadius: 10,
                           offset:
                               const Offset(0, 0), // changes position of shadow
                         ),
@@ -188,7 +183,7 @@ class CreateNewEmergency extends StatelessWidget {
                                         )),
                               )
                             },
-                        icon: const Icon(FontAwesomeIcons.bell,
+                        icon: const Icon(FontAwesomeIcons.warning,
                             size: 50, color: meerColorWhite))),
                 onPressed: () {
                   Navigator.push(
@@ -201,17 +196,17 @@ class CreateNewEmergency extends StatelessWidget {
                 },
               ),
               SizedBox(
-                height: 15.h,
+                height: 20.h,
               ),
               Text(
                 "Khẩn cấp",
-                style: kText15BoldBlack,
+                style: kText20BoldRed,
               ),
               SizedBox(
                 height: 5.h,
               ),
               Text(
-                "Nhấn trong trường hợp khẩn cấp",
+                "Nhấn để đăng tin trong trường hợp khẩn cấp!",
                 style: kText13RegularNote,
               ),
             ],

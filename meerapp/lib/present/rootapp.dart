@@ -101,12 +101,15 @@ class _RootAppState extends State<RootApp> {
   AppBar urgentAppbar() {
     return AppBar(
       backgroundColor: meerColorBackground,
-      title: Text(
-        "Tin khẩn cấp",
-        style: kText20MediumBlack,
-      ),
+      //centerTitle: true,
       elevation: 0,
-      centerTitle: true,
+      title: Padding(
+        padding: EdgeInsets.symmetric(vertical: 15.h),
+        child: Text(
+          "Meers",
+          style: kText24BoldMain,
+        ),
+      ),
     );
   }
 
