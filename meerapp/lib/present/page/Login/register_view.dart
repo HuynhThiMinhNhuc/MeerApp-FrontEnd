@@ -141,7 +141,7 @@ class _RegisterViewState extends State<RegisterView> {
                   hint: 'Mật khẩu',
                   background: meerColorBackgroundButton,
                   boder: meerColorMain,
-                  securitytext: false,
+                  securitytext: true,
                   ispass: true,
                   textcontroller: passwordcontroller,
                   textInputType: TextInputType.text,

@@ -63,7 +63,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   hint: 'Mật khẩu cũ',
                   background: meerColorBackgroundButton,
                   boder: meerColorMain,
-                  securitytext: false,
+                  securitytext: true,
                   ispass: true,
                   textcontroller: passwordcontroller,
                   textInputType: TextInputType.text,
@@ -78,7 +78,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                   hint: 'Mật khẩu mới',
                   background: meerColorBackgroundButton,
                   boder: meerColorMain,
-                  securitytext: false,
+                  securitytext: true,
                   ispass: true,
                   textcontroller: passwordcontroller,
                   textInputType: TextInputType.text,
@@ -193,9 +193,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginPage(
-                            
-                          ),
+                          builder: (context) => LoginPage(),
                         )),
                   },
                   textInput: 'ĐỔI MẬT KHẨU',

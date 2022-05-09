@@ -47,7 +47,6 @@ class _PassWordInputState extends State<PassWordInput> {
             widget.ispass ? Icons.lock : Icons.cake_rounded,
             color: meerColorMain,
             size: 23.h,
-            
           ),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -84,10 +83,12 @@ class _PassWordInputState extends State<PassWordInput> {
                     })
                   : showDatePicker(
                       context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(DateTime.now().year - 1,
+                      initialDate: DateTime(DateTime.now().year,
                           DateTime.now().month, DateTime.now().day),
-                      lastDate: DateTime(DateTime.now().year + 2),
+                      firstDate: DateTime(DateTime.now().year - 100,
+                          DateTime.now().month, DateTime.now().day),
+                      lastDate: DateTime(DateTime.now().year,
+                          DateTime.now().month, DateTime.now().day),
                     ).then((value) {
                       if (value != null) {
                         if (widget.textcontroller.text !=
