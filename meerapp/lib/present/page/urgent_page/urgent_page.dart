@@ -12,6 +12,7 @@ import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/post.dart';
 import 'package:meerapp/models/post.dart';
+import 'package:meerapp/present/component/skeleton_post.dart';
 
 import 'package:meerapp/present/models/statusPost.dart';
 
@@ -91,7 +92,7 @@ class _UrgentPageState extends State<UrgentPage> {
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CreateNewEmergency(),
@@ -123,15 +124,16 @@ class _UrgentPageState extends State<UrgentPage> {
             if (index < posts.length) {
               return Post(postData: posts[index]);
             } else {
-              return Container(
-                  height: 100,
-                  child: const LoadingPage(
-                    size: 50,
-                  ));
+              return SkeletonPost();
             }
           });
     } else {
-      return Text('Không có bài viết');
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text("Opps, chưa có bài viết nào", style: kText40BoldMain.copyWith(color: meerColor25GreyNoteText),),
+        ),
+      );
     }
   }
 }
@@ -145,60 +147,65 @@ class CreateNewEmergency extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(20.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
         children: [
-          IconButton(
-            iconSize: 130.w,
-            icon: Container(
-                height: 130.w,
-                width: 130.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: meerColorRed,
-                  boxShadow: [
-                    BoxShadow(
-                      color: meerColorRed.withOpacity(0.5),
-                      spreadRadius: 13,
-                      blurRadius: 5,
-                      offset: const Offset(0, 0), // changes position of shadow
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              IconButton(
+                iconSize: 130.w,
+                icon: Container(
+                    height: 130.w,
+                    width: 130.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: meerColorRed,
+                      boxShadow: [
+                        BoxShadow(
+                          color: meerColorRed.withOpacity(0.5),
+                          spreadRadius: 13,
+                          blurRadius: 5,
+                          offset: const Offset(0, 0), // changes position of shadow
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: IconButton(
-                    onPressed: () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateNewEmergencyPage()),
-                          )
-                        },
-                    icon: const Icon(FontAwesomeIcons.bell,
-                        size: 50, color: meerColorWhite))),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CreateNewEmergencyPage()),
-              );
-            },
-          ),
-          SizedBox(
-            height: 15.h,
-          ),
-          Text(
-            "Khẩn cấp",
-            style: kText15BoldBlack,
-          ),
-          SizedBox(
-            height: 5.h,
-          ),
-          Text(
-            "Nhấn trong trường hợp khẩn cấp",
-            style: kText13RegularNote,
+                    child: IconButton(
+                        onPressed: () => {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CreateNewEmergencyPage()),
+                              )
+                            },
+                        icon: const Icon(FontAwesomeIcons.bell,
+                            size: 50, color: meerColorWhite))),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateNewEmergencyPage()),
+                  );
+                },
+              ),
+              SizedBox(
+                height: 15.h,
+              ),
+              Text(
+                "Khẩn cấp",
+                style: kText15BoldBlack,
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Text(
+                "Nhấn trong trường hợp khẩn cấp",
+                style: kText13RegularNote,
+              ),
+            ],
           ),
         ],
       ),

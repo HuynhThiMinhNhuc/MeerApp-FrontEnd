@@ -57,6 +57,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter  
   debounce_throttle: ^2.0.0
+  skeleton_loader: ^2.0.0+4
 
 dev_dependencies:
   json_serializable: ^6.2.0
