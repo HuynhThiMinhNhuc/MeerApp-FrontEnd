@@ -165,7 +165,7 @@ class PostController extends BaseController {
     return response.errorCode == null;
   }
 
-  Future<bool> UpdatePost(String key, IPost post) async {
+  Future<bool> UpdatePost(int key, IPost post) async {
     var data = post.toJson();
 
     if (post.imageUrl != null && !isImageURL(post.bannerUrl!)) {
@@ -175,17 +175,24 @@ class PostController extends BaseController {
       data.addAll({'banner': MultipartFile.fromFile(post.bannerUrl!)});
     }
 
-    var response = await dio.post(
+    data.remove('id');
+    data.remove('creator');
+    data.remove('imageURI');
+    data.remove('bannerURI');
+    data.remove('createdAt');
+    data.addEntries({'key': key}.entries);
+
+    var response = await myAPIWrapper.postWithAuth(
       ServerUrl + '/${_getPathFromPost(post)}/update',
       data: FormData.fromMap(data),
     );
-    return _isResponseSuccess(response);
+    return response.errorCode == null;
   }
 
   Future<bool> DeletePost(String namePath, List<String> ids) async {
     var response =
-        await dio.post(ServerUrl + '/$namePath/delete', data: {'keys': ids});
-    return _isResponseSuccess(response);
+        await myAPIWrapper.postWithAuth(ServerUrl + '/$namePath/delete', data: {'keys': ids});
+    return response.errorCode == null;
   }
 
   Future<bool> FinishPost(

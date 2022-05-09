@@ -125,31 +125,41 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     return true;
   }
 
-  void _addNewCampaign() async {
-    var response =
-        await myAPIWrapper.getWithAuth(ServerUrl + '/user/detailbytoken');
-    var json = response.data as Map<String, dynamic>;
-    var myUser = UserOverview.fromJson(json);
-
-    var post = CampaignPost(
-      id: 0,
+  Future<CampaignPost> _getCampaignObject() async {
+    UserOverview? myUser;
+    if (widget.initData == null) {
+      var response =
+          await myAPIWrapper.getWithAuth(ServerUrl + '/user/detailbytoken');
+      var json = response.data as Map<String, dynamic>;
+      myUser = UserOverview.fromJson(json);
+    }
+    return CampaignPost(
+      id: widget.initData != null ? widget.initData!.id : 0,
       address: _locationTextController.text,
       lat: location!.latitude,
       lng: location!.longitude,
       title: _nameTextController.text,
       content: _descriptionTextController.text,
-      creator: myUser,
-      timeCreate: DateTime.now(),
+      creator: widget.initData != null ? widget.initData!.creator : myUser!,
+      timeCreate: widget.initData != null
+          ? widget.initData!.timeCreate
+          : DateTime.now(),
       imageUrl: avatarImagePath,
       bannerUrl: backgroundImagePath,
-      timeStart: DateTime(
-        timeDay.year,
-        timeDay.month,
-        timeDay.day,
-        timeHour!.hour,
-        timeHour!.minute,
-      ),
+      timeStart: widget.initData != null
+          ? widget.initData!.timeStart
+          : DateTime(
+              timeDay.year,
+              timeDay.month,
+              timeDay.day,
+              timeHour!.hour,
+              timeHour!.minute,
+            ),
     );
+  }
+
+  void _addNewCampaign() async {
+    var post = await _getCampaignObject();
 
     final insertResponse = await widget._postController.InsertPost(post);
     if (insertResponse.errorCode == null) {
@@ -179,7 +189,27 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     }
   }
 
-  void _saveCampaign() {}
+  void _updateCampaign() async {
+    var post = await _getCampaignObject();
+
+    var isSuccess = await widget._postController.UpdatePost(post.id, post);
+    if (isSuccess) {
+      await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => MyAlertDialog3(
+          title: 'Thông báo',
+          content: 'Cập nhật bài viết mới thành công',
+        ),
+      );
+      Navigator.of(context).pop();
+    } else {
+      showDialog(
+          context: context,
+          builder: (_) => MyAlertDialog3(
+              title: 'Lỗi',
+              content: 'Không thể cập nhật bài viết, vui lòng thử lại sau'));
+    }
+  }
 
   void _setDateTextController(DateTime value) {
     final formattedDate = DateFormat('dd/MM/yyyy').format(value);
@@ -610,7 +640,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
             if (widget.isAddData) {
               _addNewCampaign();
             } else {
-              _saveCampaign();
+              _updateCampaign();
             }
           },
           child: Text(

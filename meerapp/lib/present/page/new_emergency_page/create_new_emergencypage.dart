@@ -60,32 +60,40 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
     return true;
   }
 
-  void _addNewCampagin() async {
-    var response =
-        await myAPIWrapper.getWithAuth(ServerUrl + '/user/detailbytoken');
-    var json = response.data as Map<String, dynamic>;
-    var myUser = UserOverview.fromJson(json);
-
-    var post = EmergencyPost(
-      id: 0,
+  Future<EmergencyPost> _getEmergencyObject() async {
+    UserOverview? myUser;
+    if (widget.initData == null) {
+      var response =
+          await myAPIWrapper.getWithAuth(ServerUrl + '/user/detailbytoken');
+      var json = response.data as Map<String, dynamic>;
+      myUser = UserOverview.fromJson(json);
+    }
+    return EmergencyPost(
+      id: widget.initData != null ? widget.initData!.id : 0,
       address: _locationTextController.text,
       lat: location!.latitude,
       lng: location!.longitude,
       title: _nameTextController.text,
       content: _descriptionTextController.text,
-      creator: myUser,
-      timeCreate: DateTime.now(),
+      creator: widget.initData != null ? widget.initData!.creator : myUser!,
+      timeCreate: widget.initData != null
+          ? widget.initData!.timeCreate
+          : DateTime.now(),
       imageUrl: avatarImagePath,
       bannerUrl: backgroundImagePath,
     );
+  }
 
-    var insertResponse = await widget._postController.InsertPost(post);
-    if (insertResponse.errorCode == null) {
+  void _addEmergency() async {
+    var post = await _getEmergencyObject();
+
+    var response = await widget._postController.InsertPost(post);
+    if (response.errorCode == null) {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) => MyAlertDialog3(
           title: 'Thông báo',
-          content: 'Tạo bài viết mới thành công',
+          content: 'Thêm bài viết mới thành công',
         ),
       );
       Navigator.of(context).pop();
@@ -94,7 +102,29 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
           context: context,
           builder: (_) => MyAlertDialog3(
               title: 'Lỗi',
-              content: 'Không thể tạo bài viết, vui lòng thử lại sau'));
+              content: 'Không thể thêm bài viết, vui lòng thử lại sau'));
+    }
+  }
+
+  void _updateEmergency() async {
+    var post = await _getEmergencyObject();
+
+    var isSuccess = await widget._postController.UpdatePost(post.id, post);
+    if (isSuccess) {
+      await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => MyAlertDialog3(
+          title: 'Thông báo',
+          content: 'Cập nhật bài viết mới thành công',
+        ),
+      );
+      Navigator.of(context).pop();
+    } else {
+      showDialog(
+          context: context,
+          builder: (_) => MyAlertDialog3(
+              title: 'Lỗi',
+              content: 'Không thể cập nhật bài viết, vui lòng thử lại sau'));
     }
   }
 
@@ -165,6 +195,22 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                           style: kText17BoldBlack,
                         ),
                       ),
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10.w),
+                        child: Text(
+                          "Tên địa điểm",
+                          style: kText15RegularGreyNotetext,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: TextFormField(
+                          controller: _locationTextController,
+                        ),
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -225,10 +271,8 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                     Row(
                       children: [
                         ImageCard(
-
                           initData: backgroundImagePath,
                           hintTitle: "+ Ảnh 1",
-
                           onImageChanged: (file) {
                             backgroundImagePath = file;
                           },
@@ -313,6 +357,12 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
         TextButton(
           onPressed: () {
             if (!isValidation()) return;
+            if (widget.isAddData) {
+              _addEmergency();
+            }
+            else {
+              _updateEmergency();
+            }
           },
           child: Text(
             widget.isAddData ? "Đăng" : "Lưu",

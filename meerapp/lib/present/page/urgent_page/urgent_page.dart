@@ -117,9 +117,16 @@ class _UrgentPageState extends State<UrgentPage> {
           itemCount: count,
           itemBuilder: (_, index) {
             if (index < posts.length) {
-              return Post(postData: posts[index]);
+              return Post(
+                postData: posts[index],
+                onDeletePost: () {
+                  setState(() {
+                    posts.removeAt(index);
+                  });
+                },
+              );
             } else {
-              return SkeletonPost();
+              return const SkeletonPost();
             }
           });
     } else {

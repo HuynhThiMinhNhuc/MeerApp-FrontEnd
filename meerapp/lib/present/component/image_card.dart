@@ -37,7 +37,7 @@ class ImageCard extends StatefulWidget {
 class _ImageCardState extends State<ImageCard> {
   late String? imageFileDir = widget.initData;
   File get imageFile => File(imageFileDir!);
-  bool get isUrl => imageFileDir != null && isHttpImage(imageFileDir!);
+  bool get isUrl => imageFileDir != null && isImageURL(imageFileDir!);
 
   Future<void> _galleryImage() async {
     final _picker = ImagePicker();
