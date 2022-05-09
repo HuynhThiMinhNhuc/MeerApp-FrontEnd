@@ -29,6 +29,8 @@ class _ProfileState extends State<ProfileCreate> {
   final TextEditingController phonecontroller = new TextEditingController();
   var ismade = false;
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
