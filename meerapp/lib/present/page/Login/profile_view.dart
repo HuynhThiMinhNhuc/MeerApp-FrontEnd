@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:meerapp/api/route/auth.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/main.dart';
+import 'package:meerapp/present/component/dialog_with_circle_above.dart';
 import 'package:meerapp/present/page/Login/welcome_view.dart';
 
 import '../../component/custom_btn.dart';
@@ -11,9 +15,9 @@ import '../../component/text_input.dart';
 
 class ProfileCreate extends StatefulWidget {
   final String email;
-  var userProfile;
+  dynamic tag;
 
-  ProfileCreate({Key? key, required this.email}) : super(key: key);
+  ProfileCreate({Key? key, required this.email, this.tag}) : super(key: key);
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -23,11 +27,71 @@ class _ProfileState extends State<ProfileCreate> {
   final TextEditingController birthcontroller = new TextEditingController();
   final TextEditingController phonecontroller = new TextEditingController();
   var ismade = false;
-  var profileBloc;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  onSubmit(BuildContext context) {
+    if (namecontroller.text.isEmpty ||
+        birthcontroller.text.isEmpty ||
+        phonecontroller.text.isEmpty) {
+      _showDialog("Thiếu thông tin", "Mời bạn vui lòng điền đầy đủ thông tin");
+      return;
+    }
+    var account = {
+      "username": widget.tag["email"],
+      "password": widget.tag["password"],
+    };
+    var userInfo = {
+      "fullname": namecontroller.text.trim(),
+      "address": "",
+      "email": widget.tag["email"],
+      "phone": phonecontroller.text.trim(),
+      "description": "",
+      "gender": ismade ? 1 : 0,
+      "birthday": DateFormat("dd/MM/yyyy")
+          .parse(birthcontroller.text.trim())
+          .toUtc()
+          .toIso8601String(),
+    };
+
+    AuthAPI.signup({"account": account, "userInfo": userInfo}).then((res) {
+      if (res.errorCode != null) {
+        _showDialog("Lỗi", "Đã xảy ra lỗi. Vui lòng thử lại");
+      } else {
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => DialogWithCircleAbove(
+            content: "Hãy kiểm tra email để hoàn tất quá trình đăng ký",
+            mode: ModeDialog.anounce,
+            title: "Thành công",
+          ),
+        ).then((value) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Center(
+                child: MeerApp(),
+              ),
+            ),
+            (route) => false,
+          );
+        });
+      }
+    });
+  }
+
+  _showDialog(String title, String message) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => DialogWithCircleAbove(
+        content: message,
+        mode: ModeDialog.warning,
+        title: title,
+      ),
+    );
   }
 
   @override
@@ -200,73 +264,8 @@ class _ProfileState extends State<ProfileCreate> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 40, 20, 0),
-              // child: BlocListener<ProfileBloc, ProfileState>(
-              //   listener: (context, state) {
-              //     if (state is ProfileSucessState) {
-              //       Navigator.pushAndRemoveUntil(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (BuildContext context) => BlocProvider(
-              //             create: (context) => SigninBloc(),
-              //             child: Login(),
-              //           ),
-              //         ),
-              //         (route) => false,
-              //       );
-              //     } else if (state is ProfileFailState) {
-              //       showDialog<String>(
-              //         context: context,
-              //         builder: (BuildContext context) =>
-              //             DialogWithCircleAbove(
-              //           content:
-              //               'Xin lỗi vì sự bất tiện này. Vui lòng thử lại sau',
-              //           mode: ModeDialog.warning,
-              //           title: 'Lỗi kết nối',
-              //         ),
-              //       );
-              //     } else if (state is ProfileEmptyFeldState) {
-              //       showDialog<String>(
-              //         context: context,
-              //         builder: (BuildContext context) =>
-              //             DialogWithCircleAbove(
-              //           content: 'Vui lòng nhập đầy đủ thông tin!',
-              //           mode: ModeDialog.warning,
-              //           title: 'Thông tin bị bỏ trống',
-              //         ),
-              //       );
-              //     } else if (state is ProfileWrongFormatPhoneState) {
-              //       showDialog<String>(
-              //         context: context,
-              //         builder: (BuildContext context) =>
-              //             DialogWithCircleAbove(
-              //           content:
-              //               'Số điện thoại cần bắt đầu từ 0 và có 10 chữ số. Ví dụ: 0348774510',
-              //           mode: ModeDialog.warning,
-              //           title: 'Sai định dạng số điện thoại',
-              //         ),
-              //       );
-              //     }
-              //   },
               child: CustomButton(
-                  onPressed: () => {
-                        // profileBloc.add(ProfileSaveEvent(new UserProfile(
-                        //     name: namecontroller.text.trim(),
-                        //     avatarUri: null,
-                        //     description: "",
-                        //     birthDayString: birthcontroller.text.trim(),
-                        //     gender:
-                        //         this.ismade ? Genders.Male : Genders.Female,
-                        //     email: widget.email,
-                        //     phone: phonecontroller.text.trim())))
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WelcomeView(
-                                email: '',
-                              ),
-                            ))
-                      },
-                  textInput: 'LƯU'),
+                  onPressed: () => onSubmit(context), textInput: 'LƯU'),
             )
           ])),
     );

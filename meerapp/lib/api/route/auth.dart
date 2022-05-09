@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -45,7 +46,7 @@ class AuthAPI {
   }
 
   static Future<MyResponse> signup(dynamic jsonData) async {
-    var response = await myAPIWrapper.postWithAuth(
+    var response = await myAPIWrapper.post(
       ServerUrl + "/signup",
       options: Options(headers: {
         HttpHeaders.contentTypeHeader: "application/json",
@@ -54,5 +55,14 @@ class AuthAPI {
     );
 
     return response;
+  }
+
+  static FutureOr<MyResponse> checkExistUsername(String username) async {
+    return myAPIWrapper.get(
+      ServerUrl + "/user/exist/username",
+      queryParameters: {
+        "username": username,
+      },
+    );
   }
 }
