@@ -145,21 +145,13 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                             width: 15.w,
                           ),
                           ElevatedButton(
-                            onPressed: () async {
-                              var result = await Navigator.push(
+                            onPressed: () {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const AddJoinerPage()),
+                                        AddJoinerPage(post: post!)),
                               );
-                              await showDialog(
-                                  context: context,
-                                  builder: (context) => MyAlertDialog3(
-                                        title: 'Thông báo',
-                                        content:
-                                            'Sự kiện đã chuyển sang chế độ kết thúc',
-                                      ));
-                              Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.all(10),

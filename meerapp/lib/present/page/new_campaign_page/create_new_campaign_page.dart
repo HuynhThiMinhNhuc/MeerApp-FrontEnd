@@ -22,7 +22,7 @@ import 'package:debounce_throttle/debounce_throttle.dart';
 
 class CreateNewCampaignPage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
-  final bool isCreate; 
+  final bool isCreate;
   CreateNewCampaignPage({Key? key, required this.isCreate}) : super(key: key);
 
   static const List<String> _userName = <String>[
@@ -405,8 +405,13 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                         ),
                         TextButton(
                             onPressed: () async {
-                              await showDialogAddCampaignUser(context);
-                              setState(() {});
+                              UserOverview? object =
+                                  await showDialogAddCampaignUser(context);
+                              if (object != null) {
+                                setState(() {
+                                  listChooseUser.add(object);
+                                });
+                              }
                             },
                             child: Text(
                               "Thêm",
@@ -661,8 +666,8 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     );
   }
 
-  Future<String?> showDialogAddCampaignUser(BuildContext context) {
-    return showDialog<String>(
+  Future<dynamic> showDialogAddCampaignUser(BuildContext context) {
+    return showDialog(
       context: context,
       builder: (BuildContext context) =>
           AddParticipantAlert(listChooseUser: listChooseUser),
@@ -677,7 +682,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
       centerTitle: true,
       backgroundColor: meerColorBackground,
       title: Text(
-        widget.isCreate? "Tạo chiến dịch" : "Chỉnh sửa",
+        widget.isCreate ? "Tạo chiến dịch" : "Chỉnh sửa",
         style: ktext18BoldBlack,
       ),
       actions: [
@@ -687,7 +692,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
             _addNewCampagin();
           },
           child: Text(
-            widget.isCreate? "Đăng" : "Lưu",
+            widget.isCreate ? "Đăng" : "Lưu",
             style: kText18BoldMain,
           ),
           style: ButtonStyle(

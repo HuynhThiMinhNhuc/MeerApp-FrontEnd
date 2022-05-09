@@ -215,7 +215,7 @@ class _DetailCampaignPageState extends State<DetailCampaignPage>
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const AddJoinerPage(),
+                                                AddJoinerPage(post: post!,),
                                           ))
                                       : null;
                                 },
