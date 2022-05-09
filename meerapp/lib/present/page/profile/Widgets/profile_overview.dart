@@ -14,8 +14,9 @@ import '../profilepage.dart';
 
 class ProfileOverView extends StatelessWidget {
   mode modeProfile;
+  final int userId;
 
-  ProfileOverView(this.modeProfile);
+  ProfileOverView({required this.userId, required this.modeProfile});
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +47,10 @@ class ProfileOverView extends StatelessWidget {
 
     return StreamBuilder<List<dynamic>>(
       stream: Stream.fromFuture(Future.wait([
-        UserAPI.getCurrentUserInfo(),
-        UserAPI.getCreatedCampaign(),
-        UserAPI.getDonedCampaign(),
-        UserAPI.getNotDoneCampaign(),
+        UserAPI.getUserInfo(userId),
+        UserAPI.getCreatedCampaign(userId),
+        UserAPI.getDonedCampaign(userId),
+        UserAPI.getNotDoneCampaign(userId),
       ])),
       builder: (context, snapshot) {
         if (!snapshot.hasData || snapshot.data == null) {
@@ -186,18 +187,21 @@ class ProfileOverView extends StatelessWidget {
                         countCreated,
                         JoinedView(
                           currentTab: 0,
+                          userId: userId,
                         )),
                     joinedOverview(
                         'Đã tham gia',
                         countDoned,
                         JoinedView(
                           currentTab: 1,
+                          userId: userId,
                         )),
                     joinedOverview(
                         'Bỏ tham gia',
                         countNotDone,
                         JoinedView(
                           currentTab: 2,
+                          userId: userId,
                         )),
                   ],
                 ),

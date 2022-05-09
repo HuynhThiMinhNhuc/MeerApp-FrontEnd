@@ -8,8 +8,12 @@ import '../../../constant/post.dart';
 
 class JoinedView extends StatefulWidget {
   int currentTab;
+  final int userId;
 
-  JoinedView({required this.currentTab});
+  JoinedView({
+    required this.currentTab,
+    required this.userId,
+  });
 
   @override
   State<JoinedView> createState() => _JoinedViewState();
@@ -91,17 +95,20 @@ class _JoinedViewState extends State<JoinedView> with TickerProviderStateMixin {
         ),
         body: widget.currentTab == 0
             ? DetailJoinWidget(
+                userId: widget.userId,
                 campaignList: posts,
                 emergencyList: posts,
                 status: 0,
               )
             : widget.currentTab == 1
                 ? DetailJoinWidget(
+                    userId: widget.userId,
                     campaignList: posts,
                     emergencyList: posts,
                     status: 1,
                   )
                 : DetailJoinWidget(
+                    userId: widget.userId,
                     campaignList: posts,
                     emergencyList: posts,
                     status: 2,

@@ -11,29 +11,46 @@ class UserAPI {
     return myAPIWrapper.getWithAuth(ServerUrl + "/user/detailbytoken");
   }
 
-  static Future<MyResponse> getCreatedCampaign() async {
+  static Future<MyResponse> getCreatedCampaign(int userId) async {
     return myAPIWrapper.getWithAuth(
-        ServerUrl + "/user/detail/campaign/created?start=0&count=1000");
+      ServerUrl + "/user/other/detail/campaign/created?start=0&count=1000",
+      queryParameters: {"userId": userId},
+    );
   }
 
-  static Future<MyResponse> getDonedCampaign() async {
+  static Future<MyResponse> getDonedCampaign(int userId) async {
     return myAPIWrapper.getWithAuth(
-        ServerUrl + "/user/detail/campaign/doned?start=0&count=1000");
+      ServerUrl + "/user/other/detail/campaign/doned?start=0&count=1000",
+      queryParameters: {"userId": userId},
+    );
   }
 
-  static Future<MyResponse> getNotDoneCampaign() async {
+  static Future<MyResponse> getNotDoneCampaign(int userId) async {
     return myAPIWrapper.getWithAuth(
-        ServerUrl + "/user/detail/campaign/notdoned?start=0&count=1000");
+      ServerUrl + "/user/other/detail/campaign/notdoned?start=0&count=1000",
+      queryParameters: {"userId": userId},
+    );
   }
 
-  static Future<MyResponse> getCreatedEmergency() async {
+  static Future<MyResponse> getCreatedEmergency(int userId) async {
     return myAPIWrapper.getWithAuth(
-        ServerUrl + "/user/detail/emergency/created?start=0&count=1000");
+      ServerUrl + "/user/other/detail/emergency/created?start=0&count=1000",
+      queryParameters: {"userId": userId},
+    );
   }
 
-  static Future<MyResponse> getDonedEmergency() async {
+  static Future<MyResponse> getDonedEmergency(int userId) async {
     return myAPIWrapper.getWithAuth(
-        ServerUrl + "/user/detail/emergency/doned?start=0&count=1000");
+      ServerUrl + "/user/other/detail/emergency/doned?start=0&count=1000",
+      queryParameters: {"userId": userId},
+    );
+  }
+
+  static Future<MyResponse> getUserInfo(int userId) async {
+    return myAPIWrapper.getWithAuth(
+      ServerUrl + "/user/other/detailbyid",
+      queryParameters: {"userId": userId},
+    );
   }
 
   static Future<MyResponse> updateUserInfo(dynamic formdata) async {

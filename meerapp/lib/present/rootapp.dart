@@ -11,6 +11,7 @@ import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage
 import 'package:meerapp/present/page/profile/profilepage.dart';
 import 'package:meerapp/present/page/urgent_page/urgent_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:meerapp/singleton/user.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -78,7 +79,9 @@ class _RootAppState extends State<RootApp> {
       case 2:
         return MapPage();
       default:
-        return ProfilePage();
+        return ProfilePage(
+          userId: UserSingleton.instance.auth!.userId!,
+        );
     }
   }
 

@@ -12,6 +12,10 @@ import '../../component/post.dart';
 enum mode { My, Other }
 
 class ProfilePage extends StatefulWidget {
+  final int userId;
+  ProfilePage({
+    required this.userId,
+  });
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -20,6 +24,15 @@ class _ProfilePageState extends State<ProfilePage>
     with TickerProviderStateMixin {
   late List<bool> stateToggle = [true, false];
   late TabController _tabController;
+
+  mode getMode() {
+    if (widget.userId == UserSingleton.instance.auth!.userId) {
+      return mode.My;
+    } else {
+      return mode.My;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +51,8 @@ class _ProfilePageState extends State<ProfilePage>
           return Column(
             children: [
               ProfileOverView(
-                mode.My,
+                modeProfile: getMode(),
+                userId: widget.userId,
               ),
               _buildToggleButton(),
               _buildPost(stateToggle),
@@ -128,7 +142,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget _buildListCreatedCampaign() {
     return FutureBuilder<MyResponse>(
-      future: UserAPI.getCreatedCampaign(),
+      future: UserAPI.getCreatedCampaign(widget.userId),
       builder: (context, snapshot) {
         if (snapshot.hasError || !snapshot.hasData) {
           return Column(
@@ -148,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage>
 
   Widget _buildListCreatedEmergency() {
     return FutureBuilder<MyResponse>(
-      future: UserAPI.getCreatedEmergency(),
+      future: UserAPI.getCreatedEmergency(widget.userId),
       builder: (context, snapshot) {
         if (snapshot.hasError || !snapshot.hasData) {
           return Column(

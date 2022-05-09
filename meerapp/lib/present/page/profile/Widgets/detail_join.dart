@@ -6,12 +6,14 @@ import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/present/component/EventJoin.dart';
 
 class DetailJoinWidget extends StatelessWidget {
+  final int userId;
   final List campaignList;
   final List emergencyList;
   final int status;
 
   const DetailJoinWidget({
     Key? key,
+    required this.userId,
     required this.campaignList,
     required this.emergencyList,
     required this.status,
@@ -28,17 +30,17 @@ class DetailJoinWidget extends StatelessWidget {
   Future<List<MyResponse>> getDataList(int status) {
     if (status == 0) {
       return Future.wait([
-        UserAPI.getCreatedCampaign(),
-        UserAPI.getCreatedEmergency(),
+        UserAPI.getCreatedCampaign(userId),
+        UserAPI.getCreatedEmergency(userId),
       ]);
     } else if (status == 1) {
       return Future.wait([
-        UserAPI.getDonedCampaign(),
-        UserAPI.getDonedEmergency(),
+        UserAPI.getDonedCampaign(userId),
+        UserAPI.getDonedEmergency(userId),
       ]);
     } else {
       return Future.wait([
-        UserAPI.getNotDoneCampaign(),
+        UserAPI.getNotDoneCampaign(userId),
       ]);
     }
   }
