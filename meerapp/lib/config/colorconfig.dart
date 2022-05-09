@@ -34,3 +34,7 @@ const meerColorGradientActive = [
   Color(0xFFF8D49D),
   Color(0xFFFFFFFF)
 ];
+const meerColorGradientActive2 = [
+  Color(0xFFF8D49D),
+  Color(0xFF5AA469),
+];
