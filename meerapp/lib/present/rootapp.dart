@@ -10,6 +10,7 @@ import 'package:meerapp/present/page/new_campaign_page/create_new_campaign_page.
 import 'package:meerapp/present/page/new_emergency_page/create_new_emergencypage.dart';
 import 'package:meerapp/present/page/profile/profilepage.dart';
 import 'package:meerapp/present/page/urgent_page/urgent_page.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -75,7 +76,7 @@ class _RootAppState extends State<RootApp> {
       case 0:
         return homeAppBar();
       case 1:
-        return urgentAppbar();
+        return homeAppBar();
       case 2:
         return mapAppbar();
       default:
@@ -85,17 +86,62 @@ class _RootAppState extends State<RootApp> {
 
   AppBar homeAppBar() {
     return AppBar(
-      backgroundColor: meerColorBackground,
-      //centerTitle: true,
-      elevation: 0,
-      title: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.h),
-        child: Text(
-          "Meers",
-          style: kText24BoldMain,
+        backgroundColor: meerColorBackground,
+        //centerTitle: true,
+        elevation: 0,
+        title: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.h),
+          child: Text(
+            "Meers",
+            style: kText24BoldMain,
+          ),
         ),
-      ),
-    );
+        actions: [
+          Container(
+              margin: EdgeInsets.only(right: 10.w),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        Container(
+                          width: 35.h,
+                          height: 35.h,
+                          decoration: BoxDecoration(
+                              color: meerColorWhite,
+                              borderRadius: BorderRadius.circular(10.h),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: meerColorGreyHintText.withOpacity(0.2),
+                                  offset: Offset(0, 2),
+                                  blurRadius: 20.0,
+                                )
+                              ]),
+                          child: Center(
+                            child: Container(
+                                height: 20.h,
+                                width: 17.w,
+                                child:
+                                    SvgPicture.asset("asset/notification.svg")),
+                          ),
+                        ),
+                        Container(
+                          height: 38.h,
+                          width: 38.h,
+                          alignment: AlignmentDirectional.topEnd,
+                          child: Container(
+                            width: 10.h,
+                            height: 10.h,
+                            decoration: BoxDecoration(
+                                color: Colors.red, shape: BoxShape.circle),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ]))
+        ]);
   }
 
   AppBar urgentAppbar() {

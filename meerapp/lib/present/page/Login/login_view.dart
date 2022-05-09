@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:async/async.dart';
 import 'package:meerapp/api/route/auth.dart';
 import 'package:meerapp/config/colorconfig.dart';
+import 'package:meerapp/present/component/my_alert_dialog_2.dart';
 import 'package:meerapp/present/page/Login/register_view.dart';
 import 'package:meerapp/singleton/user.dart';
 
@@ -21,9 +22,8 @@ class _LoginState extends State<LoginPage> {
   final IconData eyeIcon = Icons.remove_red_eye_outlined;
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  CancelableOperation? isLoading;
 
-  var signinBloc;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -38,17 +38,39 @@ class _LoginState extends State<LoginPage> {
   }
 
   onSubmit() {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      _showDialog("Thất bại", "Bạn vẫn chưa điền thông tin");
+    }
+
+    setState(() {
+      isLoading = true;
+    });
     final username = emailController.text.trim();
     final password = passwordController.text.trim();
+
     AuthAPI.login(username, password).then((response) {
       if (response.errorCode != null) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Đăng nhập thất bại")));
+        _showDialog("Thất bại", "Tên đăng nhập hoặc mật khẩu sai");
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Xin chào")));
+        // ScaffoldMessenger.of(context)
+        //     .showSnackBar(const SnackBar(content: Text("Xin chào")));
       }
+
+      setState(() {
+        isLoading = false;
+      });
     });
+  }
+
+  _showDialog(String title, String message) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => MyAlertDialog2(
+        content: message,
+        isTwoActions: false,
+        title: title,
+      ),
+    );
   }
 
   @override
@@ -160,20 +182,24 @@ class _LoginState extends State<LoginPage> {
                 ),
                 Padding(
                     padding: EdgeInsets.fromLTRB(30.w, 10.h, 30.w, 10.h),
-                    child: ElevatedButton(
-                      onPressed: onSubmit,
-                      child: Text(
-                        'Đăng nhập',
-                        style: kText18BoldWhite,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          alignment: Alignment.center,
-                          primary: meerColorMain,
-                          fixedSize:
-                              Size(MediaQuery.of(context).size.width, 60.h),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30))),
-                    )),
+                    child: isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ElevatedButton(
+                            onPressed: onSubmit,
+                            child: Text(
+                              'Đăng nhập',
+                              style: kText18BoldWhite,
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                alignment: Alignment.center,
+                                primary: meerColorMain,
+                                fixedSize: Size(
+                                    MediaQuery.of(context).size.width, 60.h),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                          )),
                 SizedBox(
                   height: 10.h,
                 ),
