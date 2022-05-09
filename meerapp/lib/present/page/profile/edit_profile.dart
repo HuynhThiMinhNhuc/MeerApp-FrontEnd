@@ -445,13 +445,6 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 7.h),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Đổi mật khẩu", style: kText15BoldMain),
-                  ),
-                ),
               ],
             ),
           ),
