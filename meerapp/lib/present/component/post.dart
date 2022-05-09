@@ -26,175 +26,178 @@ class Post extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: 10.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Container(
-                      width: 40.h,
-                      height: 40.h,
-                      decoration:  BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: MyImageProvider(postData.imageUrl, const AssetImage("asset/avatardefault.png")),
-                              fit: BoxFit.cover)
-                          // NetworkImage(avatarUrl), fit: BoxFit.cover),
+    return InkWell(
+      child: Card(
+        elevation: 2,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 10.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 10.w,
+                      ),
+                      Container(
+                        width: 40.h,
+                        height: 40.h,
+                        decoration:  BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: MyImageProvider(postData.imageUrl, const AssetImage("asset/avatardefault.png")),
+                                fit: BoxFit.cover)
+                            // NetworkImage(avatarUrl), fit: BoxFit.cover),
+                            ),
+                      ),
+                      SizedBox(
+                        width: 10.w,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                            onTap: () {},
+                            child: Text(postData.creator.name,
+                                style: kText15BoldBlack),
                           ),
-                    ),
-                    SizedBox(
-                      width: 10.w,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Text(postData.creator.name,
-                              style: kText15BoldBlack),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        if (postData.creator.address != null)
-                          Text(postData.creator.address!,
-                              style: kText12RegularBlack),
-                      ],
-                    )
-                  ],
-                ),
-                PopupMenuButton(
-                  onSelected: (selection) {
-                    switch (selection) {
-                      case 1:
-                        getFunctionReport(context);
-                        break;
-                      case 2:
-                        getFuctionEdit(context);
-                        break;
-                      case 3:
-                        getFuctionDeletePost(context);
-                        break;
-                      default:
-                    }
-                  },
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: Colors.black,
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          if (postData.creator.address != null)
+                            Text(postData.creator.address!,
+                                style: kText12RegularBlack),
+                        ],
+                      )
+                    ],
                   ),
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                    PopupMenuItem(
-                      child: ListTile(
-                        title: Text(
-                          'Báo cáo',
-                          style: kText13RegularBlack,
+                  PopupMenuButton(
+                    onSelected: (selection) {
+                      switch (selection) {
+                        case 1:
+                          getFunctionReport(context);
+                          break;
+                        case 2:
+                          getFuctionEdit(context);
+                          break;
+                        case 3:
+                          getFuctionDeletePost(context);
+                          break;
+                        default:
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: Colors.black,
+                    ),
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                      PopupMenuItem(
+                        child: ListTile(
+                          title: Text(
+                            'Báo cáo',
+                            style: kText13RegularBlack,
+                          ),
+                        ),
+                        value: 1,
+                      ),
+                      if (isMainPost) PopupMenuItem(
+                        value: 2,
+                        child: ListTile(
+                          title: Text(
+                            'Chỉnh sửa',
+                            style: kText13RegularBlack,
+                          ),
                         ),
                       ),
-                      value: 1,
-                    ),
-                    if (isMainPost) PopupMenuItem(
-                      value: 2,
-                      child: ListTile(
-                        title: Text(
-                          'Chỉnh sửa',
-                          style: kText13RegularBlack,
+                      if (isMainPost) PopupMenuItem(
+                        value: 3,
+                        child: ListTile(
+                          title: Text(
+                            'Xóa',
+                            style: kText13RegularBlack,
+                          ),
                         ),
                       ),
-                    ),
-                    if (isMainPost) PopupMenuItem(
-                      value: 3,
-                      child: ListTile(
-                        title: Text(
-                          'Xóa',
-                          style: kText13RegularBlack,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            postData.bannerUrl != null?
-            Container(
-              height: 400.h,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: MyImageProvider(postData.bannerUrl, const AssetImage("asset/failedimage.png")),
-                  fit: BoxFit.cover, 
-                ),
+                    ],
+                  ),
+                ],
               ),
-            ): Container(height: 0,),
-            InkWell(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(10.w, 7.h, 5.w, 7.h),
-                  child: Text(
-                    postData.title,
-                    style: kText15BoldBlack,
+              SizedBox(
+                height: 10.h,
+              ),
+              postData.bannerUrl != null?
+              Container(
+                height: 400.h,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: MyImageProvider(postData.bannerUrl, const AssetImage("asset/failedimage.png")),
+                    fit: BoxFit.cover, 
                   ),
                 ),
-                onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => postData is CampaignPost
-                              ? DetailCampaignPage(
-                                  mode: StatusCompaign.admin,
-                                  postId: postData.id,
-                                )
-                              : DetailEmerencyPage(
-                                  mode: StatusEmerency.admin,
-                                  postId: postData.id,
-                                )),
-                    )),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10.w, 3.h, 5.w, 7.h),
-              child: RichText(
-                text: TextSpan(
-                  text: postData.content,
-                  style: DefaultTextStyle.of(context).style,
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "\n\nĐịa điểm: ",
-                      style: kText13BoldBlack,
-                    ),
-                    TextSpan(
-                      text: postData.address,
-                      style: kText13RegularBlack,
-                    ),
-                    TextSpan(
-                      text: "\n\nThời gian " +
-                          (postData is CampaignPost
-                              ? 'tổ chức: '
-                              : 'kêu gọi: '),
-                      style: kText13BoldBlack,
-                    ),
-                    TextSpan(
-                      text: DateTimeToString((postData is CampaignPost)
-                          ? (postData as CampaignPost).timeStart
-                          : postData.timeCreate),
-                      style: kText13RegularBlack,
-                    ),
-                  ],
+              ): Container(height: 0,),
+              Padding(
+                padding: EdgeInsets.fromLTRB(10.w, 7.h, 5.w, 7.h),
+                child: Text(
+                  postData.title,
+                  style: kText15BoldBlack,
                 ),
               ),
-            ),
-          ]),
+             
+              Padding(
+                padding: EdgeInsets.fromLTRB(10.w, 3.h, 5.w, 7.h),
+                child: RichText(
+                  text: TextSpan(
+                    text: postData.content,
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: "\n\nĐịa điểm: ",
+                        style: kText13BoldBlack,
+                      ),
+                      TextSpan(
+                        text: postData.address,
+                        style: kText13RegularBlack,
+                      ),
+                      TextSpan(
+                        text: "\n\nThời gian " +
+                            (postData is CampaignPost
+                                ? 'tổ chức: '
+                                : 'kêu gọi: '),
+                        style: kText13BoldBlack,
+                      ),
+                      TextSpan(
+                        text: DateTimeToString((postData is CampaignPost)
+                            ? (postData as CampaignPost).timeStart
+                            : postData.timeCreate),
+                        style: kText13RegularBlack,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ]),
+      ),
+    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => postData is CampaignPost
+                                ? DetailCampaignPage(
+                                    mode: StatusCompaign.admin,
+                                    postId: postData.id,
+                                  )
+                                : DetailEmerencyPage(
+                                    mode: StatusEmerency.admin,
+                                    postId: postData.id,
+                                  )),
+                      ),
+             
     );
   }
 
