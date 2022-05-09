@@ -115,7 +115,7 @@ class _EditProfileState extends State<EditProfile> {
           // Set old data as init value
           final oldData = snapshot.data!.data;
           fullname = oldData["fullname"];
-          birthday = DateTime.parse(oldData["birthday"]);
+          birthday = DateTime.parse(oldData["birthday"]).toLocal();
           gender = oldData["gender"];
           email = oldData["email"];
           phone = oldData["phone"];
