@@ -36,10 +36,7 @@ class APIWrapper {
 
   static Options? buildHeaderToken(Options? options) {
     var currentUser = UserSingleton.instance;
-    if (!currentUser.isLogined ||
-        currentUser.auth == null ||
-        currentUser.auth?.token == null ||
-        currentUser.currentUserId == null) {
+    if (!UserSingleton.instance.isLogined) {
       return null;
     }
 

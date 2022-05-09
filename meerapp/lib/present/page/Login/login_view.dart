@@ -3,8 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:async/async.dart';
+import 'package:meerapp/api/route/auth.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/present/page/Login/register_view.dart';
+import 'package:meerapp/singleton/user.dart';
 
 import '../../../config/fontconfig.dart';
 import '../../component/password_input.dart';
@@ -33,6 +35,20 @@ class _LoginState extends State<LoginPage> {
     passwordController.dispose();
     emailController.dispose();
     super.dispose();
+  }
+
+  onSubmit() {
+    final username = emailController.text.trim();
+    final password = passwordController.text.trim();
+    AuthAPI.login(username, password).then((response) {
+      if (response.errorCode != null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Đăng nhập thất bại")));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Xin chào")));
+      }
+    });
   }
 
   @override
@@ -144,60 +160,8 @@ class _LoginState extends State<LoginPage> {
                 ),
                 Padding(
                     padding: EdgeInsets.fromLTRB(30.w, 10.h, 30.w, 10.h),
-                    child:
-                        //  BlocConsumer<SigninBloc, SigninState>(
-                        //   listener: (context, state) {
-                        //     if (state is SignInLoadInProccess) {
-                        //       loadingDialog.load(IndicatorDialog());
-                        //     } else {
-                        //       loadingDialog.cancel();
-
-                        //       if (state is SigninfailEmailState) {
-                        //         showDialog<String>(
-                        //           context: context,
-                        //           builder: (BuildContext context) =>
-                        //               DialogWithCircleAbove(
-                        //             content: 'Vui lòng nhập đúng email đã đăng ký!',
-                        //             mode: ModeDialog.warning,
-                        //             title: 'Sai Email',
-                        //           ),
-                        //         );
-                        //       } else if (state is SigninfailPassState) {
-                        //         showDialog<String>(
-                        //           context: context,
-                        //           builder: (BuildContext context) =>
-                        //               DialogWithCircleAbove(
-                        //             content:
-                        //                 'Vui lòng nhập đúng mật khẩu đã đăng ký!',
-                        //             mode: ModeDialog.warning,
-                        //             title: 'Sai mật khẩu',
-                        //           ),
-                        //         );
-                        //       } else if (state is SigninSuccessState) {
-                        //         Navigator.of(context).pushNamedAndRemoveUntil(
-                        //             AppRoutes.home, (route) => false);
-                        //       } else if (state is SigninWithGoogleEmailAlreadyExist) {
-                        //         showDialog<String>(
-                        //           context: context,
-                        //           builder: (BuildContext context) =>
-                        //               DialogWithCircleAbove(
-                        //             content:
-                        //                 'Vui lòng đăng nhập bằng tài khoản khác!',
-                        //             mode: ModeDialog.warning,
-                        //             title: 'Email đã đăng kí tài khoản',
-                        //           ),
-                        //         );
-                        //       }
-                        //     }
-                        //   },
-                        //   builder: (context, state) {
-                        //     return
-                        ElevatedButton(
-                      onPressed: () => {},
-                      //   signinBloc.add(SigninWithEmailAndPassEvent(
-                      //       emailController.text.trim(),
-                      //       passwordController.text.trim()))
-                      // },
+                    child: ElevatedButton(
+                      onPressed: onSubmit,
                       child: Text(
                         'Đăng nhập',
                         style: kText18BoldWhite,
