@@ -96,8 +96,6 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     super.initState();
-
-    sampleImage1 = const AssetImage("asset/avt1.jpg");
   }
 
   @override
@@ -122,9 +120,8 @@ class _EditProfileState extends State<EditProfile> {
           email = oldData["email"];
           phone = oldData["phone"];
           description = oldData["description"];
-          if (oldData["avatarImageURI"] != null) {
-            sampleImage1 = MyImage(oldData["avatarImageURI"]);
-          }
+          sampleImage1 = MyImage(
+              oldData["avatarImageURI"], const AssetImage("asset/avt1.jpg"));
 
           return getbody();
         },

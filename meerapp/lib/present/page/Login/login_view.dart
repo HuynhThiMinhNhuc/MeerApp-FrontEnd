@@ -21,9 +21,8 @@ class _LoginState extends State<LoginPage> {
   final IconData eyeIcon = Icons.remove_red_eye_outlined;
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
-  CancelableOperation? isLoading;
 
-  var signinBloc;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -38,6 +37,9 @@ class _LoginState extends State<LoginPage> {
   }
 
   onSubmit() {
+    setState(() {
+      isLoading = true;
+    });
     final username = emailController.text.trim();
     final password = passwordController.text.trim();
     AuthAPI.login(username, password).then((response) {
@@ -48,6 +50,10 @@ class _LoginState extends State<LoginPage> {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text("Xin chào")));
       }
+
+      setState(() {
+        isLoading = false;
+      });
     });
   }
 
@@ -160,20 +166,24 @@ class _LoginState extends State<LoginPage> {
                 ),
                 Padding(
                     padding: EdgeInsets.fromLTRB(30.w, 10.h, 30.w, 10.h),
-                    child: ElevatedButton(
-                      onPressed: onSubmit,
-                      child: Text(
-                        'Đăng nhập',
-                        style: kText18BoldWhite,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                          alignment: Alignment.center,
-                          primary: meerColorMain,
-                          fixedSize:
-                              Size(MediaQuery.of(context).size.width, 60.h),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30))),
-                    )),
+                    child: isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ElevatedButton(
+                            onPressed: onSubmit,
+                            child: Text(
+                              'Đăng nhập',
+                              style: kText18BoldWhite,
+                            ),
+                            style: ElevatedButton.styleFrom(
+                                alignment: Alignment.center,
+                                primary: meerColorMain,
+                                fixedSize: Size(
+                                    MediaQuery.of(context).size.width, 60.h),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30))),
+                          )),
                 SizedBox(
                   height: 10.h,
                 ),
