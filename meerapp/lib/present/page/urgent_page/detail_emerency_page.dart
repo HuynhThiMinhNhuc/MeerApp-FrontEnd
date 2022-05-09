@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
@@ -10,13 +9,12 @@ import 'package:meerapp/injection.dart';
 import 'package:meerapp/models/post.dart';
 import 'package:meerapp/present/component/loading_page.dart';
 import 'package:meerapp/present/component/map.dart';
-import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:meerapp/present/page/home_page/add_joiner_page.dart';
 import 'package:meerapp/present/page/home_page/widget/join_campaign_user_widget.dart';
 
-import '../../component/my_alert_dialog.dart';
+
 
 class DetailEmerencyPage extends StatefulWidget {
   final StatusEmerency mode;
@@ -145,21 +143,13 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
                             width: 15.w,
                           ),
                           ElevatedButton(
-                            onPressed: () async {
-                              var result = await Navigator.push(
+                            onPressed: () {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const AddJoinerPage()),
+                                        AddJoinerPage(post: post!)),
                               );
-                              await showDialog(
-                                  context: context,
-                                  builder: (context) => MyAlertDialog3(
-                                        title: 'Thông báo',
-                                        content:
-                                            'Sự kiện đã chuyển sang chế độ kết thúc',
-                                      ));
-                              Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.all(10),

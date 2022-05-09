@@ -17,12 +17,15 @@ import 'package:meerapp/models/user.dart';
 import 'package:meerapp/present/component/add_participant_dialog.dart';
 import 'package:meerapp/present/component/image_card.dart';
 import 'package:meerapp/present/component/map.dart';
+import 'package:meerapp/present/component/open_map.dart';
 import 'package:meerapp/singleton/user.dart';
 import 'package:debounce_throttle/debounce_throttle.dart';
 
+import '../../component/my_alert_dialog_3.dart';
+
 class CreateNewCampaignPage extends StatefulWidget {
   final PostController _postController = sl.get<PostController>();
-  final bool isCreate; 
+  final bool isCreate;
   CreateNewCampaignPage({Key? key, required this.isCreate}) : super(key: key);
 
   static const List<String> _userName = <String>[
@@ -83,15 +86,9 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     void _showAlertDialog(String text) {
       showDialog<String>(
         context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Lỗi'),
-          content: Text(text),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Ok'),
-            ),
-          ],
+        builder: (BuildContext context) => MyAlertDialog3(
+          title: 'Lỗi',
+          content: text,
         ),
       );
     }
@@ -142,20 +139,13 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     if (insertResponse.errorCode == null) {
       var campaignId = insertResponse.data['id'];
       final inviteSuccess = await widget._postController
-          .InviteUserToCampaign(8, listChooseUser.map((e) => e.id).toList());
+          .InviteUserToCampaign(campaignId, listChooseUser.map((e) => e.id).toList());
       if (inviteSuccess) {
-        // TODO: success and exit page
         await showDialog<String>(
           context: context,
-          builder: (BuildContext context) => const AlertDialog(
-            title: Text('Thông báo'),
-            content: Text('Tạo bài viết mới thành công'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: null,
-                child: Text('Ok'),
-              ),
-            ],
+          builder: (BuildContext context) => MyAlertDialog3(
+            title: 'Thông báo',
+            content: 'Tạo bài viết mới thành công',
           ),
         );
         Navigator.of(context).pop();
@@ -163,7 +153,13 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
         log('cannot invite user to campaign $campaignId');
       }
     } else {
-      log('cannot insert campaign');
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => MyAlertDialog3(
+          title: 'Lỗi',
+          content: 'Không thể tạo bài viết, vui lòng thử lại sau',
+        ),
+      );
     }
   }
 
@@ -273,61 +269,12 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                             SizedBox(
                               height: 10.h,
                             ),
-                            Stack(
-                              children: [
-                                Container(
-                                  height: 120.h,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      image: const DecorationImage(
-                                          image:
-                                              AssetImage("asset/location.png"),
-                                          fit: BoxFit.cover)),
-                                ),
-                                Positioned(
-                                    child: Container(
-                                  height: 35.h,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: 10.w,
-                                      ),
-                                      Flexible(
-                                        child: TextFormField(
-                                          readOnly: true,
-                                          textAlign: TextAlign.start,
-                                          style: kText13RegularBlack.copyWith(
-                                              color: meerColorWhite),
-                                          controller: _locationTextController,
-                                          decoration: const InputDecoration(
-                                              border: InputBorder.none),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(
-                                          FontAwesomeIcons.angleRight,
-                                          color: meerColorBlack,
-                                          size: 20,
-                                        ),
-                                        onPressed: () async {
-                                          location = await Navigator.of(context)
-                                              .push<LatLng?>(
-                                            MaterialPageRoute(
-                                              builder: (_) =>
-                                                  MyMap(initLocation: location),
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                  decoration: const BoxDecoration(
-                                      color: Color.fromARGB(92, 0, 0, 0),
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20))),
-                                ))
-                              ],
+                            OpenMap(
+                              locationTextController: _locationTextController,
+                              onChooseLocationFinish: (newLocation) {
+                                location = newLocation;
+                              },
+                              initLocation: location,
                             ),
                             SizedBox(
                               height: 15.h,
@@ -405,8 +352,13 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
                         ),
                         TextButton(
                             onPressed: () async {
-                              await showDialogAddCampaignUser(context);
-                              setState(() {});
+                              UserOverview? object =
+                                  await showDialogAddCampaignUser(context);
+                              if (object != null) {
+                                setState(() {
+                                  listChooseUser.add(object);
+                                });
+                              }
                             },
                             child: Text(
                               "Thêm",
@@ -661,8 +613,8 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
     );
   }
 
-  Future<String?> showDialogAddCampaignUser(BuildContext context) {
-    return showDialog<String>(
+  Future<dynamic> showDialogAddCampaignUser(BuildContext context) {
+    return showDialog(
       context: context,
       builder: (BuildContext context) =>
           AddParticipantAlert(listChooseUser: listChooseUser),
@@ -677,7 +629,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
       centerTitle: true,
       backgroundColor: meerColorBackground,
       title: Text(
-        widget.isCreate? "Tạo chiến dịch" : "Chỉnh sửa",
+        widget.isCreate ? "Tạo chiến dịch" : "Chỉnh sửa",
         style: ktext18BoldBlack,
       ),
       actions: [
@@ -687,7 +639,7 @@ class _CreateNewCampaignPageState extends State<CreateNewCampaignPage> {
             _addNewCampagin();
           },
           child: Text(
-            widget.isCreate? "Đăng" : "Lưu",
+            widget.isCreate ? "Đăng" : "Lưu",
             style: kText18BoldMain,
           ),
           style: ButtonStyle(

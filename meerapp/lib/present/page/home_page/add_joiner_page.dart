@@ -7,16 +7,21 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
+import 'package:meerapp/controllers/controller.dart';
+import 'package:meerapp/injection.dart';
+import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 
 import '../../../config/constant.dart';
+import '../../../models/post.dart';
 import '../../../models/user.dart';
 import '../../component/add_participant_dialog.dart';
 
 // ignore: must_be_immutable
 
-
 class AddJoinerPage extends StatefulWidget {
-  const AddJoinerPage({Key? key}) : super(key: key);
+  final PostController _postController = sl.get<PostController>();
+  final IPost post;
+  AddJoinerPage({Key? key, required this.post}) : super(key: key);
 
   @override
   State<AddJoinerPage> createState() => _AddJoinerPageState();
@@ -25,8 +30,10 @@ class AddJoinerPage extends StatefulWidget {
 class _AddJoinerPageState extends State<AddJoinerPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  final List<UserOverview> joined = [];
-  final List<UserOverview> notjoined = [];
+  late final List<UserOverview> joined;
+  late final List<UserOverview> notjoined;
+
+  bool get isJoinedTab => _tabController.index == 0;
 
   @override
   void initState() {
@@ -35,6 +42,8 @@ class _AddJoinerPageState extends State<AddJoinerPage>
       length: 2,
       vsync: this,
     );
+    joined = [];
+    notjoined = [];
   }
 
   @override
@@ -43,27 +52,17 @@ class _AddJoinerPageState extends State<AddJoinerPage>
     super.dispose();
   }
 
-  Future<String?> showDialogAddCampaignUser() {
-  return showDialog<String>(
-    context: context,
-    builder: (context) =>
-        AddParticipantAlert(listChooseUser: _tabController.index == 0 ? joined : notjoined),
-  );
-}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: getAppBar(),
         body: SingleChildScrollView(
-          child: _tabController.index == 0
-              ? getListUser(joined)
-              : getListUser(notjoined),
+          child: getListUser(isJoinedTab ? joined : notjoined),
         ),
         bottomNavigationBar: getBottomNavigationBar(context));
   }
 
-  Column getListUser(List<UserOverview> users) {
+  Widget getListUser(List<UserOverview> users) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -78,8 +77,10 @@ class _AddJoinerPageState extends State<AddJoinerPage>
         itemCount: users.length,
         itemBuilder: (BuildContext context, int index) {
           return JoinerItem(
-            avatarUrl: users[index].avatarUri,
-            fulllName: users[index].name,
+            user: users[index],
+            onRemove: () {
+              users.removeAt(index);
+            },
           );
         },
       )
@@ -94,8 +95,38 @@ class _AddJoinerPageState extends State<AddJoinerPage>
         child: Padding(
           padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 5.h),
           child: ElevatedButton(
-            onPressed: () {
-              showDialogAddCampaignUser();
+            onPressed: () async {
+              UserOverview? object = await _showChooseDialog(context);
+              if (object != null) {
+                if (isJoinedTab) {
+                  if (notjoined.any((user) => user.id == object.id)) {
+                    showDialog(
+                      context: context,
+                      builder: (_) => MyAlertDialog3(
+                        title: 'Thông báo',
+                        content:
+                            'Người này đã có trong danh sách vắng, không thể thêm vào danh sách này',
+                      ),
+                    );
+                  } else {
+                    joined.add(object);
+                  }
+                } else {
+                  if (joined.any((user) => user.id == object.id)) {
+                    showDialog(
+                      context: context,
+                      builder: (_) => MyAlertDialog3(
+                        title: 'Thông báo',
+                        content:
+                            'Người này đã có trong danh sách tham gia, không thể thêm vào danh sách này',
+                      ),
+                    );
+                  } else {
+                    notjoined.add(object);
+                  }
+                }
+                setState(() {});
+              } else {}
             },
             style: ElevatedButton.styleFrom(
               alignment: Alignment.center,
@@ -110,8 +141,49 @@ class _AddJoinerPageState extends State<AddJoinerPage>
         ));
   }
 
+  Future<dynamic> _showChooseDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) =>
+          AddParticipantAlert(listChooseUser: isJoinedTab ? joined : notjoined),
+    );
+  }
+
   AppBar getAppBar() {
     return AppBar(
+      actions: [
+        ElevatedButton(
+            onPressed: () async {
+              var isSuccess = await widget._postController.FinishPost(
+                (widget.post is CampaignPost) ? 'campaign' : 'emergency',
+                widget.post.id,
+                joined.map((e) => e.id).toList(),
+                notjoined.map((e) => e.id).toList(),
+              );
+
+              if (isSuccess) {
+                await showDialog(
+                  context: context,
+                  builder: (context) => MyAlertDialog3(
+                    title: 'Thông báo',
+                    content:
+                        'Sự kiện đã chuyển sang chế độ kết thúc thành công',
+                  ),
+                );
+                Navigator.pop(context);
+              } else {
+                showDialog(
+                  context: context,
+                  builder: (context) => MyAlertDialog3(
+                    title: 'Lỗi',
+                    content:
+                        'Không thể thực hiện thao tác này, vui lòng thử lại sau',
+                  ),
+                );
+              }
+            },
+            child: Text("Đồng ý"))
+      ],
       backgroundColor: meerColorBackground,
       centerTitle: true,
       elevation: 0,
@@ -142,9 +214,7 @@ class _AddJoinerPageState extends State<AddJoinerPage>
                 child: const Text("Bỏ tham gia")),
           ],
           onTap: (index) {
-            setState(() {
-              _tabController.index = index;
-            });
+            setState(() {});
           },
         ),
       ),
@@ -153,9 +223,9 @@ class _AddJoinerPageState extends State<AddJoinerPage>
 }
 
 class JoinerItem extends StatelessWidget {
-  final String? avatarUrl;
-  final String fulllName;
-  const JoinerItem({Key? key, required this.avatarUrl, required this.fulllName})
+  final UserOverview user;
+  final Function()? onRemove;
+  const JoinerItem({Key? key, required this.user, this.onRemove})
       : super(key: key);
 
   @override
@@ -178,8 +248,8 @@ class JoinerItem extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 3),
                 image: DecorationImage(
-                    image: avatarUrl == null
-                        ? NetworkImage(avatarUrl!) as ImageProvider
+                    image: user.avatarUri == null
+                        ? NetworkImage(user.avatarUri!) as ImageProvider
                         : const AssetImage("asset/demo.jpg"),
                     fit: BoxFit.cover),
               ),
@@ -187,21 +257,21 @@ class JoinerItem extends StatelessWidget {
           ),
         ),
         title: Text(
-          fulllName,
+          user.name,
           style: kText15RegularBlack,
         ),
         selectedColor: const Color.fromARGB(16, 2, 1, 1),
         trailing: IconButton(
-          onPressed: () => {
-            //TODO: remove joiner
-          },
+          onPressed: () => onRemove?.call(),
           icon: const Icon(
             FontAwesomeIcons.circleMinus,
             color: meerColorRed,
           ),
         ),
         onTap: () {
-          //TODO: open user profile page
+          // TODO: open home page of this user
+          // Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+          // }));
         },
       ),
     );
