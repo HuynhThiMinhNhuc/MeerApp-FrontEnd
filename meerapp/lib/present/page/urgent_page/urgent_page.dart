@@ -57,6 +57,13 @@ class _UrgentPageState extends State<UrgentPage> {
     });
   }
 
+  void loadInit() {
+    setState(() {
+      posts.clear();
+    });
+    _fetchEmergencyPosts(0, pageSize);
+  }
+  
   void _fetchEmergencyPosts(int startIndex, int number) {
     log('Fetch data');
     setState(() {
