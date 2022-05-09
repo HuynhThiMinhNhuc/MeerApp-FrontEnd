@@ -22,6 +22,14 @@ class DetailJoinWidget extends StatelessWidget {
       UserAPI.getDonedCampaign(),
       UserAPI.getDonedEmergency(),
     ]);
+    String getStatus(int status) {
+      return status == 0
+          ? "đã tạo"
+          : status == 1
+              ? "đã tham gia"
+              : "bỏ tham gia";
+    }
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -29,44 +37,63 @@ class DetailJoinWidget extends StatelessWidget {
           SizedBox(
             height: 15.h,
           ),
-          ExpansionTile(
-            title: const Text(
-              'Chiến dịch tình nguyện',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              'Gồm các chiến dịch tình nguyện đã tham gia',
-              style: kText13RegularNote,
-            ),
-            children: List.generate(
-                campaignList.length,
-                (index) => EventJoinItem(
-                    userName: campaignList[index]['name'].toString(),
-                    postImageUrl:
-                        campaignList[index]['postImageUrl'].toString(),
-                    title: campaignList[index]['title'].toString(),
-                    time: campaignList[index]['time'].toString(),
-                    status: status)),
-          ),
-          ExpansionTile(
-            title: const Text(
-              'Sự kiện khẩn cấp',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              'Gồm các sự kiện khẩn cấp đã tham gia',
-              style: kText13RegularNote,
-            ),
-            children: List.generate(
-                campaignList.length,
-                (index) => EventJoinItem(
-                    userName: campaignList[index]['name'].toString(),
-                    postImageUrl:
-                        campaignList[index]['postImageUrl'].toString(),
-                    title: campaignList[index]['title'].toString(),
-                    time: campaignList[index]['time'].toString(),
-                    status: status)),
-          ),
+          status == 2
+              ? ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: campaignList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return EventJoinItem(
+                        userName: campaignList[index]['name'].toString(),
+                        postImageUrl:
+                            campaignList[index]['postImageUrl'].toString(),
+                        title: campaignList[index]['title'].toString(),
+                        time: campaignList[index]['time'].toString(),
+                        status: status);
+                  },
+                )
+              : Column(
+                  children: [
+                    ExpansionTile(
+                      title: const Text(
+                        'Chiến dịch tình nguyện',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Gồm các chiến dịch tình nguyện ' + getStatus(status),
+                        style: kText13RegularNote,
+                      ),
+                      children: List.generate(
+                          campaignList.length,
+                          (index) => EventJoinItem(
+                              userName: campaignList[index]['name'].toString(),
+                              postImageUrl: campaignList[index]['postImageUrl']
+                                  .toString(),
+                              title: campaignList[index]['title'].toString(),
+                              time: campaignList[index]['time'].toString(),
+                              status: status)),
+                    ),
+                    ExpansionTile(
+                      title: const Text(
+                        'Sự kiện khẩn cấp',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Gồm các sự kiện khẩn cấp ' + getStatus(status),
+                        style: kText13RegularNote,
+                      ),
+                      children: List.generate(
+                          campaignList.length,
+                          (index) => EventJoinItem(
+                              userName: campaignList[index]['name'].toString(),
+                              postImageUrl: campaignList[index]['postImageUrl']
+                                  .toString(),
+                              title: campaignList[index]['title'].toString(),
+                              time: campaignList[index]['time'].toString(),
+                              status: status)),
+                    ),
+                  ],
+                ),
         ],
       ),
     );
