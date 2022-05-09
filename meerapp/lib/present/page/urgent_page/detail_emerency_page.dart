@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meerapp/config/colorconfig.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/controllers/controller.dart';
@@ -93,25 +94,43 @@ class _DetailEmerencyPageState extends State<DetailEmerencyPage>
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: SizedBox(
-                        height: 300.h,
-                        child: Swiper(
-                          itemBuilder: (context, index) {
-                            return  MyImage(imagePost[index], Image.asset("asset/failedimage.png", fit: BoxFit.cover,));
-                          },
-                          indicatorLayout: PageIndicatorLayout.COLOR,
-                          autoplay: false,
-                          itemCount: 2,
-                          pagination: const SwiperPagination(
-                            builder: SwiperPagination.rect,
-                          ),
-                          control: const SwiperControl(
-                            color: meerColor80Black,
+                    Stack(children: [
+                      Center(
+                        child: SizedBox(
+                          height: 300.h,
+                          child: Swiper(
+                            control: const  SwiperControl(
+                                 iconPrevious: Icons.circle,
+                                 iconNext: Icons.circle,
+                                 color: Colors.transparent,
+                               ),
+                            itemBuilder: (context, index) {
+                              return MyImage(
+                                  imagePost[index],
+                                  Image.asset(
+                                    "asset/failedimage.png",
+                                    fit: BoxFit.cover,
+                                  ));
+                            },
+                            indicatorLayout: PageIndicatorLayout.COLOR,
+                            autoplay: false,
+                            itemCount: 2,
+                            pagination: const SwiperPagination(
+                              builder: SwiperPagination.dots,
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                      Positioned(
+                        top: 40.h,
+                        left: 20.w,
+                          child: IconButton(
+                        icon: Icon(FontAwesomeIcons.arrowLeft),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ))
+                    ]),
                     Padding(
                       padding: EdgeInsets.symmetric(
                           horizontal: 15.w, vertical: 10.h),

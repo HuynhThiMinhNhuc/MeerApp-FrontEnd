@@ -316,19 +316,21 @@ class _CreateNewEmergencyPageState extends State<CreateNewEmergencyPage> {
                           hintText: "Thêm tiêu đề tại đây"),
                     ),
                     TextFormField(
-                        keyboardType: TextInputType.name,
+                        keyboardType: TextInputType.multiline,
                         controller: _descriptionTextController,
                         minLines: 15,
                         maxLines: 15,
                         style: TextStyle(
                             fontFamily: 'Roboto-Regular.ttf',
                             fontSize: 15.sp,
+                            
                             color: Colors.grey[600]),
                         decoration: const InputDecoration(
                             hintText: "Viết nội dung ở đây...",
                             errorBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
                             border: InputBorder.none,
+                            
                             enabledBorder: InputBorder.none)),
                   ],
                 ),
