@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:meerapp/api/MyWrapper.dart';
 import 'package:meerapp/config/fontconfig.dart';
 import 'package:meerapp/config/helper.dart';
 import 'package:meerapp/controllers/controller.dart';
 import 'package:meerapp/injection.dart';
 import 'package:meerapp/present/component/my_alert_dialog_2.dart';
-import 'package:meerapp/present/component/my_alert_dialog_3.dart';
 import 'package:meerapp/present/models/status_compaign.dart';
 import 'package:meerapp/present/models/status_emerency.dart';
 import 'package:meerapp/present/page/home_page/detail_campaign_page.dart';
