@@ -110,7 +110,8 @@ class _HomePageState extends State<HomePage> {
               style: kText20MediumBlack,
             ),
           ),
-          _buildListPosts()
+          _buildListPosts(),
+          SizedBox(height: 50.h,)
         ],
       ),
     );
@@ -176,7 +177,7 @@ class CreateNewCampaign extends StatelessWidget {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => CreateNewCampaignPage()),
+          MaterialPageRoute(builder: (context) => CreateNewCampaignPage(isCreate: true,)),
         )
       },
     );
